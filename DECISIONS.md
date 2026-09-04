@@ -273,10 +273,11 @@ Clarifies the earlier interview question: “who is this human” is declarative
 
 ---
 
-## ADR-0023 — NetworkManager before graphical session (proposed)
+## ADR-0023 — NetworkManager before graphical session
 
-- Status: proposed
+- Status: accepted
 - Date: 2026-09-04
+- Landed: Omahedron PR #7 merge `4437f39`
 
 **Decision.** Order `NetworkManager.service` **Before=** `display-manager.service` (no Requires=) so Quickshell binds NM’s D-Bus name after the bus is up. Upstream QML fix is separate (omacom/omarchy#9923). Diff source: open [zicochaos/omarchy-nix#4](https://github.com/zicochaos/omarchy-nix/pull/4) (VirtualMachinist); **absent** on Omahedron `main` as of 2026-09-04 recon — land via small follow-up PR.
 
