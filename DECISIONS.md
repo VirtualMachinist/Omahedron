@@ -279,8 +279,8 @@ Clarifies the earlier interview question: “who is this human” is declarative
 - Date: 2026-09-04
 - Landed: Omahedron PR #7 merge `4437f39`
 
-**Decision.** Order `NetworkManager.service` **Before=** `display-manager.service` (no Requires=) so Quickshell binds NM’s D-Bus name after the bus is up. Upstream QML fix is separate (omacom/omarchy#9923). Diff source: open [zicochaos/omarchy-nix#4](https://github.com/zicochaos/omarchy-nix/pull/4) (VirtualMachinist); **absent** on Omahedron `main` as of 2026-09-04 recon — land via small follow-up PR.
+**Decision.** Order `NetworkManager.service` **Before=** `display-manager.service` (no Requires=) so Quickshell binds NM’s D-Bus name after the bus is up. Upstream QML fix is separate (omacom/omarchy#9923). Diff source: [zicochaos/omarchy-nix#4](https://github.com/zicochaos/omarchy-nix/pull/4) (VirtualMachinist); landed on Omahedron via PR #7 (`4437f39`). Upstream QML recovery remains separate.
 
 **Why.** quickshell 0.3.0 has no NameOwnerChanged recovery (basecamp/omarchy#7324); race paints NOT CONNECTED while the link is up.
 
-**Consequences.** Until merged: known first-boot / race gap. Omahedron PR open: https://github.com/VirtualMachinist/Omahedron/pull/7 @ `e33aa54` (Marci PASS). After merge: mark accepted and cite that PR. Do not vendor-patch QML in `pkgs/` for this.
+**Consequences.** Landed on `main` (PR #7). First-boot NM/Quickshell race mitigated by unit ordering. Do not vendor-patch QML in `pkgs/` for this; track upstream omacom/omarchy#9923 separately.
