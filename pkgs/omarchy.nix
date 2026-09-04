@@ -1297,19 +1297,13 @@ stdenv.mkDerivation (finalAttrs: {
 
         # Menu rewiring: cataloged entries call omarchy-nix-add /
         # omarchy-nix-remove. Action-part-only substitutions (glyph-free), so
-        # upstream `disabled:` guards and icons stay untouched (v4.0.0 moved
-        # the install-side guards from `when: ! omarchy-pkg-present X` to
-        # `disabled: omarchy-pkg-present X` — exactly our model — so no guard
-        # rewrites are needed for services/browsers/AI anymore; the mise-dir
-        # `disabled:` guards upstream keeps for dev stacks still get the
-        # pkg-present probe treatment below). NordVPN and ONCE lines are
-        # deleted outright (same rule as install.aur): ONCE is AUR-only, and
-        # NordVPN's nixpkgs package + services.nordvpn module landed only in
-        # the 26.11 cycle — re-add as a catalog feature once our stable pin
-        # catches up (upstream still installs the same nordvpn-bin package
-        # and enables nordvpnd by hand, while our NixOS analogue, catalog
-        # feature + services.nordvpn, needs the module our pinned nixpkgs
-        # lacks).
+        # upstream `when:` guards and icons stay untouched. At tag v4.0.2
+        # upstream returned install-side guards to `when: ! omarchy-pkg-present X`
+        # (zicochaos tracked a quattro tree that briefly used `disabled:`).
+        # NordVPN and ONCE lines are deleted outright (same rule as install.aur):
+        # ONCE is AUR-only, and NordVPN's nixpkgs package + services.nordvpn
+        # module landed only in the 26.11 cycle — re-add as a catalog feature
+        # once our stable pin catches up.
         substituteInPlace default/omarchy/omarchy-menu.jsonc \
           --replace-fail "'omarchy-install-browser chrome'" "'omarchy-nix-add install.browser.chrome'" \
           --replace-fail "'omarchy-install-browser edge'" "'omarchy-nix-add install.browser.edge'" \
@@ -1320,8 +1314,8 @@ stdenv.mkDerivation (finalAttrs: {
           --replace-fail "omarchy-launch-floating-terminal-with-presentation omarchy-install-service-spotify" "omarchy-launch-floating-terminal-with-presentation 'omarchy-nix-add install.service.spotify'" \
           --replace-fail "omarchy-launch-floating-terminal-with-presentation omarchy-install-service-signal" "omarchy-launch-floating-terminal-with-presentation 'omarchy-nix-add install.service.signal'" \
           --replace-fail "omarchy-launch-floating-terminal-with-presentation omarchy-install-service-tailscale" "omarchy-launch-floating-terminal-with-presentation 'omarchy-nix-add install.service.tailscale'" \
-          --replace-fail '  "install.service.nordvpn": {"icon":"󱇱","label":"NordVPN","disabled":"omarchy-pkg-present nordvpn-bin","action":"omarchy-launch-floating-terminal-with-presentation omarchy-install-service-nordvpn"},' "" \
-          --replace-fail '  "install.service.once": {"icon":"󰏖","label":"ONCE","disabled":"omarchy-pkg-present once-bin","action":"omarchy-launch-floating-terminal-with-presentation omarchy-install-service-once"},' "" \
+          --replace-fail '  "install.service.nordvpn": {"icon":"󱇱","label":"NordVPN","when":"! omarchy-pkg-present nordvpn-bin","action":"omarchy-launch-floating-terminal-with-presentation omarchy-install-service-nordvpn"},' "" \
+          --replace-fail '  "install.service.once": {"icon":"󰏖","label":"ONCE","when":"! omarchy-pkg-present once-bin","action":"omarchy-launch-floating-terminal-with-presentation omarchy-install-service-once"},' "" \
           --replace-fail "omarchy-install-and-launch Bitwarden 'bitwarden bitwarden-cli' bitwarden" "omarchy-launch-floating-terminal-with-presentation 'omarchy-nix-add install.service.bitwarden'" \
           --replace-fail "omarchy-launch-floating-terminal-with-presentation omarchy-install-editor-vscode" "omarchy-launch-floating-terminal-with-presentation 'omarchy-nix-add install.editor.vscode'" \
           --replace-fail "omarchy-install-and-launch Cursor cursor-bin cursor" "omarchy-launch-floating-terminal-with-presentation 'omarchy-nix-add install.editor.cursor'" \
@@ -1391,10 +1385,23 @@ stdenv.mkDerivation (finalAttrs: {
 
         # Development entries: replace mise-dir / rustup / opam guards with
         # pkg-present probes (php's guard is already pkg-present upstream).
-        # v4.0.0: install side uses `disabled:` with the same mise-dir
-        # expressions; remove side keeps `when:` — one literal covers both
-        # sides, so the old negated install-side substitutions are gone.
+        # v4.0.2: install side uses `when: [[ ! -d ... ]]`; remove side uses
+        # `when: [[ -d ... ]]`. Cover both literals.
         substituteInPlace default/omarchy/omarchy-menu.jsonc \
+          --replace-fail '[[ ! -d $HOME/.local/share/mise/installs/ruby ]]' '! omarchy-pkg-present ruby' \
+          --replace-fail '[[ ! -d $HOME/.local/share/mise/installs/go ]]' '! omarchy-pkg-present go' \
+          --replace-fail '[[ ! -d $HOME/.local/share/mise/installs/python ]]' '! omarchy-pkg-present python' \
+          --replace-fail '[[ ! -d $HOME/.local/share/mise/installs/zig ]]' '! omarchy-pkg-present zig' \
+          --replace-fail '[[ ! -d $HOME/.rustup ]]' '! omarchy-pkg-present rust' \
+          --replace-fail '[[ ! -d $HOME/.local/share/mise/installs/java ]]' '! omarchy-pkg-present java' \
+          --replace-fail '[[ ! -d $HOME/.local/share/mise/installs/dotnet ]]' '! omarchy-pkg-present dotnet' \
+          --replace-fail '[[ ! -d $HOME/.opam ]]' '! omarchy-pkg-present ocaml' \
+          --replace-fail '[[ ! -d $HOME/.local/share/mise/installs/clojure ]]' '! omarchy-pkg-present clojure' \
+          --replace-fail '[[ ! -d $HOME/.local/share/mise/installs/scala ]]' '! omarchy-pkg-present scala' \
+          --replace-fail '[[ ! -d $HOME/.local/share/mise/installs/node ]]' '! omarchy-pkg-present node' \
+          --replace-fail '[[ ! -d $HOME/.local/share/mise/installs/bun ]]' '! omarchy-pkg-present bun' \
+          --replace-fail '[[ ! -d $HOME/.local/share/mise/installs/deno ]]' '! omarchy-pkg-present deno' \
+          --replace-fail '[[ ! -d $HOME/.local/share/mise/installs/elixir ]]' '! omarchy-pkg-present elixir' \
           --replace-fail '[[ -d $HOME/.local/share/mise/installs/ruby ]]' 'omarchy-pkg-present ruby' \
           --replace-fail '[[ -d $HOME/.local/share/mise/installs/go ]]' 'omarchy-pkg-present go' \
           --replace-fail '[[ -d $HOME/.local/share/mise/installs/python ]]' 'omarchy-pkg-present python' \

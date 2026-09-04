@@ -2,7 +2,7 @@
 
 Human ledger of every stub and NixOS-ism. Machine source of truth is [schema/scripts.lock.json](../schema/scripts.lock.json) and [schema/packages.map.json](../schema/packages.map.json). If prose and JSON disagree, JSON wins and this file must be updated in the same commit.
 
-Status at skeleton time: **classes are decided, inventory is not yet generated from v4.0.2 `bin/`**. Merci fills the inventory during the first pin. Do not pretend the tables below are complete.
+Status at pin v4.0.2: **inventory generated** into `schema/scripts.lock.json` (431 upstream bins + pacman seed) and `schema/packages.map.json` (`pkgs/` attrs + `nixpkgs_candidates` from `install/*.packages`). Classes below remain the policy ledger; JSON wins on conflict.
 
 ## How to read a row
 
@@ -82,4 +82,6 @@ Recorded from zicochaos UPSTREAM.md. Re-verify against v4.0.2; do not copy blind
 | Item | Class | Notes |
 |---|---|---|
 | Upstream `version` file at tag v4.0.2 | host | File contents still read `4.0.0.alpha` at commit `346e69e1`. Flake `omarchyVersion` therefore reports that string until upstream retags or we document a pin override. Claimed desktop remains Omarchy **v4.0.2**. |
-| `--replace-fail` patches from zicochaos | wrap | Adopted with the port. Spot-checked path existence for env-bootstrap, python shebangs, and key systemd units at v4.0.2 (HTTP 200). Full `--replace-fail` string audit is Lea/Marci on first eval — broken replaces become COMPAT rows, not silent drops. |
+| Menu NordVPN / ONCE delete patches | drop | zicochaos matched `disabled:` guards; v4.0.2 restored `when: ! omarchy-pkg-present …`. Patches retargeted to the `when` literals (still deleted: AUR-only ONCE; NordVPN waits on nixpkgs 26.11 `services.nordvpn`). |
+| Menu mise-dir install guards | wrap | v4.0.2 install side uses `when: [[ ! -d … ]]` again (quattro briefly used `disabled:`). Added matching `--replace-fail` rewrites to `! omarchy-pkg-present`; remove-side `[[ -d … ]]` rewrites retained. |
+| Remaining `--replace-fail` surface | wrap | Path + string audit against tag tree: only the above two families broke on the pin; others still match. Lea/Marci confirm on first `nix flake check`. |
