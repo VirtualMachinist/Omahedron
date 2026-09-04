@@ -2076,7 +2076,8 @@ c";
           # sets programs.fish.enable and puts the vendored profile in the
           # system profile; the default (off) adds neither (demo config is the
           # off witness). Same eval-time assertion pattern as the disabled-state
-          # module check.
+          # module check. Eval-only: it must not realize the desktop closure
+          # (toplevel / built pam source) — GHA cannot build Hyprland.
           omarchy-fish-module =
             let
               fishPkg = self.packages.${system}.omarchy-fish;
@@ -2106,8 +2107,30 @@ c";
               # must stay intact so pam_env expands the override at login
               # (upstream's SUDO_EDITOR="$EDITOR" semantics).
               editorCfg = (mkEval { environment.sessionVariables.EDITOR = "nvim"; }).config;
-              pamEnv = cfg.environment.etc."pam/environment".source;
               hasFish = builtins.any (p: (p.drvPath or "") == fishPkg.drvPath) cfg.environment.systemPackages;
+              # pam_env expands ${EDITOR} at login in file order — the
+              # EDITOR line must precede the SUDO_EDITOR line and the
+              # indirection must survive the renderer verbatim. Assert on the
+              # etc entry TEXT at eval time instead of grepping the built
+              # source file: this check is eval-only by design. Forcing
+              # cfg.system.build.toplevel (as it used to) or building the
+              # generated pam file realizes the desktop closure — the etc
+              # source chains to sessionData.desktops -> Hyprland — which GHA
+              # checks-light must not build (Hyprland's cmake FetchContent
+              # needs git; CI run 33899110349). The generated
+              # /etc/pam/environment is exactly this text, and the login-time
+              # pam_env expansion is covered end to end by the omarchy-fish
+              # VM test (tests/fish.nix) and metal.
+              inherit (pkgs.lib) any findFirst hasInfix hasPrefix splitString;
+              pamText = cfg.environment.etc."pam/environment".text;
+              pamLines = splitString "\n" pamText;
+              editorLine = findFirst (hasPrefix "EDITOR ") null pamLines;
+              sudoLine = findFirst (hasPrefix "SUDO_EDITOR ") null pamLines;
+              # One line per rendered variable, so "SUDO_EDITOR " occurs in
+              # exactly one line; everything before it is the preceding lines.
+              before = builtins.head (builtins.split "SUDO_EDITOR " pamText);
+              linesBefore = splitString "\n" before;
+              editorBefore = any (hasPrefix "EDITOR ") linesBefore;
             in
             if !cfg.programs.fish.enable then
               throw "omarchy.fish.enable did not set programs.fish.enable"
@@ -2119,21 +2142,23 @@ c";
               throw "SUDO_EDITOR must carry the pam_env \${EDITOR} indirection"
             else if editorCfg.environment.sessionVariables.SUDO_EDITOR != "\${EDITOR}" then
               throw "SUDO_EDITOR indirection must survive an EDITOR override"
-            else if cfg.system.build.toplevel.drvPath == null then
-              throw "unreachable" # forces full evaluation incl. assertions
+            else if any (a: !a.assertion) cfg.assertions then
+              # Replaces the old cfg.system.build.toplevel.drvPath force:
+              # assertions are still fully evaluated, but the toplevel (and
+              # with it the desktop closure) is never realized.
+              throw "module assertion failed in the omarchy-fish eval"
+            else if editorLine == null then
+              throw "pam/environment is missing the EDITOR line"
+            else if sudoLine == null then
+              throw "pam/environment is missing the SUDO_EDITOR line"
+            else if !editorBefore then
+              throw "EDITOR line must precede SUDO_EDITOR in pam/environment"
+            else if !hasInfix "DEFAULT=\"\${EDITOR}\"" sudoLine then
+              throw "SUDO_EDITOR lost the pam_env \${EDITOR} indirection"
             else
-              pkgs.runCommand "omarchy-fish-module-check" { } ''
-                # pam_env expands ''${EDITOR} at login in file order — the
-                # EDITOR line must precede the SUDO_EDITOR line, and the
-                # indirection must survive the renderer verbatim.
-                ed=$(grep -n '^EDITOR[[:space:]]' ${pamEnv} | cut -d: -f1)
-                se=$(grep -n '^SUDO_EDITOR[[:space:]]' ${pamEnv} | cut -d: -f1)
-                [ -n "$ed" ] && [ -n "$se" ] || { echo "EDITOR/SUDO_EDITOR missing in pam/environment"; exit 1; }
-                [ "$ed" -lt "$se" ] || { echo "EDITOR line must precede SUDO_EDITOR in pam/environment"; exit 1; }
-                grep -q '^SUDO_EDITOR[[:space:]]*DEFAULT="''${EDITOR}"$' ${pamEnv} || {
-                  echo "SUDO_EDITOR lost the ''${EDITOR} indirection in pam/environment"; exit 1; }
-                touch $out
-              '';
+              # Eval-only by design (see the pamText comment above): the
+              # built artifact is just this assertion suite's marker.
+              pkgs.runCommand "omarchy-fish-module-check" { } "touch $out";
         }
       );
 
