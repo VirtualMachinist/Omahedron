@@ -128,4 +128,23 @@
   "1786952219.sh" = "skip"; # mise -> mise-bin repo swap (mise model rejected — catalog is final)
   "1786183928.sh" = "skip"; # regenerate mise tool wrappers (mise model rejected — catalog is final;
   #                           # omarchy-refresh-applications itself stays user-safe)
+
+  # v4.0.2 pin wave (was unclassified — exposed by GHA omarchy-migrations):
+  "1787133200.sh" = "skip"; # qt6-imageformats via omarchy-pkg-add (pacman)
+  "1787399318.sh" = "skip"; # quickshell-git -> packaged quickshell via pacman
+  "1787481315.sh" = "user-safe"; # re-stage theme via omarchy-theme-refresh ($HOME / OMARCHY_PATH)
+  "1787494718.sh" = "skip"; # FIDO2 /etc/fido2 authfile ownership (system)
+  "1787515927.sh" = "skip"; # browser policy dir hardening under /etc (system)
+  "1787580187.sh" = "skip"; # docker group opt-in + sudoless-docker removal (system)
+  "1787589206.sh" = "skip"; # pacman.conf SigLevel / omarchy-keyring (Arch)
+  "1787618700.sh" = "user-safe"; # Hyprland touchpad/touchscreen toggle state files ($HOME)
+  "1787691200.sh" = "skip"; # /usr/lib/chromium/initial_preferences EULA seed (system)
+  "1787815267.sh" = "skip"; # cups-browsed account harden + pkg-add/drop (system/pacman)
+  "1787865477.sh" = "skip"; # remove user from input group via gpasswd (system)
+  "1788009111.sh" = "skip"; # remove cups-browsed / reject queues (system)
+  "1788025225.sh" = "skip"; # purge retired installer sudoers/systemd artifacts (system)
+  "1788102906.sh" = "skip"; # XCompose + /etc/udev power rules (system udev half dominates)
+  "1788112314.sh" = "skip"; # pacman.conf edge->rc channel switch (Arch)
+  "1788124236.sh" = "skip"; # sshd PasswordAuthentication harden in /etc (NixOS declarative)
+
 }
