@@ -76,3 +76,10 @@ Recorded from zicochaos UPSTREAM.md. Re-verify against v4.0.2; do not copy blind
 - A stub that says `na: pacman` is correct. A wrap that half-calls pacman is not.
 - Do not mark metal-green from a VM.
 - Do not delete a gap from this file because it is embarrassing. Move it to a new class with an ADR.
+
+## Pin notes (v4.0.2)
+
+| Item | Class | Notes |
+|---|---|---|
+| Upstream `version` file at tag v4.0.2 | host | File contents still read `4.0.0.alpha` at commit `346e69e1`. Flake `omarchyVersion` therefore reports that string until upstream retags or we document a pin override. Claimed desktop remains Omarchy **v4.0.2**. |
+| `--replace-fail` patches from zicochaos | wrap | Adopted with the port. Spot-checked path existence for env-bootstrap, python shebangs, and key systemd units at v4.0.2 (HTTP 200). Full `--replace-fail` string audit is Lea/Marci on first eval — broken replaces become COMPAT rows, not silent drops. |

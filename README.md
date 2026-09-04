@@ -26,7 +26,7 @@ This repository is the working tree for the Hedronite agent fleet. It is intende
 | Claimed desktop | Omarchy v4.0.2 (released 2026-08-31) |
 | Flake tag when first shipped | `omahedron-4.0.2` |
 | Channel | `stable` (default) |
-| Frozen | not yet — skeleton only, no vendored tree in this drop |
+| Frozen | pin/v4.0.2 — omarchy-src locked to tag v4.0.2 (`346e69e1…`); metal not yet |
 | Metal gate | Dell Latitude 5420, 8 GB, Intel iGPU |
 | Dogfood doctrine | lite / bare-minimum: all tools installed, not all loaded |
 
@@ -85,7 +85,7 @@ Vendor rule: if the user can see it, it comes from `omarchy-src`. If NixOS alrea
 
 ## Status of this drop
 
-This working tree is **documentation + schemas + checklists**. There is no `flake.nix` yet. Do not invent one in a drive-by. Implementation starts from a fork of `zicochaos/omarchy-nix` with `omarchy-src` pinned to `v4.0.2`, after Eli opens that work item.
+`pin/v4.0.2` adopts the [zicochaos/omarchy-nix](https://github.com/zicochaos/omarchy-nix) port (`flake.nix`, `pkgs/`, `modules/`, `tests/`, `example/`, `skills/`) and locks `omarchy-src` to Omarchy tag **v4.0.2** (`346e69e1…`). Constitution docs, LICENSE, and CREDITS stay. Latitude metal and tag `omahedron-4.0.2` are **out of scope** for this pin PR.
 
 ## Channels (names only)
 

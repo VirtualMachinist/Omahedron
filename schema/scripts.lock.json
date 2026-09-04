@@ -1,7 +1,8 @@
 {
-  "$comment": "Inventory is incomplete until the v4.0.2 pin. Rows below are policy seeds so agents have examples. Merci replaces this file from bin/ + call sites during the first bump.",
+  "$comment": "First-pass inventory from basecamp/omarchy v4.0.2 bin/ (346e69e1). Heuristic classes; Merci may refine. Policy seeds preserved.",
   "pin": "v4.0.2",
-  "generated": false,
+  "upstream_rev": "346e69e1cec6c4e8924531874af6ba010a1bc99e",
+  "generated": true,
   "scripts": [
     {
       "id": "pacman",
@@ -15,15 +16,76 @@
       "notes": "Never install host pacman. Distrobox is fine for userspace Arch tools."
     },
     {
-      "id": "omarchy-update",
-      "class": "wrap",
-      "upstream": "bin/omarchy-update",
-      "stand_in": "flake update + nixos-rebuild switch",
+      "id": "omarchy",
+      "class": "vendor",
+      "upstream": "bin/omarchy",
+      "stand_in": null,
       "user_visible": true,
-      "reason": "flake-update",
       "since_pin": "v4.0.2",
-      "phase": "v1",
-      "notes": "Verify zicochaos rewire still matches v4.0.2 menus."
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-agent",
+      "class": "vendor",
+      "upstream": "bin/omarchy-agent",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-agent-crash",
+      "class": "vendor",
+      "upstream": "bin/omarchy-agent-crash",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-agent-prompt",
+      "class": "vendor",
+      "upstream": "bin/omarchy-agent-prompt",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-agent-usage-claude",
+      "class": "vendor",
+      "upstream": "bin/omarchy-agent-usage-claude",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-agent-usage-codex",
+      "class": "vendor",
+      "upstream": "bin/omarchy-agent-usage-codex",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-agent-usage-fireworks",
+      "class": "vendor",
+      "upstream": "bin/omarchy-agent-usage-fireworks",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-agent-usage-update",
+      "class": "vendor",
+      "upstream": "bin/omarchy-agent-usage-update",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
     },
     {
       "id": "omarchy-apply-hardware",
@@ -31,9 +93,18 @@
       "upstream": "bin/omarchy-apply-hardware",
       "stand_in": "NixOS hardware + firmware modules",
       "user_visible": false,
-      "reason": "iso-apply",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "never",
+      "reason": "iso-apply"
+    },
+    {
+      "id": "omarchy-apply-lock",
+      "class": "vendor",
+      "upstream": "bin/omarchy-apply-lock",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
     },
     {
       "id": "omarchy-apply-system",
@@ -41,9 +112,3182 @@
       "upstream": "bin/omarchy-apply-system",
       "stand_in": null,
       "user_visible": false,
-      "reason": "iso-apply",
+      "since_pin": "v4.0.2",
+      "phase": "never",
+      "reason": "iso-apply"
+    },
+    {
+      "id": "omarchy-audio-input-mute",
+      "class": "vendor",
+      "upstream": "bin/omarchy-audio-input-mute",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-audio-input-set-default",
+      "class": "vendor",
+      "upstream": "bin/omarchy-audio-input-set-default",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-audio-output-set-default",
+      "class": "vendor",
+      "upstream": "bin/omarchy-audio-output-set-default",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-audio-output-sink",
+      "class": "vendor",
+      "upstream": "bin/omarchy-audio-output-sink",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-audio-output-switch",
+      "class": "vendor",
+      "upstream": "bin/omarchy-audio-output-switch",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-audio-output-volume",
+      "class": "vendor",
+      "upstream": "bin/omarchy-audio-output-volume",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-audio-sink-availability",
+      "class": "vendor",
+      "upstream": "bin/omarchy-audio-sink-availability",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-audio-source-switch",
+      "class": "vendor",
+      "upstream": "bin/omarchy-audio-source-switch",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-audio-tuning",
+      "class": "vendor",
+      "upstream": "bin/omarchy-audio-tuning",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-bar",
+      "class": "vendor",
+      "upstream": "bin/omarchy-bar",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-bar-text-color",
+      "class": "vendor",
+      "upstream": "bin/omarchy-bar-text-color",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-battery-low",
+      "class": "vendor",
+      "upstream": "bin/omarchy-battery-low",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-battery-present",
+      "class": "vendor",
+      "upstream": "bin/omarchy-battery-present",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-battery-status",
+      "class": "vendor",
+      "upstream": "bin/omarchy-battery-status",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-bluetooth-device",
+      "class": "vendor",
+      "upstream": "bin/omarchy-bluetooth-device",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-bluetooth-power",
+      "class": "vendor",
+      "upstream": "bin/omarchy-bluetooth-power",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-branding-about",
+      "class": "vendor",
+      "upstream": "bin/omarchy-branding-about",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-branding-screensaver",
+      "class": "vendor",
+      "upstream": "bin/omarchy-branding-screensaver",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-brightness-display",
+      "class": "vendor",
+      "upstream": "bin/omarchy-brightness-display",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-brightness-display-apple",
+      "class": "vendor",
+      "upstream": "bin/omarchy-brightness-display-apple",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-brightness-display-ddc",
+      "class": "vendor",
+      "upstream": "bin/omarchy-brightness-display-ddc",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-brightness-keyboard",
+      "class": "vendor",
+      "upstream": "bin/omarchy-brightness-keyboard",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-brightness-keyboard-mute",
+      "class": "vendor",
+      "upstream": "bin/omarchy-brightness-keyboard-mute",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-capture-qr",
+      "class": "vendor",
+      "upstream": "bin/omarchy-capture-qr",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-capture-region",
+      "class": "vendor",
+      "upstream": "bin/omarchy-capture-region",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-capture-screenrecording",
+      "class": "vendor",
+      "upstream": "bin/omarchy-capture-screenrecording",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-capture-screenrecording-with-webcam",
+      "class": "vendor",
+      "upstream": "bin/omarchy-capture-screenrecording-with-webcam",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-capture-screenshot",
+      "class": "vendor",
+      "upstream": "bin/omarchy-capture-screenshot",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-capture-text",
+      "class": "vendor",
+      "upstream": "bin/omarchy-capture-text",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-capture-webcam-list",
+      "class": "vendor",
+      "upstream": "bin/omarchy-capture-webcam-list",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-capture-webcam-resize",
+      "class": "vendor",
+      "upstream": "bin/omarchy-capture-webcam-resize",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-channel-current",
+      "class": "vendor",
+      "upstream": "bin/omarchy-channel-current",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-channel-set",
+      "class": "vendor",
+      "upstream": "bin/omarchy-channel-set",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-chromium-copy-url-host",
+      "class": "vendor",
+      "upstream": "bin/omarchy-chromium-copy-url-host",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-chromium-ytdlp-host",
+      "class": "vendor",
+      "upstream": "bin/omarchy-chromium-ytdlp-host",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-clipboard-open",
+      "class": "vendor",
+      "upstream": "bin/omarchy-clipboard-open",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-clipboard-paste-file",
+      "class": "vendor",
+      "upstream": "bin/omarchy-clipboard-paste-file",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-clipboard-paste-text",
+      "class": "vendor",
+      "upstream": "bin/omarchy-clipboard-paste-text",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-cmd-missing",
+      "class": "vendor",
+      "upstream": "bin/omarchy-cmd-missing",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-cmd-present",
+      "class": "vendor",
+      "upstream": "bin/omarchy-cmd-present",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-cmd-terminal-cwd",
+      "class": "vendor",
+      "upstream": "bin/omarchy-cmd-terminal-cwd",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-crash-watch",
+      "class": "vendor",
+      "upstream": "bin/omarchy-crash-watch",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-debug",
+      "class": "vendor",
+      "upstream": "bin/omarchy-debug",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-debug-idle",
+      "class": "vendor",
+      "upstream": "bin/omarchy-debug-idle",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-default-agent",
+      "class": "vendor",
+      "upstream": "bin/omarchy-default-agent",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-default-browser",
+      "class": "vendor",
+      "upstream": "bin/omarchy-default-browser",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-default-editor",
+      "class": "vendor",
+      "upstream": "bin/omarchy-default-editor",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-default-terminal",
+      "class": "vendor",
+      "upstream": "bin/omarchy-default-terminal",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-dev-add-migration",
+      "class": "vendor",
+      "upstream": "bin/omarchy-dev-add-migration",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-dev-benchmark-cli",
+      "class": "vendor",
+      "upstream": "bin/omarchy-dev-benchmark-cli",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-dev-benchmark-theme-switcher",
+      "class": "vendor",
+      "upstream": "bin/omarchy-dev-benchmark-theme-switcher",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-dev-font",
+      "class": "vendor",
+      "upstream": "bin/omarchy-dev-font",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-dev-install-ydoo",
+      "class": "vendor",
+      "upstream": "bin/omarchy-dev-install-ydoo",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-dev-link",
+      "class": "na",
+      "upstream": "bin/omarchy-dev-link",
+      "stand_in": null,
+      "user_visible": false,
+      "since_pin": "v4.0.2",
+      "phase": "never",
+      "reason": "mutable-usr",
+      "notes": "Arch mutable /usr/share/omarchy link. Not on NixOS."
+    },
+    {
+      "id": "omarchy-dev-pkg-test",
+      "class": "vendor",
+      "upstream": "bin/omarchy-dev-pkg-test",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-dev-status",
+      "class": "vendor",
+      "upstream": "bin/omarchy-dev-status",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-dev-theme-preview",
+      "class": "vendor",
+      "upstream": "bin/omarchy-dev-theme-preview",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-dev-ui-preview",
+      "class": "vendor",
+      "upstream": "bin/omarchy-dev-ui-preview",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-dev-unlink",
+      "class": "vendor",
+      "upstream": "bin/omarchy-dev-unlink",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-disk-speedtest",
+      "class": "vendor",
+      "upstream": "bin/omarchy-disk-speedtest",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-display-text-size",
+      "class": "vendor",
+      "upstream": "bin/omarchy-display-text-size",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-dns",
+      "class": "vendor",
+      "upstream": "bin/omarchy-dns",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-done",
+      "class": "vendor",
+      "upstream": "bin/omarchy-done",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-drive-info",
+      "class": "vendor",
+      "upstream": "bin/omarchy-drive-info",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-drive-password",
+      "class": "vendor",
+      "upstream": "bin/omarchy-drive-password",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-drive-select",
+      "class": "vendor",
+      "upstream": "bin/omarchy-drive-select",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-file-select",
+      "class": "vendor",
+      "upstream": "bin/omarchy-file-select",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-font-current",
+      "class": "vendor",
+      "upstream": "bin/omarchy-font-current",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-font-list",
+      "class": "vendor",
+      "upstream": "bin/omarchy-font-list",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-font-set",
+      "class": "vendor",
+      "upstream": "bin/omarchy-font-set",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-games-retro-cores",
+      "class": "vendor",
+      "upstream": "bin/omarchy-games-retro-cores",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-games-retro-install",
+      "class": "vendor",
+      "upstream": "bin/omarchy-games-retro-install",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-git-url-check",
+      "class": "vendor",
+      "upstream": "bin/omarchy-git-url-check",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hibernation-available",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hibernation-available",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hibernation-remove",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hibernation-remove",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hibernation-setup",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hibernation-setup",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hook",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hook",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hook-install",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hook-install",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hw-asus-expertbook-b9406",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hw-asus-expertbook-b9406",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hw-asus-rog",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hw-asus-rog",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hw-asus-zenbook-ux5406aa",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hw-asus-zenbook-ux5406aa",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hw-clamshell",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hw-clamshell",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hw-dell-xps-haptic-touchpad",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hw-dell-xps-haptic-touchpad",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hw-dell-xps-oled",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hw-dell-xps-oled",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hw-display",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hw-display",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hw-external-monitors",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hw-external-monitors",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hw-fingerprint",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hw-fingerprint",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hw-framework16",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hw-framework16",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hw-hybrid-gpu",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hw-hybrid-gpu",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hw-intel",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hw-intel",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hw-intel-ptl",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hw-intel-ptl",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hw-intel-sof",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hw-intel-sof",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hw-laptop",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hw-laptop",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hw-laptop-closed",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hw-laptop-closed",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hw-match",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hw-match",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hw-nvidia",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hw-nvidia",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hw-nvidia-gsp",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hw-nvidia-gsp",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hw-nvidia-without-gsp",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hw-nvidia-without-gsp",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hw-recover-internal-monitor",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hw-recover-internal-monitor",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hw-surface",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hw-surface",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hw-touchpad",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hw-touchpad",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hw-touchscreen",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hw-touchscreen",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hw-vulkan",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hw-vulkan",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hw-webcam",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hw-webcam",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hyprland-focus-app",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hyprland-focus-app",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hyprland-monitor-clamshell",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hyprland-monitor-clamshell",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hyprland-monitor-external-active",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hyprland-monitor-external-active",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hyprland-monitor-focused",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hyprland-monitor-focused",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hyprland-monitor-focused-apple",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hyprland-monitor-focused-apple",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hyprland-monitor-internal",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hyprland-monitor-internal",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hyprland-monitor-internal-mirror",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hyprland-monitor-internal-mirror",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hyprland-monitor-laptop",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hyprland-monitor-laptop",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hyprland-monitor-modeless",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hyprland-monitor-modeless",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hyprland-monitor-scaling",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hyprland-monitor-scaling",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hyprland-monitor-watch",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hyprland-monitor-watch",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hyprland-reload-guard",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hyprland-reload-guard",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hyprland-session-locked",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hyprland-session-locked",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hyprland-toggle",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hyprland-toggle",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hyprland-toggle-disabled",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hyprland-toggle-disabled",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hyprland-toggle-enabled",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hyprland-toggle-enabled",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hyprland-window-close-all",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hyprland-window-close-all",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hyprland-window-gaps-toggle",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hyprland-window-gaps-toggle",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hyprland-window-pop",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hyprland-window-pop",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hyprland-window-single-square-aspect-toggle",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hyprland-window-single-square-aspect-toggle",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hyprland-window-tiled-fullscreen-toggle",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hyprland-window-tiled-fullscreen-toggle",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hyprland-window-transparency-toggle",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hyprland-window-transparency-toggle",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hyprland-window-width",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hyprland-window-width",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-hyprland-workspace-layout-toggle",
+      "class": "vendor",
+      "upstream": "bin/omarchy-hyprland-workspace-layout-toggle",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-install-ai-chatgpt",
+      "class": "na",
+      "upstream": "bin/omarchy-install-ai-chatgpt",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
       "since_pin": "v4.0.2",
       "phase": "never"
+    },
+    {
+      "id": "omarchy-install-and-launch",
+      "class": "na",
+      "upstream": "bin/omarchy-install-and-launch",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-install-app",
+      "class": "na",
+      "upstream": "bin/omarchy-install-app",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-install-browser",
+      "class": "na",
+      "upstream": "bin/omarchy-install-browser",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-install-chromium-copy-url",
+      "class": "na",
+      "upstream": "bin/omarchy-install-chromium-copy-url",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-install-chromium-google-account",
+      "class": "na",
+      "upstream": "bin/omarchy-install-chromium-google-account",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-install-chromium-ytdlp",
+      "class": "na",
+      "upstream": "bin/omarchy-install-chromium-ytdlp",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-install-dev-env",
+      "class": "na",
+      "upstream": "bin/omarchy-install-dev-env",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-install-docker-dbs",
+      "class": "na",
+      "upstream": "bin/omarchy-install-docker-dbs",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-install-editor-emacs",
+      "class": "na",
+      "upstream": "bin/omarchy-install-editor-emacs",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-install-editor-helix",
+      "class": "na",
+      "upstream": "bin/omarchy-install-editor-helix",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-install-editor-vscode",
+      "class": "na",
+      "upstream": "bin/omarchy-install-editor-vscode",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-install-editor-zed",
+      "class": "na",
+      "upstream": "bin/omarchy-install-editor-zed",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-install-font",
+      "class": "na",
+      "upstream": "bin/omarchy-install-font",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-install-gaming-battlenet",
+      "class": "na",
+      "upstream": "bin/omarchy-install-gaming-battlenet",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-install-gaming-geforce-now",
+      "class": "na",
+      "upstream": "bin/omarchy-install-gaming-geforce-now",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-install-gaming-gpu-lib32",
+      "class": "na",
+      "upstream": "bin/omarchy-install-gaming-gpu-lib32",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-install-gaming-heroic",
+      "class": "na",
+      "upstream": "bin/omarchy-install-gaming-heroic",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-install-gaming-lutris",
+      "class": "na",
+      "upstream": "bin/omarchy-install-gaming-lutris",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-install-gaming-retroarch",
+      "class": "na",
+      "upstream": "bin/omarchy-install-gaming-retroarch",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-install-gaming-steam",
+      "class": "na",
+      "upstream": "bin/omarchy-install-gaming-steam",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-install-gaming-xbox-cloud",
+      "class": "na",
+      "upstream": "bin/omarchy-install-gaming-xbox-cloud",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-install-gaming-xbox-controllers",
+      "class": "na",
+      "upstream": "bin/omarchy-install-gaming-xbox-controllers",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-install-preinstalls",
+      "class": "na",
+      "upstream": "bin/omarchy-install-preinstalls",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-install-service-1password",
+      "class": "na",
+      "upstream": "bin/omarchy-install-service-1password",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-install-service-dropbox",
+      "class": "na",
+      "upstream": "bin/omarchy-install-service-dropbox",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-install-service-nordvpn",
+      "class": "na",
+      "upstream": "bin/omarchy-install-service-nordvpn",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-install-service-once",
+      "class": "na",
+      "upstream": "bin/omarchy-install-service-once",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-install-service-signal",
+      "class": "na",
+      "upstream": "bin/omarchy-install-service-signal",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-install-service-spotify",
+      "class": "na",
+      "upstream": "bin/omarchy-install-service-spotify",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-install-service-sunshine",
+      "class": "na",
+      "upstream": "bin/omarchy-install-service-sunshine",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-install-service-tailscale",
+      "class": "na",
+      "upstream": "bin/omarchy-install-service-tailscale",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-install-terminal",
+      "class": "na",
+      "upstream": "bin/omarchy-install-terminal",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-installed-service-dropbox",
+      "class": "vendor",
+      "upstream": "bin/omarchy-installed-service-dropbox",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-installed-service-tailscale",
+      "class": "vendor",
+      "upstream": "bin/omarchy-installed-service-tailscale",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-launch-1password",
+      "class": "vendor",
+      "upstream": "bin/omarchy-launch-1password",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-launch-about",
+      "class": "vendor",
+      "upstream": "bin/omarchy-launch-about",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-launch-battlenet",
+      "class": "vendor",
+      "upstream": "bin/omarchy-launch-battlenet",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-launch-browser",
+      "class": "vendor",
+      "upstream": "bin/omarchy-launch-browser",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-launch-config-editor",
+      "class": "vendor",
+      "upstream": "bin/omarchy-launch-config-editor",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-launch-discord-community",
+      "class": "vendor",
+      "upstream": "bin/omarchy-launch-discord-community",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-launch-docker-tui",
+      "class": "vendor",
+      "upstream": "bin/omarchy-launch-docker-tui",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-launch-editor",
+      "class": "vendor",
+      "upstream": "bin/omarchy-launch-editor",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-launch-floating-terminal-with-presentation",
+      "class": "vendor",
+      "upstream": "bin/omarchy-launch-floating-terminal-with-presentation",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-launch-nautilus",
+      "class": "vendor",
+      "upstream": "bin/omarchy-launch-nautilus",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-launch-nautilus-cwd",
+      "class": "vendor",
+      "upstream": "bin/omarchy-launch-nautilus-cwd",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-launch-or-focus",
+      "class": "vendor",
+      "upstream": "bin/omarchy-launch-or-focus",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-launch-or-focus-tui",
+      "class": "vendor",
+      "upstream": "bin/omarchy-launch-or-focus-tui",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-launch-or-focus-webapp",
+      "class": "vendor",
+      "upstream": "bin/omarchy-launch-or-focus-webapp",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-launch-screensaver",
+      "class": "vendor",
+      "upstream": "bin/omarchy-launch-screensaver",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-launch-shell",
+      "class": "vendor",
+      "upstream": "bin/omarchy-launch-shell",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-launch-signal",
+      "class": "vendor",
+      "upstream": "bin/omarchy-launch-signal",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-launch-spotify",
+      "class": "vendor",
+      "upstream": "bin/omarchy-launch-spotify",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-launch-terminal",
+      "class": "vendor",
+      "upstream": "bin/omarchy-launch-terminal",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-launch-terminal-herdr",
+      "class": "vendor",
+      "upstream": "bin/omarchy-launch-terminal-herdr",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-launch-terminal-tmux",
+      "class": "vendor",
+      "upstream": "bin/omarchy-launch-terminal-tmux",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-launch-tui",
+      "class": "vendor",
+      "upstream": "bin/omarchy-launch-tui",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-launch-webapp",
+      "class": "vendor",
+      "upstream": "bin/omarchy-launch-webapp",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-menu",
+      "class": "vendor",
+      "upstream": "bin/omarchy-menu",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-menu-clipboard",
+      "class": "vendor",
+      "upstream": "bin/omarchy-menu-clipboard",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-menu-emoji",
+      "class": "vendor",
+      "upstream": "bin/omarchy-menu-emoji",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-menu-emoji-insert",
+      "class": "vendor",
+      "upstream": "bin/omarchy-menu-emoji-insert",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-menu-file",
+      "class": "vendor",
+      "upstream": "bin/omarchy-menu-file",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-menu-herdr-keybindings",
+      "class": "vendor",
+      "upstream": "bin/omarchy-menu-herdr-keybindings",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-menu-images",
+      "class": "vendor",
+      "upstream": "bin/omarchy-menu-images",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-menu-input",
+      "class": "vendor",
+      "upstream": "bin/omarchy-menu-input",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-menu-keybindings",
+      "class": "vendor",
+      "upstream": "bin/omarchy-menu-keybindings",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-menu-plugin",
+      "class": "vendor",
+      "upstream": "bin/omarchy-menu-plugin",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-menu-select",
+      "class": "vendor",
+      "upstream": "bin/omarchy-menu-select",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-menu-share",
+      "class": "vendor",
+      "upstream": "bin/omarchy-menu-share",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-menu-timezone",
+      "class": "vendor",
+      "upstream": "bin/omarchy-menu-timezone",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-menu-tmux-keybindings",
+      "class": "vendor",
+      "upstream": "bin/omarchy-menu-tmux-keybindings",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-migrate",
+      "class": "vendor",
+      "upstream": "bin/omarchy-migrate",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-migrate-notify",
+      "class": "vendor",
+      "upstream": "bin/omarchy-migrate-notify",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-mise-install",
+      "class": "vendor",
+      "upstream": "bin/omarchy-mise-install",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-monitor-state",
+      "class": "vendor",
+      "upstream": "bin/omarchy-monitor-state",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-network-band",
+      "class": "vendor",
+      "upstream": "bin/omarchy-network-band",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-network-password",
+      "class": "vendor",
+      "upstream": "bin/omarchy-network-password",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-network-qr",
+      "class": "vendor",
+      "upstream": "bin/omarchy-network-qr",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-network-speedtest",
+      "class": "vendor",
+      "upstream": "bin/omarchy-network-speedtest",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-network-status",
+      "class": "vendor",
+      "upstream": "bin/omarchy-network-status",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-notification-battery",
+      "class": "vendor",
+      "upstream": "bin/omarchy-notification-battery",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-notification-dismiss",
+      "class": "vendor",
+      "upstream": "bin/omarchy-notification-dismiss",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-notification-send",
+      "class": "vendor",
+      "upstream": "bin/omarchy-notification-send",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-notification-time",
+      "class": "vendor",
+      "upstream": "bin/omarchy-notification-time",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-notification-wait",
+      "class": "vendor",
+      "upstream": "bin/omarchy-notification-wait",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-notification-weather",
+      "class": "vendor",
+      "upstream": "bin/omarchy-notification-weather",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-osd",
+      "class": "vendor",
+      "upstream": "bin/omarchy-osd",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-pkg-add",
+      "class": "na",
+      "upstream": "bin/omarchy-pkg-add",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-pkg-aur-accessible",
+      "class": "na",
+      "upstream": "bin/omarchy-pkg-aur-accessible",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-pkg-aur-add",
+      "class": "na",
+      "upstream": "bin/omarchy-pkg-aur-add",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-pkg-aur-install",
+      "class": "na",
+      "upstream": "bin/omarchy-pkg-aur-install",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-pkg-drop",
+      "class": "na",
+      "upstream": "bin/omarchy-pkg-drop",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-pkg-install",
+      "class": "na",
+      "upstream": "bin/omarchy-pkg-install",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-pkg-missing",
+      "class": "na",
+      "upstream": "bin/omarchy-pkg-missing",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-pkg-present",
+      "class": "na",
+      "upstream": "bin/omarchy-pkg-present",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-pkg-remove",
+      "class": "na",
+      "upstream": "bin/omarchy-pkg-remove",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-plugin-add",
+      "class": "vendor",
+      "upstream": "bin/omarchy-plugin-add",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-plugin-catalog",
+      "class": "vendor",
+      "upstream": "bin/omarchy-plugin-catalog",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-plugin-clone",
+      "class": "vendor",
+      "upstream": "bin/omarchy-plugin-clone",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-plugin-disable",
+      "class": "vendor",
+      "upstream": "bin/omarchy-plugin-disable",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-plugin-enable",
+      "class": "vendor",
+      "upstream": "bin/omarchy-plugin-enable",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-plugin-list",
+      "class": "vendor",
+      "upstream": "bin/omarchy-plugin-list",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-plugin-remove",
+      "class": "vendor",
+      "upstream": "bin/omarchy-plugin-remove",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-plugin-update",
+      "class": "vendor",
+      "upstream": "bin/omarchy-plugin-update",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-plugin-validate",
+      "class": "vendor",
+      "upstream": "bin/omarchy-plugin-validate",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-plymouth-current",
+      "class": "vendor",
+      "upstream": "bin/omarchy-plymouth-current",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-plymouth-list",
+      "class": "vendor",
+      "upstream": "bin/omarchy-plymouth-list",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-plymouth-preview",
+      "class": "vendor",
+      "upstream": "bin/omarchy-plymouth-preview",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-plymouth-reset",
+      "class": "vendor",
+      "upstream": "bin/omarchy-plymouth-reset",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-plymouth-set",
+      "class": "vendor",
+      "upstream": "bin/omarchy-plymouth-set",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-plymouth-set-by-theme",
+      "class": "vendor",
+      "upstream": "bin/omarchy-plymouth-set-by-theme",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-plymouth-switcher",
+      "class": "vendor",
+      "upstream": "bin/omarchy-plymouth-switcher",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-power-present",
+      "class": "vendor",
+      "upstream": "bin/omarchy-power-present",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-powerprofiles-init",
+      "class": "vendor",
+      "upstream": "bin/omarchy-powerprofiles-init",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-powerprofiles-list",
+      "class": "vendor",
+      "upstream": "bin/omarchy-powerprofiles-list",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-powerprofiles-set",
+      "class": "vendor",
+      "upstream": "bin/omarchy-powerprofiles-set",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-provision-first-run",
+      "class": "vendor",
+      "upstream": "bin/omarchy-provision-first-run",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-provision-owner",
+      "class": "vendor",
+      "upstream": "bin/omarchy-provision-owner",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-provision-user",
+      "class": "vendor",
+      "upstream": "bin/omarchy-provision-user",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-refresh-applications",
+      "class": "vendor",
+      "upstream": "bin/omarchy-refresh-applications",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-refresh-chromium",
+      "class": "vendor",
+      "upstream": "bin/omarchy-refresh-chromium",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-refresh-config",
+      "class": "vendor",
+      "upstream": "bin/omarchy-refresh-config",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-refresh-herdr",
+      "class": "vendor",
+      "upstream": "bin/omarchy-refresh-herdr",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-refresh-hyprland",
+      "class": "vendor",
+      "upstream": "bin/omarchy-refresh-hyprland",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-refresh-hyprsunset",
+      "class": "vendor",
+      "upstream": "bin/omarchy-refresh-hyprsunset",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-refresh-limine",
+      "class": "vendor",
+      "upstream": "bin/omarchy-refresh-limine",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-refresh-pacman",
+      "class": "na",
+      "upstream": "bin/omarchy-refresh-pacman",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-refresh-plymouth",
+      "class": "vendor",
+      "upstream": "bin/omarchy-refresh-plymouth",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-refresh-sddm",
+      "class": "vendor",
+      "upstream": "bin/omarchy-refresh-sddm",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-refresh-shell",
+      "class": "vendor",
+      "upstream": "bin/omarchy-refresh-shell",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-refresh-tmux",
+      "class": "vendor",
+      "upstream": "bin/omarchy-refresh-tmux",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-reinstall",
+      "class": "wrap",
+      "upstream": "bin/omarchy-reinstall",
+      "stand_in": "flake update + nixos-rebuild",
+      "user_visible": true,
+      "reason": "flake-update",
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-reinstall-configs",
+      "class": "vendor",
+      "upstream": "bin/omarchy-reinstall-configs",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-reinstall-pkgs",
+      "class": "vendor",
+      "upstream": "bin/omarchy-reinstall-pkgs",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-reminder",
+      "class": "vendor",
+      "upstream": "bin/omarchy-reminder",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-remove-browser",
+      "class": "na",
+      "upstream": "bin/omarchy-remove-browser",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-remove-dev-env",
+      "class": "na",
+      "upstream": "bin/omarchy-remove-dev-env",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-remove-gaming-battlenet",
+      "class": "na",
+      "upstream": "bin/omarchy-remove-gaming-battlenet",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-remove-gaming-geforce-now",
+      "class": "na",
+      "upstream": "bin/omarchy-remove-gaming-geforce-now",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-remove-gaming-heroic",
+      "class": "na",
+      "upstream": "bin/omarchy-remove-gaming-heroic",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-remove-gaming-lutris",
+      "class": "na",
+      "upstream": "bin/omarchy-remove-gaming-lutris",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-remove-gaming-minecraft",
+      "class": "na",
+      "upstream": "bin/omarchy-remove-gaming-minecraft",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-remove-gaming-retroarch",
+      "class": "na",
+      "upstream": "bin/omarchy-remove-gaming-retroarch",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-remove-gaming-steam",
+      "class": "na",
+      "upstream": "bin/omarchy-remove-gaming-steam",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-remove-gaming-xbox-cloud",
+      "class": "na",
+      "upstream": "bin/omarchy-remove-gaming-xbox-cloud",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-remove-gaming-xbox-controllers",
+      "class": "na",
+      "upstream": "bin/omarchy-remove-gaming-xbox-controllers",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-remove-launcher-entry",
+      "class": "na",
+      "upstream": "bin/omarchy-remove-launcher-entry",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-remove-preinstalls",
+      "class": "na",
+      "upstream": "bin/omarchy-remove-preinstalls",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-remove-security-fido2",
+      "class": "na",
+      "upstream": "bin/omarchy-remove-security-fido2",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-remove-security-fingerprint",
+      "class": "na",
+      "upstream": "bin/omarchy-remove-security-fingerprint",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-remove-security-sshd",
+      "class": "na",
+      "upstream": "bin/omarchy-remove-security-sshd",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-remove-security-sudoless-docker",
+      "class": "na",
+      "upstream": "bin/omarchy-remove-security-sudoless-docker",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-remove-service-1password",
+      "class": "na",
+      "upstream": "bin/omarchy-remove-service-1password",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-remove-service-dropbox",
+      "class": "na",
+      "upstream": "bin/omarchy-remove-service-dropbox",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-remove-service-sunshine",
+      "class": "na",
+      "upstream": "bin/omarchy-remove-service-sunshine",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-remove-service-tailscale",
+      "class": "na",
+      "upstream": "bin/omarchy-remove-service-tailscale",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-restart-app",
+      "class": "vendor",
+      "upstream": "bin/omarchy-restart-app",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-restart-audio",
+      "class": "vendor",
+      "upstream": "bin/omarchy-restart-audio",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-restart-bluetooth",
+      "class": "vendor",
+      "upstream": "bin/omarchy-restart-bluetooth",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-restart-btop",
+      "class": "vendor",
+      "upstream": "bin/omarchy-restart-btop",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-restart-gum",
+      "class": "vendor",
+      "upstream": "bin/omarchy-restart-gum",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-restart-helix",
+      "class": "vendor",
+      "upstream": "bin/omarchy-restart-helix",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-restart-herdr",
+      "class": "vendor",
+      "upstream": "bin/omarchy-restart-herdr",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-restart-hyprctl",
+      "class": "vendor",
+      "upstream": "bin/omarchy-restart-hyprctl",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-restart-hyprsunset",
+      "class": "vendor",
+      "upstream": "bin/omarchy-restart-hyprsunset",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-restart-opencode",
+      "class": "vendor",
+      "upstream": "bin/omarchy-restart-opencode",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-restart-shell",
+      "class": "vendor",
+      "upstream": "bin/omarchy-restart-shell",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-restart-terminal",
+      "class": "vendor",
+      "upstream": "bin/omarchy-restart-terminal",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-restart-tmux",
+      "class": "vendor",
+      "upstream": "bin/omarchy-restart-tmux",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-restart-trackpad",
+      "class": "vendor",
+      "upstream": "bin/omarchy-restart-trackpad",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-restart-wifi",
+      "class": "vendor",
+      "upstream": "bin/omarchy-restart-wifi",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-restart-xcompose",
+      "class": "vendor",
+      "upstream": "bin/omarchy-restart-xcompose",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-screensaver",
+      "class": "vendor",
+      "upstream": "bin/omarchy-screensaver",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-setup-direct-boot",
+      "class": "vendor",
+      "upstream": "bin/omarchy-setup-direct-boot",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-setup-security-fido2",
+      "class": "vendor",
+      "upstream": "bin/omarchy-setup-security-fido2",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-setup-security-fingerprint",
+      "class": "vendor",
+      "upstream": "bin/omarchy-setup-security-fingerprint",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-setup-security-sshd",
+      "class": "vendor",
+      "upstream": "bin/omarchy-setup-security-sshd",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-setup-security-sudoless-docker",
+      "class": "vendor",
+      "upstream": "bin/omarchy-setup-security-sudoless-docker",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-shell",
+      "class": "vendor",
+      "upstream": "bin/omarchy-shell",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-shell-config",
+      "class": "vendor",
+      "upstream": "bin/omarchy-shell-config",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-show-done",
+      "class": "vendor",
+      "upstream": "bin/omarchy-show-done",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-show-logo",
+      "class": "vendor",
+      "upstream": "bin/omarchy-show-logo",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-snapshot",
+      "class": "na",
+      "upstream": "bin/omarchy-snapshot",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-state",
+      "class": "vendor",
+      "upstream": "bin/omarchy-state",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-sudo-docker",
+      "class": "vendor",
+      "upstream": "bin/omarchy-sudo-docker",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-sudo-keepalive",
+      "class": "vendor",
+      "upstream": "bin/omarchy-sudo-keepalive",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-sudo-passwordless",
+      "class": "vendor",
+      "upstream": "bin/omarchy-sudo-passwordless",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-system-factory-reset",
+      "class": "vendor",
+      "upstream": "bin/omarchy-system-factory-reset",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-system-factory-reset-finish",
+      "class": "vendor",
+      "upstream": "bin/omarchy-system-factory-reset-finish",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-system-lid-close",
+      "class": "vendor",
+      "upstream": "bin/omarchy-system-lid-close",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-system-lock",
+      "class": "vendor",
+      "upstream": "bin/omarchy-system-lock",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-system-logout",
+      "class": "vendor",
+      "upstream": "bin/omarchy-system-logout",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-system-reboot",
+      "class": "vendor",
+      "upstream": "bin/omarchy-system-reboot",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-system-shutdown",
+      "class": "vendor",
+      "upstream": "bin/omarchy-system-shutdown",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-system-sleep-lock",
+      "class": "vendor",
+      "upstream": "bin/omarchy-system-sleep-lock",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-system-sleep-monitor",
+      "class": "vendor",
+      "upstream": "bin/omarchy-system-sleep-monitor",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-system-stats",
+      "class": "vendor",
+      "upstream": "bin/omarchy-system-stats",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-system-wake",
+      "class": "vendor",
+      "upstream": "bin/omarchy-system-wake",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-tailscale-receive",
+      "class": "vendor",
+      "upstream": "bin/omarchy-tailscale-receive",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-tailscale-send",
+      "class": "vendor",
+      "upstream": "bin/omarchy-tailscale-send",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-theme-bg-cache",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-bg-cache",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-theme-bg-current",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-bg-current",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-theme-bg-install",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-bg-install",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-theme-bg-next",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-bg-next",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-theme-bg-set",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-bg-set",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-theme-bg-switcher",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-bg-switcher",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-theme-color",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-color",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-theme-colors-from-alacritty",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-colors-from-alacritty",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-theme-current",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-current",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-theme-dir",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-dir",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-theme-extras",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-extras",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-theme-install",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-install",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-theme-list",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-list",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-theme-osc",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-osc",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-theme-refresh",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-refresh",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-theme-remove",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-remove",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
     },
     {
       "id": "omarchy-theme-set",
@@ -56,20 +3300,626 @@
       "notes": "Desktop. Do not rewrite the TOML engine."
     },
     {
-      "id": "omarchy-windows-vm",
-      "class": "stub",
-      "upstream": "bin/omarchy-windows-vm",
+      "id": "omarchy-theme-set-browser",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-set-browser",
       "stand_in": null,
       "user_visible": true,
-      "reason": "windows-vm-phased",
       "since_pin": "v4.0.2",
-      "phase": "v1.2",
-      "notes": "Destination yes. Not a v1 ship gate. Reclassify after call-site audit."
+      "phase": "v1"
     },
     {
-      "id": "omarchy-webapp-install",
+      "id": "omarchy-theme-set-browser-policy",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-set-browser-policy",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-theme-set-claude",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-set-claude",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-theme-set-foot",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-set-foot",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-theme-set-gnome",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-set-gnome",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-theme-set-keyboard",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-set-keyboard",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-theme-set-keyboard-asus-rog",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-set-keyboard-asus-rog",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-theme-set-keyboard-f16",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-set-keyboard-f16",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-theme-set-obsidian",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-set-obsidian",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-theme-set-pi",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-set-pi",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-theme-set-templates",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-set-templates",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-theme-set-tmux",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-set-tmux",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-theme-set-vscode",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-set-vscode",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-theme-switcher",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-switcher",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-theme-update",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-update",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-toggle",
+      "class": "vendor",
+      "upstream": "bin/omarchy-toggle",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-toggle-bar",
+      "class": "vendor",
+      "upstream": "bin/omarchy-toggle-bar",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-toggle-crash-capture",
+      "class": "vendor",
+      "upstream": "bin/omarchy-toggle-crash-capture",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-toggle-enabled",
+      "class": "vendor",
+      "upstream": "bin/omarchy-toggle-enabled",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-toggle-hybrid-gpu",
+      "class": "vendor",
+      "upstream": "bin/omarchy-toggle-hybrid-gpu",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-toggle-idle",
+      "class": "vendor",
+      "upstream": "bin/omarchy-toggle-idle",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-toggle-input-device",
+      "class": "vendor",
+      "upstream": "bin/omarchy-toggle-input-device",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-toggle-nightlight",
+      "class": "vendor",
+      "upstream": "bin/omarchy-toggle-nightlight",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-toggle-notification-silencing",
+      "class": "vendor",
+      "upstream": "bin/omarchy-toggle-notification-silencing",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-toggle-screensaver",
+      "class": "vendor",
+      "upstream": "bin/omarchy-toggle-screensaver",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-toggle-suspend",
+      "class": "vendor",
+      "upstream": "bin/omarchy-toggle-suspend",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-toggle-touchpad",
+      "class": "vendor",
+      "upstream": "bin/omarchy-toggle-touchpad",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-toggle-touchscreen",
+      "class": "vendor",
+      "upstream": "bin/omarchy-toggle-touchscreen",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-transcode",
+      "class": "vendor",
+      "upstream": "bin/omarchy-transcode",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-transcode-ascii",
+      "class": "vendor",
+      "upstream": "bin/omarchy-transcode-ascii",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-tui-install",
+      "class": "vendor",
+      "upstream": "bin/omarchy-tui-install",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-tui-remove",
+      "class": "vendor",
+      "upstream": "bin/omarchy-tui-remove",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-tui-remove-all",
+      "class": "vendor",
+      "upstream": "bin/omarchy-tui-remove-all",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-update",
+      "class": "wrap",
+      "upstream": "bin/omarchy-update",
+      "stand_in": "flake update + nixos-rebuild switch",
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1",
+      "reason": "flake-update",
+      "notes": "Verify zicochaos rewire still matches v4.0.2 menus."
+    },
+    {
+      "id": "omarchy-update-analyze-logs",
+      "class": "vendor",
+      "upstream": "bin/omarchy-update-analyze-logs",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-update-aur-pkgs",
+      "class": "vendor",
+      "upstream": "bin/omarchy-update-aur-pkgs",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-update-available",
+      "class": "na",
+      "upstream": "bin/omarchy-update-available",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-update-confirm",
+      "class": "vendor",
+      "upstream": "bin/omarchy-update-confirm",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-update-dev",
+      "class": "vendor",
+      "upstream": "bin/omarchy-update-dev",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-update-firmware",
+      "class": "vendor",
+      "upstream": "bin/omarchy-update-firmware",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-update-keyring",
+      "class": "vendor",
+      "upstream": "bin/omarchy-update-keyring",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-update-lock",
+      "class": "vendor",
+      "upstream": "bin/omarchy-update-lock",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-update-mise",
+      "class": "vendor",
+      "upstream": "bin/omarchy-update-mise",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-update-orphan-pkgs",
+      "class": "vendor",
+      "upstream": "bin/omarchy-update-orphan-pkgs",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-update-pacman-guard",
+      "class": "na",
+      "upstream": "bin/omarchy-update-pacman-guard",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-update-pkg-prune",
+      "class": "vendor",
+      "upstream": "bin/omarchy-update-pkg-prune",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-update-requires-free-space",
+      "class": "vendor",
+      "upstream": "bin/omarchy-update-requires-free-space",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-update-restart",
+      "class": "vendor",
+      "upstream": "bin/omarchy-update-restart",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-update-status",
+      "class": "vendor",
+      "upstream": "bin/omarchy-update-status",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-update-stay-awake",
+      "class": "vendor",
+      "upstream": "bin/omarchy-update-stay-awake",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-update-system-pkgs",
+      "class": "na",
+      "upstream": "bin/omarchy-update-system-pkgs",
+      "stand_in": "packages.map + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-update-system-pkgs-when-conflicted",
+      "class": "vendor",
+      "upstream": "bin/omarchy-update-system-pkgs-when-conflicted",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-update-time",
+      "class": "vendor",
+      "upstream": "bin/omarchy-update-time",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-update-user-notify",
+      "class": "vendor",
+      "upstream": "bin/omarchy-update-user-notify",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-upgrade-to-quattro",
+      "class": "vendor",
+      "upstream": "bin/omarchy-upgrade-to-quattro",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-upload-log",
+      "class": "vendor",
+      "upstream": "bin/omarchy-upload-log",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-version",
+      "class": "vendor",
+      "upstream": "bin/omarchy-version",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-version-branch",
+      "class": "vendor",
+      "upstream": "bin/omarchy-version-branch",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-version-channel",
+      "class": "vendor",
+      "upstream": "bin/omarchy-version-channel",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-version-pkgs",
+      "class": "vendor",
+      "upstream": "bin/omarchy-version-pkgs",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-voxtype-config",
+      "class": "vendor",
+      "upstream": "bin/omarchy-voxtype-config",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-voxtype-install",
+      "class": "vendor",
+      "upstream": "bin/omarchy-voxtype-install",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-voxtype-model",
+      "class": "vendor",
+      "upstream": "bin/omarchy-voxtype-model",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-voxtype-remove",
+      "class": "vendor",
+      "upstream": "bin/omarchy-voxtype-remove",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-voxtype-status",
+      "class": "vendor",
+      "upstream": "bin/omarchy-voxtype-status",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-weather-icon",
+      "class": "vendor",
+      "upstream": "bin/omarchy-weather-icon",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-weather-location",
+      "class": "vendor",
+      "upstream": "bin/omarchy-weather-location",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-weather-status",
+      "class": "vendor",
+      "upstream": "bin/omarchy-weather-status",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-webapp-handler-hey",
       "class": "stub",
-      "upstream": "bin/omarchy-webapp-install",
+      "upstream": "bin/omarchy-webapp-handler-hey",
       "stand_in": null,
       "user_visible": true,
       "reason": "webapps-phased",
@@ -77,15 +3927,55 @@
       "phase": "v1.1"
     },
     {
-      "id": "omarchy-dev-link",
-      "class": "drop",
-      "upstream": "bin/omarchy-dev-link",
+      "id": "omarchy-webapp-handler-zoom",
+      "class": "stub",
+      "upstream": "bin/omarchy-webapp-handler-zoom",
       "stand_in": null,
-      "user_visible": false,
-      "reason": "mutable-usr",
+      "user_visible": true,
+      "reason": "webapps-phased",
       "since_pin": "v4.0.2",
-      "phase": "never",
-      "notes": "Drop if unreached from Quattro menus. Promote to stub if a menu still calls it."
+      "phase": "v1.1"
+    },
+    {
+      "id": "omarchy-webapp-install",
+      "class": "stub",
+      "upstream": "bin/omarchy-webapp-install",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1.1",
+      "reason": "webapps-phased"
+    },
+    {
+      "id": "omarchy-webapp-remove",
+      "class": "stub",
+      "upstream": "bin/omarchy-webapp-remove",
+      "stand_in": null,
+      "user_visible": true,
+      "reason": "webapps-phased",
+      "since_pin": "v4.0.2",
+      "phase": "v1.1"
+    },
+    {
+      "id": "omarchy-webapp-remove-all",
+      "class": "stub",
+      "upstream": "bin/omarchy-webapp-remove-all",
+      "stand_in": null,
+      "user_visible": true,
+      "reason": "webapps-phased",
+      "since_pin": "v4.0.2",
+      "phase": "v1.1"
+    },
+    {
+      "id": "omarchy-windows-vm",
+      "class": "stub",
+      "upstream": "bin/omarchy-windows-vm",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1.2",
+      "reason": "windows-vm-phased",
+      "notes": "Destination yes. Not a v1 ship gate."
     }
   ]
 }
