@@ -2121,7 +2121,13 @@ c";
               # /etc/pam/environment is exactly this text, and the login-time
               # pam_env expansion is covered end to end by the omarchy-fish
               # VM test (tests/fish.nix) and metal.
-              inherit (pkgs.lib) any findFirst hasInfix hasPrefix splitString;
+              inherit (pkgs.lib)
+                any
+                findFirst
+                hasInfix
+                hasPrefix
+                splitString
+                ;
               pamText = cfg.environment.etc."pam/environment".text;
               pamLines = splitString "\n" pamText;
               editorLine = findFirst (hasPrefix "EDITOR ") null pamLines;
