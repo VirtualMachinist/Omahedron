@@ -1,0 +1,12 @@
+# Local editor / OS
+.DS_Store
+*.swp
+*~
+.idea/
+.vscode/
+
+# Nix (when the flake arrives)
+result
+result-*
+.direnv/
+.pre-commit-config.yaml.local

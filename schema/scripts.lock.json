@@ -1,0 +1,91 @@
+{
+  "$comment": "Inventory is incomplete until the v4.0.2 pin. Rows below are policy seeds so agents have examples. Merci replaces this file from bin/ + call sites during the first bump.",
+  "pin": "v4.0.2",
+  "generated": false,
+  "scripts": [
+    {
+      "id": "pacman",
+      "class": "na",
+      "upstream": "pacman",
+      "stand_in": "schema/packages.map.json + nixos-rebuild",
+      "user_visible": false,
+      "reason": "pacman",
+      "since_pin": "v4.0.2",
+      "phase": "never",
+      "notes": "Never install host pacman. Distrobox is fine for userspace Arch tools."
+    },
+    {
+      "id": "omarchy-update",
+      "class": "wrap",
+      "upstream": "bin/omarchy-update",
+      "stand_in": "flake update + nixos-rebuild switch",
+      "user_visible": true,
+      "reason": "flake-update",
+      "since_pin": "v4.0.2",
+      "phase": "v1",
+      "notes": "Verify zicochaos rewire still matches v4.0.2 menus."
+    },
+    {
+      "id": "omarchy-apply-hardware",
+      "class": "na",
+      "upstream": "bin/omarchy-apply-hardware",
+      "stand_in": "NixOS hardware + firmware modules",
+      "user_visible": false,
+      "reason": "iso-apply",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-apply-system",
+      "class": "na",
+      "upstream": "bin/omarchy-apply-system",
+      "stand_in": null,
+      "user_visible": false,
+      "reason": "iso-apply",
+      "since_pin": "v4.0.2",
+      "phase": "never"
+    },
+    {
+      "id": "omarchy-theme-set",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-set",
+      "stand_in": "HM activation also invokes it headlessly",
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1",
+      "notes": "Desktop. Do not rewrite the TOML engine."
+    },
+    {
+      "id": "omarchy-windows-vm",
+      "class": "stub",
+      "upstream": "bin/omarchy-windows-vm",
+      "stand_in": null,
+      "user_visible": true,
+      "reason": "windows-vm-phased",
+      "since_pin": "v4.0.2",
+      "phase": "v1.2",
+      "notes": "Destination yes. Not a v1 ship gate. Reclassify after call-site audit."
+    },
+    {
+      "id": "omarchy-webapp-install",
+      "class": "stub",
+      "upstream": "bin/omarchy-webapp-install",
+      "stand_in": null,
+      "user_visible": true,
+      "reason": "webapps-phased",
+      "since_pin": "v4.0.2",
+      "phase": "v1.1"
+    },
+    {
+      "id": "omarchy-dev-link",
+      "class": "drop",
+      "upstream": "bin/omarchy-dev-link",
+      "stand_in": null,
+      "user_visible": false,
+      "reason": "mutable-usr",
+      "since_pin": "v4.0.2",
+      "phase": "never",
+      "notes": "Drop if unreached from Quattro menus. Promote to stub if a menu still calls it."
+    }
+  ]
+}

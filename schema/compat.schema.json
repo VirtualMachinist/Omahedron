@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hedronite.local/omahedron/schema/compat.schema.json",
+  "title": "Omahedron compatibility row",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "class",
+    "upstream",
+    "user_visible",
+    "since_pin"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9.-]*$",
+      "description": "Stable slug used in CI and stub messages."
+    },
+    "class": {
+      "type": "string",
+      "enum": ["vendor", "wrap", "stub", "host", "na", "drop"]
+    },
+    "upstream": {
+      "type": "string",
+      "description": "Path or command in omarchy-src, e.g. bin/omarchy-update."
+    },
+    "stand_in": {
+      "type": ["string", "null"],
+      "description": "NixOS option, wrap name, or null."
+    },
+    "user_visible": {
+      "type": "boolean",
+      "description": "Reached from menu, keybind, first-run, or bar."
+    },
+    "reason": {
+      "type": "string",
+      "description": "Short slug used after 'omahedron: stub:' / 'omahedron: na:'."
+    },
+    "since_pin": {
+      "type": "string",
+      "description": "Omarchy tag this row was first recorded against, e.g. v4.0.2."
+    },
+    "phase": {
+      "type": "string",
+      "enum": ["v1", "v1.1", "v1.2", "later", "never"]
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}

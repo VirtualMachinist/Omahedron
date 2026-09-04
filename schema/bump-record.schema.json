@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hedronite.local/omahedron/schema/bump-record.schema.json",
+  "title": "Omahedron bump record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "official_tag",
+    "omahedron_tag",
+    "state",
+    "omarchy_src_rev",
+    "opened_on"
+  ],
+  "properties": {
+    "official_tag": { "type": "string", "pattern": "^v[0-9]+\\.[0-9]+\\.[0-9]+.*$" },
+    "omahedron_tag": { "type": ["string", "null"] },
+    "state": {
+      "type": "string",
+      "enum": ["watching", "bump-open", "check-green", "metal-green", "tagged"]
+    },
+    "kind": {
+      "type": "string",
+      "enum": ["security", "patch", "minor", "major", "rc"]
+    },
+    "omarchy_src_rev": { "type": "string" },
+    "previous_pin": { "type": ["string", "null"] },
+    "nixpkgs_pair": { "type": "string" },
+    "opened_on": { "type": "string", "format": "date" },
+    "tagged_on": { "type": ["string", "null"] },
+    "security": { "type": "boolean" },
+    "soak_applied": { "type": "boolean" },
+    "checks": {
+      "type": "object",
+      "properties": {
+        "flake_check": { "type": "boolean" },
+        "ledger_complete": { "type": "boolean" },
+        "vm_pregate": { "type": "boolean" },
+        "latitude_metal": { "type": "boolean" }
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "notes": { "type": "string" }
+  }
+}

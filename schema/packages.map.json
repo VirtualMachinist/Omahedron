@@ -1,0 +1,86 @@
+{
+  "$comment": "Seed map from zicochaos docs. Re-verify against install/omarchy-*.packages at v4.0.2. Do not treat this as complete.",
+  "pin": "v4.0.2",
+  "generated": false,
+  "packages": [
+    {
+      "upstream": "aether",
+      "status": "pkgs",
+      "attr": "aether",
+      "notes": "Absent from nixpkgs at zicochaos writing."
+    },
+    {
+      "upstream": "asdcontrol",
+      "status": "pkgs",
+      "attr": "asdcontrol"
+    },
+    {
+      "upstream": "omacalc",
+      "status": "pkgs",
+      "attr": "omacalc"
+    },
+    {
+      "upstream": "omacut",
+      "status": "pkgs",
+      "attr": "omacut"
+    },
+    {
+      "upstream": "omawrite",
+      "status": "pkgs",
+      "attr": "omawrite"
+    },
+    {
+      "upstream": "tensaku",
+      "status": "pkgs",
+      "attr": "tensaku"
+    },
+    {
+      "upstream": "try",
+      "status": "pkgs",
+      "attr": "try"
+    },
+    {
+      "upstream": "yaru-theme",
+      "status": "pkgs",
+      "attr": "yaru-theme"
+    },
+    {
+      "upstream": "hyprland-guiutils",
+      "status": "pkgs",
+      "attr": "hyprland-guiutils"
+    },
+    {
+      "upstream": "hyprland-preview-share-picker",
+      "status": "pkgs",
+      "attr": "hyprland-preview-share-picker"
+    },
+    {
+      "upstream": "omarchy-nvim",
+      "status": "pkgs",
+      "attr": "omarchy-nvim"
+    },
+    {
+      "upstream": "mise",
+      "status": "exclude",
+      "attr": null,
+      "notes": "Arch /opt toolchain. Use nixpkgs / flakes / devshells."
+    },
+    {
+      "upstream": "foot",
+      "status": "nixpkgs",
+      "attr": "foot"
+    },
+    {
+      "upstream": "chromium",
+      "status": "nixpkgs",
+      "attr": "chromium",
+      "notes": "Desktop file id differs; alias required."
+    },
+    {
+      "upstream": "hyprland",
+      "status": "nixpkgs",
+      "attr": "hyprland",
+      "notes": "Must be ≥0.56. Flake input if 26.05 package lags."
+    }
+  ]
+}
