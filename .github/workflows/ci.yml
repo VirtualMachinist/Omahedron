@@ -11,9 +11,13 @@ concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
-  flake-checks:
-    name: flake checks (non-VM)
+  checks-light:
+    name: checks-light (non-VM)
     runs-on: ubuntu-latest
     timeout-minutes: 180
     steps:
@@ -26,11 +30,17 @@ jobs:
       - name: flake show
         run: nix flake show --all-systems
 
+      - name: formatter
+        run: nix fmt -- --check .
+
+      - name: package omarchy
+        run: nix build -L .#packages.x86_64-linux.omarchy
+
       - name: non-VM checks (x86_64-linux)
         run: |
           set -euo pipefail
-          # Skip nixosTest VM harnesses (need KVM / long nested virt).
-          # Keep fail-closed ledger / package / eval checks from flake.nix.
+          # Skip nixosTest VM harnesses (need KVM / nested virt on github-hosted).
+          # Fail closed on ledger / package / eval checks already defined in flake.nix.
           checks=(
             omarchy-skill
             catalog-consistency
@@ -55,6 +65,3 @@ jobs:
             nix build -L ".#checks.x86_64-linux.$c"
             echo "::endgroup::"
           done
-
-      - name: package omarchy
-        run: nix build -L .#packages.x86_64-linux.omarchy
