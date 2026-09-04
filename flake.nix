@@ -19,7 +19,8 @@
     };
 
     # Hyprland needs to be >= 0.56 for the Lua config Quattro uses.
-    hyprland.url = "github:hyprwm/Hyprland";
+    # Pin to release tag (not HEAD) so pre-tag / metal builds are reproducible.
+    hyprland.url = "github:hyprwm/Hyprland/v0.56.2";
 
     # Home-Manager pinned to the release branch matching stable nixpkgs
     # (26.05). Following the rolling master branch pulled a 26.11-pre HM
@@ -54,10 +55,10 @@
       systems = [ "x86_64-linux" ];
       forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f system);
 
-      # Read the upstream version file (e.g. "4.0.0.alpha"). It carries a
-      # trailing newline — trim it once here so every consumer (package names,
-      # derivation paths, meta) sees the clean value.
-      omarchyVersion = nixpkgs.lib.strings.trim (builtins.readFile "${omarchy-src}/version");
+      # Upstream tag v4.0.2 still ships version file contents "4.0.0.alpha"
+      # (commit 346e69e1). Override so package names / meta claim the desktop
+      # pin we actually consume — stop reading the stale alpha string.
+      omarchyVersion = "4.0.2";
 
       # External pkgs for packages/demo/tests. Global allowUnfree is
       # intentionally NOT set — it used to mask the real consumer path
