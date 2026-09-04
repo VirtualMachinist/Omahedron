@@ -83,6 +83,7 @@ Recorded from zicochaos UPSTREAM.md. Re-verify against v4.0.2; do not copy blind
 |---|---|---|
 | Upstream `version` file at tag v4.0.2 | host | File contents still read `4.0.0.alpha` at commit `346e69e1`. **Override active:** flake sets `omarchyVersion = "4.0.2"` (does not read the upstream file). Claimed desktop = Omarchy **v4.0.2**. |
 | Hyprland flake input | wrap | Pinned to `github:hyprwm/Hyprland/v0.56.2` (not HEAD) for reproducible pre-tag / metal. |
+| NetworkManager before display-manager | wrap | `systemd.services.NetworkManager.before = ["display-manager.service"]` (no Requires). Fixes quickshell 0.3.0 first-boot NM race (basecamp/omarchy#7324); cherry-pick of zicochaos/omarchy-nix#4. |
 | Menu NordVPN / ONCE delete patches | drop | zicochaos matched `disabled:` guards; v4.0.2 restored `when: ! omarchy-pkg-present …`. Patches retargeted to the `when` literals (still deleted: AUR-only ONCE; NordVPN waits on nixpkgs 26.11 `services.nordvpn`). |
 | Menu mise-dir install guards | wrap | v4.0.2 install side uses `when: [[ ! -d … ]]` again (quattro briefly used `disabled:`). Added matching `--replace-fail` rewrites to `! omarchy-pkg-present`; remove-side `[[ -d … ]]` rewrites retained. |
 | Remaining `--replace-fail` surface | wrap | Path + string audit against tag tree: only the above two families broke on the pin; others still match. Nix/CI / vendor confirm on first `nix flake check`. |
