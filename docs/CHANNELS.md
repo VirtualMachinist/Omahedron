@@ -23,7 +23,7 @@ check-green --(Latitude metal)----------->  metal-green
 metal-green --(tag + changelog)---------->  tagged
 ```
 
-Owners: Merci moves `watching` → `bump-open` when the tag is observed. Marci/Lea drive to `check-green`. Sati signs `metal-green`. Leo tags. Vini can force `bump-open` on a security note even if Merci is asleep.
+Owners: Schema moves `watching` → `bump-open` when the tag is observed. vendor/Nix/CI drive to `check-green`. UX/metal signs `metal-green`. Publishing tags. SecOps can force `bump-open` on a security note even if Schema is offline.
 
 ## Policy
 
@@ -60,7 +60,7 @@ frozen  = YYYY-MM-DD
 channel = stable | rc | edge
 ```
 
-Leo’s changelog line:
+Publishing changelog line:
 
 ```
 parity with Omarchy vX.Y.Z; known gaps: …
@@ -77,10 +77,10 @@ parity with Omarchy vX.Y.Z; known gaps: …
 ## Suggested consumer pin
 
 ```nix
-# once the public remote exists
-omahedron.url = "github:Hedronite/omahedron/omahedron-4.0.2";
+# public remote
+omahedron.url = "github:VirtualMachinist/Omahedron/omahedron-4.0.2";
 # or follow the stable branch after it exists
-# omahedron.url = "github:Hedronite/omahedron/stable";
+# omahedron.url = "github:VirtualMachinist/Omahedron/stable";
 ```
 
-Hedronite org/remote spelling is TBD at remote-creation time. Do not bikeshed it in glue PRs.
+Public flake remote is `github:VirtualMachinist/Omahedron`. Do not invent alternate remotes in glue PRs.

@@ -10,7 +10,7 @@ Kind: security / patch / minor / major
 
 - [ ] Official GitHub tag exists
 - [ ] Release notes read (security vs feature)
-- [ ] State moved to `bump-open` (Merci or Vini)
+- [ ] State moved to `bump-open` (Schema or SecOps)
 - [ ] No soak, or soak reason recorded (patch train still live)
 
 ## Diff

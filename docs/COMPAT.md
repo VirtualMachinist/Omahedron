@@ -2,7 +2,7 @@
 
 Human ledger of every stub and NixOS-ism. Machine source of truth is [schema/scripts.lock.json](../schema/scripts.lock.json) and [schema/packages.map.json](../schema/packages.map.json). If prose and JSON disagree, JSON wins and this file must be updated in the same commit.
 
-Status at pin v4.0.2 (Merci refine): **inventory refined** in `schema/scripts.lock.json` (431 upstream bins + pacman seed) — vendor rows that `pkgs/omarchy.nix` replaces via `stub_declarative` / `stub_handled` / `cat>` are now `stub`/`wrap`. `packages.map.json` unchanged this pass. Classes below remain the policy ledger; JSON wins on conflict.
+Status at pin v4.0.2 (Schema refine): **inventory refined** in `schema/scripts.lock.json` (431 upstream bins + pacman seed) — vendor rows that `pkgs/omarchy.nix` replaces via `stub_declarative` / `stub_handled` / `cat>` are now `stub`/`wrap`. `packages.map.json` unchanged this pass. Classes below remain the policy ledger; JSON wins on conflict.
 
 ## How to read a row
 
@@ -71,7 +71,7 @@ Recorded from zicochaos UPSTREAM.md. Re-verify against v4.0.2; do not copy blind
 | fingerprint | host / stub | v1.2 if hardware present |
 | windows-vm | stub | v1.2 wrap-or-stub from call sites |
 
-## Honesty rules (Vini)
+## Honesty rules (SecOps)
 
 - A stub that says `na: pacman` is correct. A wrap that half-calls pacman is not.
 - Do not mark metal-green from a VM.
@@ -85,5 +85,5 @@ Recorded from zicochaos UPSTREAM.md. Re-verify against v4.0.2; do not copy blind
 | Hyprland flake input | wrap | Pinned to `github:hyprwm/Hyprland/v0.56.2` (not HEAD) for reproducible pre-tag / metal. |
 | Menu NordVPN / ONCE delete patches | drop | zicochaos matched `disabled:` guards; v4.0.2 restored `when: ! omarchy-pkg-present …`. Patches retargeted to the `when` literals (still deleted: AUR-only ONCE; NordVPN waits on nixpkgs 26.11 `services.nordvpn`). |
 | Menu mise-dir install guards | wrap | v4.0.2 install side uses `when: [[ ! -d … ]]` again (quattro briefly used `disabled:`). Added matching `--replace-fail` rewrites to `! omarchy-pkg-present`; remove-side `[[ -d … ]]` rewrites retained. |
-| Remaining `--replace-fail` surface | wrap | Path + string audit against tag tree: only the above two families broke on the pin; others still match. Lea/Marci confirm on first `nix flake check`. |
-| Merci lock refine (post-PR1) | stub/wrap | Vendor→stub for stub_declarative/stub_handled (incl. reinstall-pkgs, update-aur-pkgs, update-system-pkgs-when-conflicted); vendor→wrap for flake `cat>` stand-ins still marked vendor. host/drop counts still 0 — version *file* host note above; menu NordVPN/ONCE stay drop patches not lock rows. |
+| Remaining `--replace-fail` surface | wrap | Path + string audit against tag tree: only the above two families broke on the pin; others still match. Nix/CI / vendor confirm on first `nix flake check`. |
+| Schema lock refine (post-PR1) | stub/wrap | Vendor→stub for stub_declarative/stub_handled (incl. reinstall-pkgs, update-aur-pkgs, update-system-pkgs-when-conflicted); vendor→wrap for flake `cat>` stand-ins still marked vendor. host/drop counts still 0 — version *file* host note above; menu NordVPN/ONCE stay drop patches not lock rows. |

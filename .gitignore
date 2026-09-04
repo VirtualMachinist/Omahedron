@@ -10,3 +10,10 @@ result
 result-*
 .direnv/
 .pre-commit-config.yaml.local
+
+# Private / vault-only (never commit)
+docs/FLEET.md
+docs/WORKSPACE.md
+AGENTS.hedronite.md
+.hedronite/
+PRIVATE.md

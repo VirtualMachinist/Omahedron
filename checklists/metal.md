@@ -49,6 +49,6 @@ Operator:
 
 ## Sign-off
 
-- [ ] Sati accepts pixels
-- [ ] Vini accepts “no pacman on PATH for update/install”
+- [ ] UX/metal accepts pixels
+- [ ] SecOps accepts “no pacman on PATH for update/install”
 - [ ] Human operator initials:

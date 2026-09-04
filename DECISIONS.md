@@ -10,7 +10,7 @@ Template: [templates/adr.md](templates/adr.md).
 
 - Status: accepted
 - Date: 2026-09-04
-- Deciders: human maintainer, Eli
+- Deciders: human maintainer / Maintainer role
 
 **Decision.** The distro/product name is **Omahedron**. The org is **Hedronite**. The reserved sibling brand **Omarchanite** is not used in this repository (it will be some other substrate: Home Manager-only overlay, CLI, or deploy tool — TBD). The generic category phrase “nix-omarchy” may appear in prose as a descriptor, never as the product name.
 
@@ -29,7 +29,7 @@ Template: [templates/adr.md](templates/adr.md).
 
 **Why.** Matches the real work and keeps agents from “completing” pacman or Limine.
 
-**Consequences.** README banner and changelog always name gaps. Leo owns the sentence.
+**Consequences.** README banner and changelog always name gaps. Publishing owns the sentence.
 
 ---
 

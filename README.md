@@ -75,12 +75,12 @@ Vendor rule: if the user can see it, it comes from `omarchy-src`. If NixOS alrea
 | If you are | Read |
 |---|---|
 | Any agent landing in this repo | [AGENTS.md](AGENTS.md) then [SPEC.md](SPEC.md) |
-| Eli (orchestrator) | [AGENTS.md](AGENTS.md), [ROADMAP.md](ROADMAP.md), [DECISIONS.md](DECISIONS.md) |
-| Lea / Marci (glue, vendor, packages) | [docs/UPSTREAM.md](docs/UPSTREAM.md), [docs/SCHEMA.md](docs/SCHEMA.md) |
-| Vini (security / honesty) | [docs/COMPAT.md](docs/COMPAT.md), [docs/CHANNELS.md](docs/CHANNELS.md) |
-| Sati (what the user sees) | [docs/METAL.md](docs/METAL.md), [checklists/metal.md](checklists/metal.md) |
-| Merci (inventories) | [schema/](schema/), [templates/bump-record.md](templates/bump-record.md) |
-| Leo (human words) | this README, [docs/CREDITS.md](docs/CREDITS.md), [templates/changelog.md](templates/changelog.md) |
+| Maintainer | [AGENTS.md](AGENTS.md), [ROADMAP.md](ROADMAP.md), [DECISIONS.md](DECISIONS.md) |
+| Nix/CI / vendor | [docs/UPSTREAM.md](docs/UPSTREAM.md), [docs/SCHEMA.md](docs/SCHEMA.md) |
+| SecOps | [docs/COMPAT.md](docs/COMPAT.md), [docs/CHANNELS.md](docs/CHANNELS.md) |
+| UX/metal | [docs/METAL.md](docs/METAL.md), [checklists/metal.md](checklists/metal.md) |
+| Schema | [schema/](schema/), [templates/bump-record.md](templates/bump-record.md) |
+| Publishing | this README, [docs/CREDITS.md](docs/CREDITS.md), [templates/changelog.md](templates/changelog.md) |
 | Human daily-driving the Latitude | [checklists/metal.md](checklists/metal.md), [docs/CHANNELS.md](docs/CHANNELS.md) |
 
 ## Status of this drop

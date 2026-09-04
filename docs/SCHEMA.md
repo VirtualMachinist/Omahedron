@@ -53,8 +53,8 @@ zicochaos precedent for `pkgs` (re-verify at v4.0.2): aether, asdcontrol, omacal
 3. **Unknown binary tripwire:** union of `bin/omarchy-*` in the vendored tree minus keys in `scripts.lock.json` is empty
 4. Optional: every `user-visible: true` row has class in `{vendor, wrap, stub, host}`
 
-Merci owns the tripwire. Marci owns the patches that the tripwire forces.
+Schema owns the tripwire. vendor owns the patches that the tripwire forces.
 
 ## Generation
 
-Until a generator exists, Merci updates JSON by hand during the bump. A later tool may scan `bin/` and fail if the lock is stale. Do not generate from COMPAT.md prose.
+Until a generator exists, Schema updates JSON by hand during the bump. A later tool may scan `bin/` and fail if the lock is stale. Do not generate from COMPAT.md prose.
