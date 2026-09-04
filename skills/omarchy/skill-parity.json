@@ -1,0 +1,153 @@
+{
+  "comment": "Semantic parity manifest for the NixOS omarchy skill. Every h2-h4 (##+) heading and every Command Groups table row in the upstream default/agents/skills/omarchy/SKILL.md must appear here, classified as preserved (carried over verbatim in intent), adapted (rewritten for NixOS), or omitted (intentionally excluded, reason required). checks.omarchy-skill fails when upstream adds a section or command group that is not classified here, or when this manifest classifies something upstream removed. An optional 'anchor' string is grepped in our SKILL.md to prove the classified content is actually present. (v4.0.0: upstream split the deep guidance into sibling topic guides and folded Common Tasks/Patterns into the new section layout.)",
+  "sections": {
+    "When This Skill MUST Be Used": {
+      "status": "adapted",
+      "note": "Trigger list lives in the frontmatter description (what agents actually match on) plus the intro; paths rewritten to the NixOS port. A redundant MUST section duplicates the frontmatter and drifts."
+    },
+    "Topic Guides": {
+      "status": "omitted",
+      "reason": "v4.0.0 moved the deep guidance (hyprland/plugins/theming/hooks/capture/contributing) into sibling .md files that are NOT shipped by omarchy-nix — our skill keeps the equivalent NixOS-adapted guidance inline, and contributing.md is upstream-repo workflow that does not apply to the port."
+    },
+    "Critical Safety Rules": {
+      "status": "adapted",
+      "note": "'Ownership and Safety': $OMARCHY_PATH replaces /usr/share/omarchy as the never-edit tree (on NixOS it is literally read-only); the pkexec remark moved to the dedicated Privilege Escalation section."
+    },
+    "Privilege Escalation": {
+      "status": "adapted",
+      "note": "Same policy (sudo in a visible terminal, pkexec only for non-interactive callers) with NixOS specifics: sudo via /run/wrappers, omarchy scripts already handle their own elevation.",
+      "anchor": "/run/wrappers/bin/sudo"
+    },
+    "System Architecture": {
+      "status": "adapted",
+      "note": "Component table kept, base-OS row describes NixOS + the consumer flake instead of Arch /etc ownership; menu/launcher row points at the extensions jsonc."
+    },
+    "Command Discovery": {
+      "status": "adapted",
+      "note": "Same discovery commands; adds the runtime-manifest quarantine warning (some discovered commands are declarative-note stubs, not working install paths) and the NixOS package commands."
+    },
+    "Command Groups": {
+      "status": "adapted",
+      "note": "Group table kept; launch added; install/pkg/setup rows describe the NixOS replacement or the stub behavior instead of the Arch flow."
+    },
+    "Configuration Locations": {
+      "status": "adapted",
+      "note": "Hyprland/shell/terminals carried over; keeps the Other Configs table (btop, fastfetch, lazygit, starship, git) with the NixOS caveat that no system fastfetch default is installed."
+    },
+    "Terminals": {
+      "status": "preserved",
+      "note": "Same four terminal config paths and omarchy restart terminal.",
+      "anchor": "~/.config/alacritty/alacritty.toml"
+    },
+    "Other Configs": {
+      "status": "adapted",
+      "note": "Table kept (btop, fastfetch, lazygit, starship, git); no /etc/fastfetch system default is installed on NixOS so only the user file is documented; git identity notes the omarchy.full_name/email_address source."
+    },
+    "Safe Customization Patterns": {
+      "status": "adapted",
+      "note": "The backup/read/edit/apply loop and the reset-with-confirmation rule are folded into 'Common Workflows' (backup, narrowest reset with confirmation, hooks, new-theme flow)."
+    },
+    "Edit User Config Directly": {
+      "status": "adapted",
+      "note": "Same read-backup-edit-apply loop; the apply step lists the NixOS-relevant reload/restart commands per component."
+    },
+    "Reset to Defaults -- ALWAYS SEEK USER CONFIRMATION BEFORE RUNNING": {
+      "status": "adapted",
+      "note": "Same confirmation-first rule; narrowest reset via omarchy refresh; the upstream nuclear option (omarchy reinstall) only chains stubs on NixOS and the re-seed workflow replaces it."
+    },
+    "System Commands": {
+      "status": "adapted",
+      "note": "v4.0.0 section replacing Common Tasks' system rows: update/version/debug kept; lock/shutdown/reboot documented as user-safe wrappers with the agent-session caution; theme/font flows keep their own anchors below."
+    },
+    "Troubleshooting": {
+      "status": "adapted",
+      "note": "debug/refresh guidance kept; upstream's 'omarchy reinstall' nuclear option only chains stubs on NixOS and is replaced by the re-seed workflow."
+    },
+    "Decision Framework": {
+      "status": "adapted",
+      "note": "Same decision order; the package branch points at omarchy-nix-* instead of omarchy pkg/pkg aur."
+    },
+    "Reminder Requests": {
+      "status": "preserved",
+      "note": "Reminder flow is platform-independent; kept as-is.",
+      "anchor": "omarchy reminder show"
+    },
+    "Out of Scope": {
+      "status": "adapted",
+      "note": "Explicit section kept; scope boundary is the omarchy-nix / upstream source trees (repository AGENTS.md), not omarchy dev link."
+    },
+    "Example Requests": {
+      "status": "adapted",
+      "note": "Example set kept where NixOS-safe; package examples rewritten to the omarchy-nix workflow.",
+      "anchor": "nix-add"
+    }
+  },
+  "commandGroups": {
+    "refresh": {
+      "status": "preserved",
+      "note": "omarchy-refresh-* are user-safe (store-to-$HOME copies patched with --no-preserve=mode).",
+      "anchor": "omarchy refresh shell"
+    },
+    "restart": {
+      "status": "preserved",
+      "note": "User-scope restarts only.",
+      "anchor": "omarchy restart shell"
+    },
+    "toggle": {
+      "status": "preserved",
+      "note": "Desktop feature toggles are user-safe.",
+      "anchor": "omarchy toggle nightlight"
+    },
+    "theme": {
+      "status": "preserved",
+      "note": "Theme engine writes only under ~/.local/state/omarchy.",
+      "anchor": "omarchy theme set nord"
+    },
+    "bar": {
+      "status": "preserved",
+      "note": "Bar layout edits ~/.config/omarchy/shell.json.",
+      "anchor": "omarchy bar --help"
+    },
+    "plugin": {
+      "status": "preserved",
+      "note": "Plugin clones live under ~/.config/omarchy/plugins.",
+      "anchor": "omarchy plugin --help"
+    },
+    "hook": {
+      "status": "preserved",
+      "note": "Hook install writes under ~/.config/omarchy/hooks; pre-refresh-pacman.d exists but never fires on NixOS.",
+      "anchor": "omarchy hook --help"
+    },
+    "install": {
+      "status": "adapted",
+      "note": "The menu/catalog path is NixOS-native (omarchy-nix-add). Direct omarchy-install-* calls are declarative-note stubs or nixos-adapted; webapp/TUI install stays upstream user-level."
+    },
+    "launch": {
+      "status": "preserved",
+      "note": "omarchy-launch-* are user-safe launchers (browser, terminal, editor, webapp, tui).",
+      "anchor": "omarchy launch browser"
+    },
+    "capture": {
+      "status": "preserved",
+      "note": "Screenshots/recordings write to ~/Pictures and ~/Videos; v4.0.0 adds QR capture (zbar).",
+      "anchor": "omarchy capture --help"
+    },
+    "reminder": {
+      "status": "preserved",
+      "note": "User-scope reminders.",
+      "anchor": "omarchy reminder --help"
+    },
+    "pkg": {
+      "status": "omitted",
+      "reason": "pacman/AUR interface; omarchy-pkg-* are declarative-note stubs on NixOS. Replaced by omarchy-nix-search/add/remove writing omarchy-packages.json."
+    },
+    "setup": {
+      "status": "adapted",
+      "note": "Interactive setup wizards that mutate the system (fingerprint, lock, sshd, timezone, plymouth) are declarative-note stubs or hidden menu entries on NixOS — the equivalent is the named NixOS/omarchy option in the consumer flake."
+    },
+    "update": {
+      "status": "adapted",
+      "note": "omarchy update keeps the UX shell; the core resolves the consumer flake (OMARCHY_NIX_FLAKE) and runs nix flake update + nixos-rebuild; transactions are locked/atomic with audit logs."
+    }
+  }
+}
