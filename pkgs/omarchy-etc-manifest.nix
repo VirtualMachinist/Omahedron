@@ -14,6 +14,7 @@
 #   na       — Arch-stack specific, no NixOS counterpart (reason in comment)
 {
   "cups/cups-browsed.conf" = "native"; # services.printing.browsedConf (CreateRemotePrinters Yes)
+  "cups/cups-files.conf" = "na"; # Arch CUPS User/Group 209 + SystemGroup cups-browsed; NixOS printing owns cups-files
   "docker/daemon.json" = "native"; # virtualisation.docker.daemon.settings — log rotation only; dns/bip pins deliberately dropped (no resolved bridge integration on NixOS)
   "fastfetch/config.jsonc" = "seed"; # HM seed ~/.config/fastfetch/config.jsonc
   "gnupg/dirmngr.conf" = "vendored"; # environment.etc."gnupg/dirmngr.conf"
@@ -29,8 +30,9 @@
   "sddm.conf.d/10-theme.conf" = "native"; # services.displayManager.sddm.theme
   "sddm.conf.d/10-wayland.conf" = "native"; # sddm.wayland.enable + Wayland.CompositorCommand
   "security/faillock.conf" = "covered"; # deny=10 passed inline in security.pam.services.omarchy-lock-password
-  "sudoers.d/omarchy-asdcontrol" = "native"; # security.sudo.extraRules (NOPASSWD asdcontrol, profile path)
   "sudoers.d/omarchy-passwd-tries" = "native"; # security.sudo.extraConfig (passwd_tries=10)
+  "sudoers.d/omarchy-dns" = "na"; # NOPASSWD omarchy-dns Cloudflare|Google|DHCP — Arch /usr/bin; NM owns DNS toggles on NixOS for now
+  "sudoers.d/omarchy-theme-browser" = "na"; # NOPASSWD omarchy-theme-set-browser-policy hex — needs profile-path sudo wrap later
   "sudoers.d/omarchy-tzupdate" = "native"; # security.sudo.extraRules (NOPASSWD tzupdate + timedatectl set-timezone)
   "sysctl.d/90-omarchy-file-watchers.conf" = "covered"; # nixpkgs config/sysctl.nix already ships the identical fs.inotify.max_user_watches=524288 mkDefault
   "sysctl.d/99-omarchy-sysctl.conf" = "native"; # boot.kernel.sysctl (zram-era VM tuning + tcp_mtu_probing)
@@ -41,9 +43,11 @@
   "systemd/resolved.conf.d/20-docker-dns.conf" = "na"; # resolved bridge listener not in use; docker defaults pass the host resolver through to containers
   "systemd/system.conf.d/10-faster-shutdown.conf" = "native"; # systemd.settings.Manager.DefaultTimeoutStopSec = "5s"
   "systemd/system.conf.d/20-omarchy-nofile.conf" = "native"; # systemd.settings.Manager.DefaultLimitNOFILE
+  "systemd/system/cups-browsed.service.d/10-omarchy.conf" = "na"; # cups-browsed sandbox drop-in; cups-browsed not default on NixOS omarchy
   "systemd/system/docker.service.d/no-block-boot.conf" = "native"; # systemd.services.docker.unitConfig.DefaultDependencies = false
   "systemd/system/plocate-updatedb.service.d/ac-only.conf" = "native"; # services.locate (plocate) + systemd.services.update-locatedb ConditionACPower (nixpkgs unit name)
   "systemd/system/user@.service.d/10-faster-shutdown.conf" = "native"; # systemd.services."user@".serviceConfig.TimeoutStopSec = "5s"
   "systemd/user.conf.d/20-omarchy-nofile.conf" = "native"; # systemd.user.settings.Manager (post-26.05) / systemd.user.extraConfig (26.05) DefaultLimitNOFILE — version-dependent
+  "sysusers.d/omarchy-cups-browsed.conf" = "na"; # sysusers cups-browsed; NixOS users.users when printing enables discovery
   "tmpfiles.d/omarchy-zswap.conf" = "native"; # systemd.tmpfiles.rules: w! zswap enabled=N (boot-only)
 }
