@@ -81,7 +81,8 @@ Recorded from zicochaos UPSTREAM.md. Re-verify against v4.0.2; do not copy blind
 
 | Item | Class | Notes |
 |---|---|---|
-| Upstream `version` file at tag v4.0.2 | host | File contents still read `4.0.0.alpha` at commit `346e69e1`. Flake `omarchyVersion` therefore reports that string until upstream retags or we document a pin override. Claimed desktop remains Omarchy **v4.0.2**. |
+| Upstream `version` file at tag v4.0.2 | host | File contents still read `4.0.0.alpha` at commit `346e69e1`. **Override active:** flake sets `omarchyVersion = "4.0.2"` (does not read the upstream file). Claimed desktop = Omarchy **v4.0.2**. |
+| Hyprland flake input | wrap | Pinned to `github:hyprwm/Hyprland/v0.56.2` (not HEAD) for reproducible pre-tag / metal. |
 | Menu NordVPN / ONCE delete patches | drop | zicochaos matched `disabled:` guards; v4.0.2 restored `when: ! omarchy-pkg-present …`. Patches retargeted to the `when` literals (still deleted: AUR-only ONCE; NordVPN waits on nixpkgs 26.11 `services.nordvpn`). |
 | Menu mise-dir install guards | wrap | v4.0.2 install side uses `when: [[ ! -d … ]]` again (quattro briefly used `disabled:`). Added matching `--replace-fail` rewrites to `! omarchy-pkg-present`; remove-side `[[ -d … ]]` rewrites retained. |
 | Remaining `--replace-fail` surface | wrap | Path + string audit against tag tree: only the above two families broke on the pin; others still match. Lea/Marci confirm on first `nix flake check`. |
