@@ -1,5 +1,5 @@
 {
-  "$comment": "pkgs/ attrs adopted from zicochaos; bulk Arch names from v4.0.2 install/*.packages under nixpkgs_candidates for Merci refinement.",
+  "$comment": "pkgs/ attrs adopted from zicochaos; bulk Arch names from v4.0.2 install/*.packages under nixpkgs_candidates for Schema refinement.",
   "pin": "v4.0.2",
   "upstream_rev": "346e69e1cec6c4e8924531874af6ba010a1bc99e",
   "generated": true,
