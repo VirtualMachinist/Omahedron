@@ -143,7 +143,7 @@
   "1787865477.sh" = "skip"; # remove user from input group via gpasswd (system)
   "1788009111.sh" = "skip"; # remove cups-browsed / reject queues (system)
   "1788025225.sh" = "skip"; # purge retired installer sudoers/systemd artifacts (system)
-  "1788102906.sh" = "skip"; # XCompose + /etc/udev power rules (system udev half dominates)
+  "1788102906.sh" = "adapter"; # XCompose ~/.XCompose repair kept; udev half in pkgs/migrations-nix/
   "1788112314.sh" = "skip"; # pacman.conf edge->rc channel switch (Arch)
   "1788124236.sh" = "skip"; # sshd PasswordAuthentication harden in /etc (NixOS declarative)
 
