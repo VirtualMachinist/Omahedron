@@ -31,7 +31,7 @@ jobs:
         run: nix flake show --all-systems
 
       - name: formatter
-        run: nix fmt -- --check .
+        run: nix fmt -- --ci .
 
       - name: package omarchy
         run: nix build -L .#packages.x86_64-linux.omarchy
