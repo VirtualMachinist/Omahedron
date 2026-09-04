@@ -1,8 +1,8 @@
 {
-  "$comment": "First-pass inventory from basecamp/omarchy v4.0.2 bin/ (346e69e1). Heuristic classes; Merci may refine. Policy seeds preserved.",
+  "$comment": "Refined from basecamp/omarchy v4.0.2 bin/ (346e69e1). Heuristic\u2192policy: vendor rows that pkgs/omarchy.nix stub_declarative/stub_handled or cat> replaces are stub/wrap. 4.0.0.alpha version string remains upstream hold.",
   "pin": "v4.0.2",
   "upstream_rev": "346e69e1cec6c4e8924531874af6ba010a1bc99e",
-  "generated": true,
+  "generated": false,
   "scripts": [
     {
       "id": "pacman",
@@ -397,21 +397,25 @@
     },
     {
       "id": "omarchy-channel-current",
-      "class": "vendor",
+      "class": "wrap",
       "upstream": "bin/omarchy-channel-current",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix replacement",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "flake-body",
+      "notes": "flake cat> stand-in at pin"
     },
     {
       "id": "omarchy-channel-set",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-channel-set",
-      "stand_in": null,
+      "stand_in": "packages.map + nixos-rebuild / omarchy-nix-add",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "pkgs/omarchy.nix stub_declarative at pin"
     },
     {
       "id": "omarchy-chromium-copy-url-host",
@@ -1953,12 +1957,14 @@
     },
     {
       "id": "omarchy-migrate",
-      "class": "vendor",
+      "class": "wrap",
       "upstream": "bin/omarchy-migrate",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix replacement",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "flake-body",
+      "notes": "flake cat> stand-in at pin"
     },
     {
       "id": "omarchy-migrate-notify",
@@ -2522,12 +2528,14 @@
     },
     {
       "id": "omarchy-reinstall-pkgs",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-reinstall-pkgs",
-      "stand_in": null,
+      "stand_in": "packages.map + nixos-rebuild / omarchy-nix-add",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "pkgs/omarchy.nix stub_declarative at pin"
     },
     {
       "id": "omarchy-reminder",
@@ -2930,12 +2938,14 @@
     },
     {
       "id": "omarchy-setup-security-sshd",
-      "class": "vendor",
+      "class": "wrap",
       "upstream": "bin/omarchy-setup-security-sshd",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix replacement",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "flake-body",
+      "notes": "flake cat> stand-in at pin"
     },
     {
       "id": "omarchy-setup-security-sudoless-docker",
@@ -3301,12 +3311,14 @@
     },
     {
       "id": "omarchy-theme-set-browser",
-      "class": "vendor",
+      "class": "wrap",
       "upstream": "bin/omarchy-theme-set-browser",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix replacement",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "flake-body",
+      "notes": "flake cat> stand-in at pin"
     },
     {
       "id": "omarchy-theme-set-browser-policy",
@@ -3618,12 +3630,14 @@
     },
     {
       "id": "omarchy-update-aur-pkgs",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-update-aur-pkgs",
-      "stand_in": null,
+      "stand_in": "flake update pipeline / declarative",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-handled",
+      "notes": "pkgs/omarchy.nix stub_handled at pin"
     },
     {
       "id": "omarchy-update-available",
@@ -3646,12 +3660,14 @@
     },
     {
       "id": "omarchy-update-dev",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-update-dev",
-      "stand_in": null,
+      "stand_in": "flake update pipeline / declarative",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-handled",
+      "notes": "pkgs/omarchy.nix stub_handled at pin"
     },
     {
       "id": "omarchy-update-firmware",
@@ -3664,12 +3680,14 @@
     },
     {
       "id": "omarchy-update-keyring",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-update-keyring",
-      "stand_in": null,
+      "stand_in": "flake update pipeline / declarative",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-handled",
+      "notes": "pkgs/omarchy.nix stub_handled at pin"
     },
     {
       "id": "omarchy-update-lock",
@@ -3682,21 +3700,25 @@
     },
     {
       "id": "omarchy-update-mise",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-update-mise",
-      "stand_in": null,
+      "stand_in": "flake update pipeline / declarative",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-handled",
+      "notes": "pkgs/omarchy.nix stub_handled at pin"
     },
     {
       "id": "omarchy-update-orphan-pkgs",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-update-orphan-pkgs",
-      "stand_in": null,
+      "stand_in": "flake update pipeline / declarative",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-handled",
+      "notes": "pkgs/omarchy.nix stub_handled at pin"
     },
     {
       "id": "omarchy-update-pacman-guard",
@@ -3728,12 +3750,14 @@
     },
     {
       "id": "omarchy-update-restart",
-      "class": "vendor",
+      "class": "wrap",
       "upstream": "bin/omarchy-update-restart",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix replacement",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "flake-body",
+      "notes": "flake cat> stand-in at pin"
     },
     {
       "id": "omarchy-update-status",
@@ -3765,12 +3789,14 @@
     },
     {
       "id": "omarchy-update-system-pkgs-when-conflicted",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-update-system-pkgs-when-conflicted",
-      "stand_in": null,
+      "stand_in": "flake update pipeline / declarative",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-handled",
+      "notes": "pkgs/omarchy.nix stub_handled at pin"
     },
     {
       "id": "omarchy-update-time",
@@ -3792,12 +3818,14 @@
     },
     {
       "id": "omarchy-upgrade-to-quattro",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-upgrade-to-quattro",
-      "stand_in": null,
+      "stand_in": "packages.map + nixos-rebuild / omarchy-nix-add",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "pkgs/omarchy.nix stub_declarative at pin"
     },
     {
       "id": "omarchy-upload-log",
@@ -3810,12 +3838,14 @@
     },
     {
       "id": "omarchy-version",
-      "class": "vendor",
+      "class": "wrap",
       "upstream": "bin/omarchy-version",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix replacement",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "flake-body",
+      "notes": "flake cat> stand-in at pin"
     },
     {
       "id": "omarchy-version-branch",
@@ -3828,21 +3858,25 @@
     },
     {
       "id": "omarchy-version-channel",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-version-channel",
-      "stand_in": null,
+      "stand_in": "packages.map + nixos-rebuild / omarchy-nix-add",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "pkgs/omarchy.nix stub_declarative at pin"
     },
     {
       "id": "omarchy-version-pkgs",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-version-pkgs",
-      "stand_in": null,
+      "stand_in": "packages.map + nixos-rebuild / omarchy-nix-add",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "pkgs/omarchy.nix stub_declarative at pin"
     },
     {
       "id": "omarchy-voxtype-config",
