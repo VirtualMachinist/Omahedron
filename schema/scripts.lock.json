@@ -2708,13 +2708,14 @@
     },
     {
       "id": "omarchy-remove-security-sudoless-docker",
-      "class": "na",
+      "class": "stub",
       "upstream": "bin/omarchy-remove-security-sudoless-docker",
-      "stand_in": "packages.map + nixos-rebuild",
-      "user_visible": false,
-      "reason": "pacman",
+      "stand_in": "users.extraGroups + virtualisation.docker / declarative-note",
+      "user_visible": true,
+      "reason": "nixos-declarative",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "pkgs/omarchy-runtime-manifest.nix declarative-note; menu remove.security.sudoless-docker hidden"
     },
     {
       "id": "omarchy-remove-service-1password",
@@ -2949,12 +2950,14 @@
     },
     {
       "id": "omarchy-setup-security-sudoless-docker",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-setup-security-sudoless-docker",
-      "stand_in": null,
+      "stand_in": "users.extraGroups + virtualisation.docker / declarative-note",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "pkgs/omarchy-runtime-manifest.nix declarative-note; menu setup.security.sudoless-docker hidden"
     },
     {
       "id": "omarchy-shell",
@@ -3322,12 +3325,14 @@
     },
     {
       "id": "omarchy-theme-set-browser-policy",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-theme-set-browser-policy",
-      "stand_in": null,
-      "user_visible": true,
+      "stand_in": "programs.chromium.policies / environment.etc / declarative-note",
+      "user_visible": false,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "pkgs/omarchy-runtime-manifest.nix declarative-note; privileged /etc policy writer; theme-set-browser already wrap no-op"
     },
     {
       "id": "omarchy-theme-set-claude",

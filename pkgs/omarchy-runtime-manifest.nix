@@ -49,6 +49,18 @@
       class = "declarative-note";
       note = "Sudo policy is declarative: set security.sudo.wheelNeedsPassword = false (or security.sudo.extraRules) in your flake config.";
     };
+    omarchy-setup-security-sudoless-docker = {
+      class = "declarative-note";
+      note = "Sudoless Docker is declarative: set virtualisation.docker.enable = true and users.users.<name>.extraGroups = [ \"docker\" ] in your flake config (docker group ≈ passwordless root).";
+    };
+    omarchy-remove-security-sudoless-docker = {
+      class = "declarative-note";
+      note = "Sudoless Docker is declarative: remove \"docker\" from users.users.<name>.extraGroups in your flake config and rebuild.";
+    };
+    omarchy-theme-set-browser-policy = {
+      class = "declarative-note";
+      note = "Browser managed policies under /etc are declarative: set programs.chromium.policies / environment.etc in your flake config (theme accent color does not follow at runtime on NixOS).";
+    };
     omarchy-setup-direct-boot = {
       class = "declarative-note";
       note = "Boot entries are declarative: configure boot.loader.* (systemd-boot / EFISTUB) in your flake config.";
@@ -306,7 +318,9 @@
     "setup.direct-boot"
     "setup.security.fido2"
     "setup.security.passwordless-sudo"
+    "setup.security.sudoless-docker"
     "remove.security.fido2"
+    "remove.security.sudoless-docker"
     "trigger.hardware.hybrid-gpu"
     "update.config.plymouth"
     "style.unlock"
