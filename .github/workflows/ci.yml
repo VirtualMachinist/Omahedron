@@ -1,0 +1,60 @@
+# Omahedron CI eval (Lea seat). Pre-tag wire-up — Evan GO via Eli 2026-09-04.
+# VM nixosTest checks (omarchy-desktop / ux / fish) stay local/metal; not run on github-hosted.
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  flake-checks:
+    name: flake checks (non-VM)
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: DeterminateSystems/nix-installer-action@main
+
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: flake show
+        run: nix flake show --all-systems
+
+      - name: non-VM checks (x86_64-linux)
+        run: |
+          set -euo pipefail
+          # Skip nixosTest VM harnesses (need KVM / long nested virt).
+          # Keep fail-closed ledger / package / eval checks from flake.nix.
+          checks=(
+            omarchy-skill
+            catalog-consistency
+            omarchy-migrations
+            omarchy-shebangs
+            omarchy-pam-eval
+            omarchy-binfmt-eval
+            omarchy-migration-parity
+            omarchy-etc-parity
+            omarchy-disabled-state
+            omarchy-runtime
+            omarchy-nix-transactions
+            omarchy-flake-resolver
+            omarchy-option-validation
+            omarchy-options-documented
+            omarchy-fish-package
+            omarchy-fish-parity
+            omarchy-fish-module
+          )
+          for c in "${checks[@]}"; do
+            echo "::group::check $c"
+            nix build -L ".#checks.x86_64-linux.$c"
+            echo "::endgroup::"
+          done
+
+      - name: package omarchy
+        run: nix build -L .#packages.x86_64-linux.omarchy
