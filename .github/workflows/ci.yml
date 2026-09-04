@@ -14,7 +14,6 @@ concurrency:
 
 permissions:
   contents: read
-  id-token: write
 
 jobs:
   checks-light:
@@ -26,7 +25,9 @@ jobs:
 
       - uses: DeterminateSystems/nix-installer-action@main
 
-      - uses: DeterminateSystems/magic-nix-cache-action@main
+      # magic-nix-cache: GHA cache 418 throttle can hang the Post step for 20m+.
+      # Prefer flake/binary caches; keep installer only until cache is stable.
+      # - uses: DeterminateSystems/magic-nix-cache-action@main
 
       - name: flake show
         run: nix flake show --all-systems
