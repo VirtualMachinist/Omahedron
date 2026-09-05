@@ -1,0 +1,69 @@
+# Omahedron CI: package build and non-VM checks before release validation.
+# VM nixosTest checks (omarchy-desktop / ux / fish) stay local/metal; not run on github-hosted.
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  checks-light:
+    name: checks-light (non-VM)
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: DeterminateSystems/nix-installer-action@main
+
+      # magic-nix-cache: GHA cache 418 throttle can hang the Post step for 20m+.
+      # Prefer flake/binary caches; keep installer only until cache is stable.
+      # - uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: flake show
+        run: nix flake show --all-systems
+
+      - name: formatter
+        run: nix fmt -- --ci .
+
+      - name: package omarchy
+        run: nix build -L .#packages.x86_64-linux.omarchy
+
+      - name: non-VM checks (x86_64-linux)
+        run: |
+          set -euo pipefail
+          # Skip nixosTest VM harnesses (need KVM / nested virt on github-hosted).
+          # Run the manifest / package / eval checks already defined in flake.nix.
+          checks=(
+            omarchy-skill
+            catalog-consistency
+            omarchy-migrations
+            omarchy-shebangs
+            omarchy-pam-eval
+            omarchy-binfmt-eval
+            omarchy-migration-parity
+            omarchy-etc-parity
+            omarchy-disabled-state
+            omarchy-runtime
+            omarchy-nix-transactions
+            omarchy-flake-resolver
+            omarchy-option-validation
+            omarchy-options-documented
+            omarchy-fish-package
+            omarchy-fish-parity
+            omarchy-fish-module
+          )
+          for c in "${checks[@]}"; do
+            echo "::group::check $c"
+            nix build -L ".#checks.x86_64-linux.$c"
+            echo "::endgroup::"
+          done
