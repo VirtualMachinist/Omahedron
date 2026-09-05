@@ -14,7 +14,7 @@ PR review list is at the bottom of AGENTS.md.
 ## Validation
 
 Pull requests and pushes to `main` run flake evaluation, formatting, the
-Omarchy package build, and 17 non-VM checks. Full system builds and the
+Omarchy package build, and 18 non-VM checks. Full system builds and the
 Fish, desktop, and UX VM suites run through the `ci` workflow's manual
 `validation` input:
 
@@ -38,3 +38,5 @@ nix flake check -L
 
 A successful VM run is a pre-gate. Complete the [Latitude checklist](checklists/metal.md)
 before claiming verified desktop UX or publishing a product tag.
+
+For ledger changes or an upstream bump, run `nix build -L .#checks.x86_64-linux.omarchy-ledgers`. This validates the JSON schemas against the pinned source and evaluated module, then runs mutation fixtures that must fail on inventory, classification, pin, attribute and option drift. See [the schema contract](docs/SCHEMA.md).

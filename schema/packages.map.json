@@ -1,359 +1,2131 @@
 {
-  "$comment": "pkgs/ attrs adopted from zicochaos; bulk Arch names from v4.0.2 install/*.packages under nixpkgs_candidates for Schema refinement.",
+  "$comment": "Hand-reviewed exact inventory of pinned install/*.packages. Availability describes the default module or a validated attribute, not full OS/package closure parity.",
   "pin": "v4.0.2",
   "upstream_rev": "346e69e1cec6c4e8924531874af6ba010a1bc99e",
-  "generated": true,
+  "generated": false,
   "packages": [
-    {
-      "upstream": "hyprland",
-      "status": "pkgs",
-      "attr": "hyprland",
-      "notes": "Pinned Hyprland v0.56.2 flake package with Glaze 7.2.0 from a fixed-output source, matching its CMakeLists.txt find_package(glaze 7...<8) and FetchContent fallback. Avoids selecting incompatible Glaze 8 from its nixpkgs input and fetching during configure. Explicit consumer compositor packages still win."
-    },
-    {
-      "upstream": "fish",
-      "status": "nixpkgs",
-      "attr": "fish",
-      "notes": "Default interactive shell through users.defaultUserShell (ADR-0011); explicit shell choices win and omarchy.fish.enable = false opts out. Bash remains the script runtime."
-    },
-    {
-      "upstream": "cups-browsed",
-      "status": "exclude",
-      "attr": null,
-      "notes": "Excluded by default to match v4.0.2 migration 1788009111.sh. CUPS printing remains enabled; consumers may explicitly enable services.printing.browsed.enable. Existing generated queues are not deleted."
-    },
     {
       "upstream": "aether",
       "status": "pkgs",
       "attr": "aether",
-      "notes": "Present under pkgs/ from zicochaos adopt."
+      "availability": "default",
+      "notes": "Flake package supplied by the default Omarchy module.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "alsa-utils",
+      "status": "nixpkgs",
+      "attr": "alsa-utils",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "apple-bcm-firmware",
+      "status": "gap",
+      "notes": "Optional upstream hardware support has no audited Omahedron mapping yet. Not installed or advertised as supported; host integration needs separate validation.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "apple-t2-audio-config",
+      "status": "gap",
+      "notes": "Optional upstream hardware support has no audited Omahedron mapping yet. Not installed or advertised as supported; host integration needs separate validation.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
     },
     {
       "upstream": "asdcontrol",
       "status": "pkgs",
       "attr": "asdcontrol",
-      "notes": "Present under pkgs/ from zicochaos adopt."
+      "availability": "default",
+      "notes": "Flake package supplied by the default Omarchy module.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "asusctl",
+      "status": "host",
+      "options": [
+        "services.asusd.enable"
+      ],
+      "notes": "ASUS-specific support is a host opt-in; not enabled by the desktop module.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "autoconf-archive",
+      "status": "nixpkgs",
+      "attr": "autoconf-archive",
+      "availability": "available",
+      "notes": "Nixpkgs counterpart available to consumers; not asserted as a separate default module package. Hardware/plugin activation, where needed, is host-owned.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "avahi",
+      "status": "host",
+      "options": [
+        "services.avahi.enable"
+      ],
+      "notes": "Avahi service is enabled by default; consumers may override.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "base",
+      "status": "exclude",
+      "notes": "Arch metapackage or kernel module lifecycle tooling; NixOS owns the base system, build environments and kernel modules.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "base-devel",
+      "status": "exclude",
+      "notes": "Arch metapackage or kernel module lifecycle tooling; NixOS owns the base system, build environments and kernel modules.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "bash-completion",
+      "status": "nixpkgs",
+      "attr": "bash-completion",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "bat",
+      "status": "nixpkgs",
+      "attr": "bat",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "bluez",
+      "status": "nixpkgs",
+      "attr": "bluez",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "bluez-tools",
+      "status": "nixpkgs",
+      "attr": "bluez-tools",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "bluez-utils",
+      "status": "nixpkgs",
+      "attr": "bluez",
+      "availability": "default",
+      "notes": "Arch name mapped to the Nixpkgs attribute in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "bolt",
+      "status": "host",
+      "options": [
+        "services.hardware.bolt.enable"
+      ],
+      "notes": "Thunderbolt authorization service is enabled by default.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "brightnessctl",
+      "status": "nixpkgs",
+      "attr": "brightnessctl",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "broadcom-wl",
+      "status": "exclude",
+      "notes": "Arch out-of-tree driver packaging is not shipped; the host must select a compatible NixOS kernel/driver configuration.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "btop",
+      "status": "nixpkgs",
+      "attr": "btop",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "btrfs-progs",
+      "status": "host",
+      "options": [
+        "boot.supportedFilesystems"
+      ],
+      "notes": "Filesystem tools follow the host filesystem configuration; no assumption that the host uses Btrfs.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "chromium",
+      "status": "nixpkgs",
+      "attr": "chromium",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "clang",
+      "status": "nixpkgs",
+      "attr": "clang",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "cliamp",
+      "status": "nixpkgs",
+      "attr": "cliamp",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "cups",
+      "status": "host",
+      "options": [
+        "services.printing.enable"
+      ],
+      "notes": "CUPS and its NixOS-selected filter/helper dependencies are owned by the printing module, enabled by default.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "cups-filters",
+      "status": "host",
+      "options": [
+        "services.printing.enable"
+      ],
+      "notes": "CUPS and its NixOS-selected filter/helper dependencies are owned by the printing module, enabled by default.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "cups-pk-helper",
+      "status": "host",
+      "options": [
+        "services.printing.enable"
+      ],
+      "notes": "CUPS and its NixOS-selected filter/helper dependencies are owned by the printing module, enabled by default.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "ddcutil",
+      "status": "nixpkgs",
+      "attr": "ddcutil",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "dell-xps-touchpad-haptics",
+      "status": "gap",
+      "notes": "Optional upstream hardware support has no audited Omahedron mapping yet. Not installed or advertised as supported; host integration needs separate validation.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "dkms",
+      "status": "exclude",
+      "notes": "Arch metapackage or kernel module lifecycle tooling; NixOS owns the base system, build environments and kernel modules.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "docker",
+      "status": "host",
+      "options": [
+        "virtualisation.docker.enable"
+      ],
+      "notes": "Docker is enabled by default; NixOS supplies the engine and CLI plugins.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "docker-buildx",
+      "status": "host",
+      "options": [
+        "virtualisation.docker.enable"
+      ],
+      "notes": "Docker is enabled by default; NixOS supplies the engine and CLI plugins.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "docker-compose",
+      "status": "host",
+      "options": [
+        "virtualisation.docker.enable"
+      ],
+      "notes": "Docker is enabled by default; NixOS supplies the engine and CLI plugins.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "dosfstools",
+      "status": "nixpkgs",
+      "attr": "dosfstools",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "dotnet-runtime",
+      "status": "nixpkgs",
+      "attr": "dotnet-runtime",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "dua-cli",
+      "status": "nixpkgs",
+      "attr": "dua",
+      "availability": "default",
+      "notes": "Arch name mapped to the Nixpkgs attribute in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "egl-wayland",
+      "status": "nixpkgs",
+      "attr": "egl-wayland",
+      "availability": "available",
+      "notes": "Nixpkgs counterpart available to consumers; not asserted as a separate default module package. Hardware/plugin activation, where needed, is host-owned.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "evince",
+      "status": "nixpkgs",
+      "attr": "evince",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "exfatprogs",
+      "status": "nixpkgs",
+      "attr": "exfatprogs",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "expac",
+      "status": "exclude",
+      "notes": "Arch package database/build tooling is outside desktop parity. Nix packages and rebuilds replace host pacman/AUR operations (ADR-0002/0009).",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "eza",
+      "status": "nixpkgs",
+      "attr": "eza",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "fakeroot",
+      "status": "exclude",
+      "notes": "Arch package database/build tooling is outside desktop parity. Nix packages and rebuilds replace host pacman/AUR operations (ADR-0002/0009).",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "fastfetch",
+      "status": "nixpkgs",
+      "attr": "fastfetch",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "fcitx5",
+      "status": "nixpkgs",
+      "attr": "fcitx5",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "fcitx5-gtk",
+      "status": "nixpkgs",
+      "attr": "fcitx5-gtk",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "fcitx5-qt",
+      "status": "nixpkgs",
+      "attr": "libsForQt5.fcitx5-qt",
+      "availability": "default",
+      "notes": "Arch name mapped to the Nixpkgs attribute in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "fd",
+      "status": "nixpkgs",
+      "attr": "fd",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "ffmpegthumbnailer",
+      "status": "nixpkgs",
+      "attr": "ffmpegthumbnailer",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "fontconfig",
+      "status": "host",
+      "options": [
+        "fonts.fontconfig.enable"
+      ],
+      "notes": "Font discovery is owned by the NixOS fontconfig module.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "foot",
+      "status": "nixpkgs",
+      "attr": "foot",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "fzf",
+      "status": "nixpkgs",
+      "attr": "fzf",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "git",
+      "status": "nixpkgs",
+      "attr": "git",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "gnome-disk-utility",
+      "status": "nixpkgs",
+      "attr": "gnome-disk-utility",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "gnome-keyring",
+      "status": "host",
+      "options": [
+        "services.gnome.gnome-keyring.enable"
+      ],
+      "notes": "NixOS owns the keyring daemon and PAM integration; enabled by default.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "gnome-themes-extra",
+      "status": "nixpkgs",
+      "attr": "gnome-themes-extra",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "gpu-screen-recorder",
+      "status": "host",
+      "options": [
+        "programs.gpu-screen-recorder.enable"
+      ],
+      "notes": "NixOS installs the recorder and privileged KMS wrapper; enabled by default.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "grim",
+      "status": "nixpkgs",
+      "attr": "grim",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "gst-plugin-pipewire",
+      "status": "nixpkgs",
+      "attr": "pipewire",
+      "availability": "available",
+      "notes": "Nixpkgs counterpart available to consumers; not asserted as a separate default module package. Hardware/plugin activation, where needed, is host-owned.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "gtk4-layer-shell",
+      "status": "nixpkgs",
+      "attr": "gtk4-layer-shell",
+      "availability": "available",
+      "notes": "Nixpkgs counterpart available to consumers; not asserted as a separate default module package. Hardware/plugin activation, where needed, is host-owned.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "gum",
+      "status": "nixpkgs",
+      "attr": "gum",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "gvfs-mtp",
+      "status": "nixpkgs",
+      "attr": "gvfs",
+      "availability": "default",
+      "notes": "Arch name mapped to the Nixpkgs attribute in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "gvfs-nfs",
+      "status": "nixpkgs",
+      "attr": "gvfs",
+      "availability": "default",
+      "notes": "Arch name mapped to the Nixpkgs attribute in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "gvfs-smb",
+      "status": "nixpkgs",
+      "attr": "gvfs",
+      "availability": "default",
+      "notes": "Arch name mapped to the Nixpkgs attribute in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
     },
     {
       "upstream": "herdr",
       "status": "pkgs",
       "attr": "herdr",
-      "notes": "Present under pkgs/ from zicochaos adopt."
+      "availability": "default",
+      "notes": "Flake package supplied by the default Omarchy module.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "hyprland",
+      "status": "pkgs",
+      "attr": "hyprland",
+      "availability": "default",
+      "notes": "Pinned v0.56.2 compositor with scoped Glaze 7.2.0 dependency from pkgs/hyprland.nix; explicit consumer compositor packages win.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
     },
     {
       "upstream": "hyprland-guiutils",
       "status": "pkgs",
       "attr": "hyprland-guiutils",
-      "notes": "Present under pkgs/ from zicochaos adopt."
+      "availability": "default",
+      "notes": "Flake package supplied by the default Omarchy module.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
     },
     {
       "upstream": "hyprland-preview-share-picker",
       "status": "pkgs",
       "attr": "hyprland-preview-share-picker",
-      "notes": "Present under pkgs/ from zicochaos adopt."
+      "availability": "default",
+      "notes": "Flake package supplied by the default Omarchy module.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "hyprpicker",
+      "status": "nixpkgs",
+      "attr": "hyprpicker",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "hyprsunset",
+      "status": "nixpkgs",
+      "attr": "hyprsunset",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "imagemagick",
+      "status": "nixpkgs",
+      "attr": "imagemagick",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "imv",
+      "status": "nixpkgs",
+      "attr": "imv",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "inetutils",
+      "status": "nixpkgs",
+      "attr": "inetutils",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "inotify-tools",
+      "status": "nixpkgs",
+      "attr": "inotify-tools",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "intel-ipu7-camera",
+      "status": "gap",
+      "notes": "Optional upstream hardware support has no audited Omahedron mapping yet. Not installed or advertised as supported; host integration needs separate validation.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "intel-lpmd",
+      "status": "gap",
+      "notes": "Optional upstream hardware support has no audited Omahedron mapping yet. Not installed or advertised as supported; host integration needs separate validation.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "intel-media-driver",
+      "status": "nixpkgs",
+      "attr": "intel-media-driver",
+      "availability": "available",
+      "notes": "Nixpkgs counterpart available to consumers; not asserted as a separate default module package. Hardware/plugin activation, where needed, is host-owned.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "inxi",
+      "status": "nixpkgs",
+      "attr": "inxi",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "jq",
+      "status": "nixpkgs",
+      "attr": "jq",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "kdenlive",
+      "status": "nixpkgs",
+      "attr": "kdePackages.kdenlive",
+      "availability": "default",
+      "notes": "Arch name mapped to the Nixpkgs attribute in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "kernel-modules-hook",
+      "status": "exclude",
+      "notes": "Arch metapackage or kernel module lifecycle tooling; NixOS owns the base system, build environments and kernel modules.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "lazydocker",
+      "status": "nixpkgs",
+      "attr": "lazydocker",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "lazygit",
+      "status": "nixpkgs",
+      "attr": "lazygit",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "less",
+      "status": "nixpkgs",
+      "attr": "less",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "lib32-nvidia-580xx-utils",
+      "status": "host",
+      "options": [
+        "hardware.nvidia.package",
+        "hardware.nvidia.open",
+        "hardware.graphics.enable32Bit"
+      ],
+      "notes": "GPU driver version, open/proprietary choice and 32-bit support belong to the host NixOS configuration; no Arch DKMS packages.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "lib32-nvidia-utils",
+      "status": "host",
+      "options": [
+        "hardware.nvidia.package",
+        "hardware.nvidia.open",
+        "hardware.graphics.enable32Bit"
+      ],
+      "notes": "GPU driver version, open/proprietary choice and 32-bit support belong to the host NixOS configuration; no Arch DKMS packages.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "libpulse",
+      "status": "nixpkgs",
+      "attr": "libpulseaudio",
+      "availability": "available",
+      "notes": "Nixpkgs counterpart available to consumers; not asserted as a separate default module package. Hardware/plugin activation, where needed, is host-owned.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "libreoffice-fresh",
+      "status": "nixpkgs",
+      "attr": "libreoffice-fresh",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "libsecret",
+      "status": "nixpkgs",
+      "attr": "libsecret",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "libva-intel-driver",
+      "status": "nixpkgs",
+      "attr": "intel-vaapi-driver",
+      "availability": "available",
+      "notes": "Nixpkgs counterpart available to consumers; not asserted as a separate default module package. Hardware/plugin activation, where needed, is host-owned.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "libva-nvidia-driver",
+      "status": "nixpkgs",
+      "attr": "nvidia-vaapi-driver",
+      "availability": "available",
+      "notes": "Nixpkgs counterpart available to consumers; not asserted as a separate default module package. Hardware/plugin activation, where needed, is host-owned.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "libvips",
+      "status": "nixpkgs",
+      "attr": "vips",
+      "availability": "default",
+      "notes": "Arch name mapped to the Nixpkgs attribute in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "libvpl",
+      "status": "nixpkgs",
+      "attr": "libvpl",
+      "availability": "available",
+      "notes": "Nixpkgs counterpart available to consumers; not asserted as a separate default module package. Hardware/plugin activation, where needed, is host-owned.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "libyaml",
+      "status": "nixpkgs",
+      "attr": "libyaml",
+      "availability": "available",
+      "notes": "Nixpkgs counterpart available to consumers; not asserted as a separate default module package. Hardware/plugin activation, where needed, is host-owned.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "limine",
+      "status": "exclude",
+      "notes": "Arch boot/snapshot integration is outside scope. NixOS boot.loader options and generations replace it (ADR-0002/0007).",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "limine-mkinitcpio-hook",
+      "status": "exclude",
+      "notes": "Arch boot/snapshot integration is outside scope. NixOS boot.loader options and generations replace it (ADR-0002/0007).",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "limine-snapper-sync",
+      "status": "exclude",
+      "notes": "Arch boot/snapshot integration is outside scope. NixOS boot.loader options and generations replace it (ADR-0002/0007).",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "linux",
+      "status": "host",
+      "options": [
+        "boot.kernelPackages"
+      ],
+      "notes": "The host NixOS kernel and matching module headers own this surface; no Arch kernel artifacts.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "linux-firmware",
+      "status": "host",
+      "options": [
+        "hardware.enableRedistributableFirmware"
+      ],
+      "notes": "Firmware is selected by the host NixOS hardware configuration; the desktop does not install Arch firmware packages.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "linux-firmware-marvell",
+      "status": "host",
+      "options": [
+        "hardware.enableRedistributableFirmware"
+      ],
+      "notes": "Firmware is selected by the host NixOS hardware configuration; the desktop does not install Arch firmware packages.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "linux-headers",
+      "status": "host",
+      "options": [
+        "boot.kernelPackages"
+      ],
+      "notes": "The host NixOS kernel and matching module headers own this surface; no Arch kernel artifacts.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "linux-ptl",
+      "status": "exclude",
+      "notes": "Vendor Arch kernel flavor is not shipped; host boot.kernelPackages remains authoritative (ADR-0007).",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "linux-ptl-headers",
+      "status": "exclude",
+      "notes": "Vendor Arch kernel flavor is not shipped; host boot.kernelPackages remains authoritative (ADR-0007).",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "linux-t2",
+      "status": "exclude",
+      "notes": "Vendor Arch kernel flavor is not shipped; host boot.kernelPackages remains authoritative (ADR-0007).",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "linux-t2-headers",
+      "status": "exclude",
+      "notes": "Vendor Arch kernel flavor is not shipped; host boot.kernelPackages remains authoritative (ADR-0007).",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "llvm",
+      "status": "nixpkgs",
+      "attr": "llvm",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "localsend",
+      "status": "nixpkgs",
+      "attr": "localsend",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "lsp-plugins-lv2",
+      "status": "nixpkgs",
+      "attr": "lsp-plugins",
+      "availability": "available",
+      "notes": "Nixpkgs counterpart available to consumers; not asserted as a separate default module package. Hardware/plugin activation, where needed, is host-owned.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "lua51",
+      "status": "nixpkgs",
+      "attr": "lua5_1",
+      "availability": "default",
+      "notes": "Arch name mapped to the Nixpkgs attribute in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "luarocks",
+      "status": "nixpkgs",
+      "attr": "luarocks",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "macbook12-spi-driver-dkms",
+      "status": "exclude",
+      "notes": "Arch out-of-tree driver packaging is not shipped; the host must select a compatible NixOS kernel/driver configuration.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "man-db",
+      "status": "nixpkgs",
+      "attr": "man-db",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "mariadb-libs",
+      "status": "nixpkgs",
+      "attr": "mariadb-connector-c",
+      "availability": "default",
+      "notes": "Arch name mapped to the Nixpkgs attribute in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "mise-bin",
+      "status": "nixpkgs",
+      "attr": "mise",
+      "availability": "default",
+      "notes": "Arch name mapped to the Nixpkgs attribute in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "moonlight-qt",
+      "status": "nixpkgs",
+      "attr": "moonlight-qt",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "mpv",
+      "status": "nixpkgs",
+      "attr": "mpv",
+      "availability": "default",
+      "notes": "Default module overrides mpv with mpvScripts.mpris; availability compares package names to allow that override.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "mpv-mpris",
+      "status": "nixpkgs",
+      "attr": "mpvScripts.mpris",
+      "availability": "available",
+      "notes": "Used by the mpv override; a plugin dependency, not a separate system-profile package.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "nautilus",
+      "status": "nixpkgs",
+      "attr": "nautilus",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "nautilus-python",
+      "status": "nixpkgs",
+      "attr": "nautilus-python",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "networkmanager",
+      "status": "host",
+      "options": [
+        "networking.networkmanager.enable"
+      ],
+      "notes": "NetworkManager service and tools are enabled by default.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "noto-fonts",
+      "status": "nixpkgs",
+      "attr": "noto-fonts",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "noto-fonts-cjk",
+      "status": "nixpkgs",
+      "attr": "noto-fonts-cjk-sans",
+      "availability": "default",
+      "notes": "Arch name mapped to the Nixpkgs attribute in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "noto-fonts-emoji",
+      "status": "nixpkgs",
+      "attr": "noto-fonts-color-emoji",
+      "availability": "default",
+      "notes": "Arch name mapped to the Nixpkgs attribute in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "nss-mdns",
+      "status": "nixpkgs",
+      "attr": "nssmdns",
+      "availability": "default",
+      "notes": "Arch name mapped to the Nixpkgs attribute in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "nvidia-580xx-dkms",
+      "status": "host",
+      "options": [
+        "hardware.nvidia.package",
+        "hardware.nvidia.open",
+        "hardware.graphics.enable32Bit"
+      ],
+      "notes": "GPU driver version, open/proprietary choice and 32-bit support belong to the host NixOS configuration; no Arch DKMS packages.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "nvidia-580xx-utils",
+      "status": "host",
+      "options": [
+        "hardware.nvidia.package",
+        "hardware.nvidia.open",
+        "hardware.graphics.enable32Bit"
+      ],
+      "notes": "GPU driver version, open/proprietary choice and 32-bit support belong to the host NixOS configuration; no Arch DKMS packages.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "nvidia-dkms",
+      "status": "host",
+      "options": [
+        "hardware.nvidia.package",
+        "hardware.nvidia.open",
+        "hardware.graphics.enable32Bit"
+      ],
+      "notes": "GPU driver version, open/proprietary choice and 32-bit support belong to the host NixOS configuration; no Arch DKMS packages.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "nvidia-open-dkms",
+      "status": "host",
+      "options": [
+        "hardware.nvidia.package",
+        "hardware.nvidia.open",
+        "hardware.graphics.enable32Bit"
+      ],
+      "notes": "GPU driver version, open/proprietary choice and 32-bit support belong to the host NixOS configuration; no Arch DKMS packages.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "nvidia-utils",
+      "status": "host",
+      "options": [
+        "hardware.nvidia.package",
+        "hardware.nvidia.open",
+        "hardware.graphics.enable32Bit"
+      ],
+      "notes": "GPU driver version, open/proprietary choice and 32-bit support belong to the host NixOS configuration; no Arch DKMS packages.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "nvim",
+      "status": "nixpkgs",
+      "attr": "neovim",
+      "availability": "default",
+      "notes": "Arch name mapped to the Nixpkgs attribute in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "obs-studio",
+      "status": "nixpkgs",
+      "attr": "obs-studio",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "obsidian",
+      "status": "nixpkgs",
+      "attr": "obsidian",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
     },
     {
       "upstream": "omacalc",
       "status": "pkgs",
       "attr": "omacalc",
-      "notes": "Present under pkgs/ from zicochaos adopt."
+      "availability": "default",
+      "notes": "Flake package supplied by the default Omarchy module.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
     },
     {
       "upstream": "omacut",
       "status": "pkgs",
       "attr": "omacut",
-      "notes": "Present under pkgs/ from zicochaos adopt."
-    },
-    {
-      "upstream": "omarchy",
-      "status": "pkgs",
-      "attr": "omarchy",
-      "notes": "Present under pkgs/ from zicochaos adopt."
-    },
-    {
-      "upstream": "omarchy-catalog",
-      "status": "pkgs",
-      "attr": "omarchy-catalog",
-      "notes": "Present under pkgs/ from zicochaos adopt."
-    },
-    {
-      "upstream": "omarchy-etc-manifest",
-      "status": "pkgs",
-      "attr": "omarchy-etc-manifest",
-      "notes": "Present under pkgs/ from zicochaos adopt."
-    },
-    {
-      "upstream": "omarchy-fish",
-      "status": "pkgs",
-      "attr": "omarchy-fish",
-      "notes": "Vendored profile installed by default with omarchy.fish.enable; opt-out omits it. Present under pkgs/ from zicochaos adopt."
-    },
-    {
-      "upstream": "omarchy-migrations",
-      "status": "pkgs",
-      "attr": "omarchy-migrations",
-      "notes": "Present under pkgs/ from zicochaos adopt."
+      "availability": "default",
+      "notes": "Flake package supplied by the default Omarchy module.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
     },
     {
       "upstream": "omarchy-nvim",
       "status": "pkgs",
       "attr": "omarchy-nvim",
-      "notes": "Present under pkgs/ from zicochaos adopt."
-    },
-    {
-      "upstream": "omarchy-runtime-manifest",
-      "status": "pkgs",
-      "attr": "omarchy-runtime-manifest",
-      "notes": "Present under pkgs/ from zicochaos adopt."
+      "availability": "default",
+      "notes": "Flake package supplied by the default Omarchy module.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
     },
     {
       "upstream": "omawrite",
       "status": "pkgs",
       "attr": "omawrite",
-      "notes": "Present under pkgs/ from zicochaos adopt."
+      "availability": "default",
+      "notes": "Flake package supplied by the default Omarchy module.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
     },
     {
-      "upstream": "plymouth-omarchy-theme",
-      "status": "pkgs",
-      "attr": "plymouth-omarchy-theme",
-      "notes": "Present under pkgs/ from zicochaos adopt."
+      "upstream": "pacman-contrib",
+      "status": "exclude",
+      "notes": "Arch package database/build tooling is outside desktop parity. Nix packages and rebuilds replace host pacman/AUR operations (ADR-0002/0009).",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
     },
     {
-      "upstream": "sddm-omarchy-theme",
-      "status": "pkgs",
-      "attr": "sddm-omarchy-theme",
-      "notes": "Present under pkgs/ from zicochaos adopt."
+      "upstream": "pamixer",
+      "status": "nixpkgs",
+      "attr": "pamixer",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "pinta",
+      "status": "nixpkgs",
+      "attr": "pinta",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "pipewire",
+      "status": "nixpkgs",
+      "attr": "pipewire",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "pipewire-alsa",
+      "status": "host",
+      "options": [
+        "services.pipewire.alsa.enable"
+      ],
+      "notes": "ALSA compatibility is enabled by default through NixOS PipeWire.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "pipewire-jack",
+      "status": "host",
+      "options": [
+        "services.pipewire.jack.enable"
+      ],
+      "notes": "JACK compatibility is host-controlled and not enabled by the desktop module.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "pipewire-pulse",
+      "status": "host",
+      "options": [
+        "services.pipewire.pulse.enable"
+      ],
+      "notes": "PulseAudio compatibility is enabled by default through NixOS PipeWire.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "plocate",
+      "status": "nixpkgs",
+      "attr": "plocate",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "plymouth",
+      "status": "host",
+      "options": [
+        "omarchy.plymouth.enable"
+      ],
+      "notes": "Boot splash is enabled by default through the Omarchy module; omarchy.plymouth.enable = false opts out.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "postgresql-libs",
+      "status": "nixpkgs",
+      "attr": "postgresql.lib",
+      "availability": "default",
+      "notes": "Arch name mapped to the Nixpkgs attribute in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "power-profiles-daemon",
+      "status": "nixpkgs",
+      "attr": "power-profiles-daemon",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "python-gobject",
+      "status": "nixpkgs",
+      "attr": "python3Packages.pygobject3",
+      "availability": "default",
+      "notes": "Arch name mapped to the Nixpkgs attribute in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "python-poetry-core",
+      "status": "nixpkgs",
+      "attr": "python3Packages.poetry-core",
+      "availability": "default",
+      "notes": "Arch name mapped to the Nixpkgs attribute in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "qemu-user-static-binfmt",
+      "status": "host",
+      "options": [
+        "omarchy.binfmtEmulatedSystems"
+      ],
+      "notes": "Cross-architecture emulation is opt-in; the default list is empty.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "qmk-hid",
+      "status": "gap",
+      "notes": "Optional upstream hardware support has no audited Omahedron mapping yet. Not installed or advertised as supported; host integration needs separate validation.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "qrencode",
+      "status": "nixpkgs",
+      "attr": "qrencode",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "qt6-imageformats",
+      "status": "nixpkgs",
+      "attr": "qt6.qtimageformats",
+      "availability": "available",
+      "notes": "Nixpkgs counterpart available to consumers; not asserted as a separate default module package. Hardware/plugin activation, where needed, is host-owned.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "qt6-wayland",
+      "status": "nixpkgs",
+      "attr": "qt6.qtwayland",
+      "availability": "default",
+      "notes": "Arch name mapped to the Nixpkgs attribute in the default module package/font set.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "quickshell",
+      "status": "nixpkgs",
+      "attr": "quickshell",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "ripgrep",
+      "status": "nixpkgs",
+      "attr": "ripgrep",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "ruby",
+      "status": "nixpkgs",
+      "attr": "ruby",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "sddm",
+      "status": "host",
+      "options": [
+        "services.displayManager.sddm.enable"
+      ],
+      "notes": "SDDM is enabled by default; NixOS owns greeter/session integration.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "slurp",
+      "status": "nixpkgs",
+      "attr": "slurp",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "snapper",
+      "status": "exclude",
+      "notes": "Arch boot/snapshot integration is outside scope. NixOS boot.loader options and generations replace it (ADR-0002/0007).",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "socat",
+      "status": "nixpkgs",
+      "attr": "socat",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "sof-firmware",
+      "status": "host",
+      "options": [
+        "hardware.enableRedistributableFirmware"
+      ],
+      "notes": "Firmware is selected by the host NixOS hardware configuration; the desktop does not install Arch firmware packages.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "starship",
+      "status": "nixpkgs",
+      "attr": "starship",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "sushi",
+      "status": "nixpkgs",
+      "attr": "sushi",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "system-config-printer",
+      "status": "nixpkgs",
+      "attr": "system-config-printer",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "t2fanrd",
+      "status": "gap",
+      "notes": "Optional upstream hardware support has no audited Omahedron mapping yet. Not installed or advertised as supported; host integration needs separate validation.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
     },
     {
       "upstream": "tensaku",
       "status": "pkgs",
       "attr": "tensaku",
-      "notes": "Present under pkgs/ from zicochaos adopt."
+      "availability": "default",
+      "notes": "Flake package supplied by the default Omarchy module.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
     },
     {
-      "upstream": "try",
+      "upstream": "tesseract",
+      "status": "nixpkgs",
+      "attr": "tesseract5",
+      "availability": "default",
+      "notes": "Arch name mapped to the Nixpkgs attribute in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "tesseract-data-eng",
+      "status": "nixpkgs",
+      "attr": "tesseract5",
+      "availability": "default",
+      "notes": "Arch name mapped to the Nixpkgs attribute in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "thermald",
+      "status": "host",
+      "options": [
+        "services.thermald.enable"
+      ],
+      "notes": "Intel thermal daemon is a host opt-in; not enabled by the desktop module.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "tldr",
+      "status": "nixpkgs",
+      "attr": "tldr",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "tmux",
+      "status": "nixpkgs",
+      "attr": "tmux",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "tobi-try",
       "status": "pkgs",
       "attr": "try",
-      "notes": "Present under pkgs/ from zicochaos adopt."
+      "availability": "default",
+      "notes": "Upstream Arch name mapped to the local flake package supplied by the module.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "tree-sitter-cli",
+      "status": "nixpkgs",
+      "attr": "tree-sitter",
+      "availability": "default",
+      "notes": "Arch name mapped to the Nixpkgs attribute in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "ttf-ia-writer",
+      "status": "nixpkgs",
+      "attr": "ia-writer-quattro",
+      "availability": "default",
+      "notes": "Arch name mapped to the Nixpkgs attribute in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "ttf-jetbrains-mono-nerd-basic",
+      "status": "nixpkgs",
+      "attr": "nerd-fonts.jetbrains-mono",
+      "availability": "default",
+      "notes": "Arch name mapped to the Nixpkgs attribute in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
     },
     {
       "upstream": "ttfx",
       "status": "pkgs",
       "attr": "ttfx",
-      "notes": "Present under pkgs/ from zicochaos adopt."
+      "availability": "default",
+      "notes": "Flake package supplied by the default Omarchy module.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
     },
     {
-      "upstream": "yaru-theme",
+      "upstream": "tuxedo-drivers-nocompatcheck-dkms",
+      "status": "exclude",
+      "notes": "Arch out-of-tree driver packaging is not shipped; the host must select a compatible NixOS kernel/driver configuration.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "tzupdate",
+      "status": "nixpkgs",
+      "attr": "tzupdate",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "udiskie",
+      "status": "nixpkgs",
+      "attr": "udiskie",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "ufw",
+      "status": "host",
+      "options": [
+        "networking.firewall.enable",
+        "virtualisation.docker.enable"
+      ],
+      "notes": "Use the NixOS firewall and Docker networking; no UFW rules or Arch firewall scripts are installed.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "ufw-docker",
+      "status": "host",
+      "options": [
+        "networking.firewall.enable",
+        "virtualisation.docker.enable"
+      ],
+      "notes": "Use the NixOS firewall and Docker networking; no UFW rules or Arch firewall scripts are installed.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "unzip",
+      "status": "nixpkgs",
+      "attr": "unzip",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "usage",
+      "status": "nixpkgs",
+      "attr": "usage",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "uwsm",
+      "status": "host",
+      "options": [
+        "programs.uwsm.enable"
+      ],
+      "notes": "NixOS owns the UWSM session launcher; enabled with Hyprland.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "vpl-gpu-rt",
+      "status": "nixpkgs",
+      "attr": "vpl-gpu-rt",
+      "availability": "available",
+      "notes": "Nixpkgs counterpart available to consumers; not asserted as a separate default module package. Hardware/plugin activation, where needed, is host-owned.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "vulkan-asahi",
+      "status": "exclude",
+      "notes": "Apple Silicon graphics package is outside the supported x86_64-linux target.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "vulkan-intel",
+      "status": "host",
+      "options": [
+        "hardware.graphics.package"
+      ],
+      "notes": "Mesa drivers follow the graphics package, pinned alongside Hyprland by default; actual GPU support remains a host concern.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "vulkan-radeon",
+      "status": "host",
+      "options": [
+        "hardware.graphics.package"
+      ],
+      "notes": "Mesa drivers follow the graphics package, pinned alongside Hyprland by default; actual GPU support remains a host concern.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "webp-pixbuf-loader",
+      "status": "nixpkgs",
+      "attr": "webp-pixbuf-loader",
+      "availability": "available",
+      "notes": "Nixpkgs counterpart available to consumers; not asserted as a separate default module package. Hardware/plugin activation, where needed, is host-owned.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "whois",
+      "status": "nixpkgs",
+      "attr": "whois",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "wireless-regdb",
+      "status": "host",
+      "options": [
+        "hardware.enableRedistributableFirmware"
+      ],
+      "notes": "Firmware is selected by the host NixOS hardware configuration; the desktop does not install Arch firmware packages.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "wireplumber",
+      "status": "nixpkgs",
+      "attr": "wireplumber",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "wl-clipboard",
+      "status": "nixpkgs",
+      "attr": "wl-clipboard",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "woff2-font-awesome",
+      "status": "nixpkgs",
+      "attr": "font-awesome",
+      "availability": "default",
+      "notes": "Arch name mapped to the Nixpkgs attribute in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "wtype",
+      "status": "nixpkgs",
+      "attr": "wtype",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "xdg-desktop-portal-gtk",
+      "status": "nixpkgs",
+      "attr": "xdg-desktop-portal-gtk",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "xdg-desktop-portal-hyprland",
+      "status": "host",
+      "options": [
+        "programs.hyprland.portalPackage"
+      ],
+      "notes": "Portal package follows the pinned Hyprland module, rather than the root Nixpkgs portal version.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "xdg-terminal-exec",
+      "status": "nixpkgs",
+      "attr": "xdg-terminal-exec",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "xournalpp",
+      "status": "nixpkgs",
+      "attr": "xournalpp",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "yaru-icon-theme",
       "status": "pkgs",
       "attr": "yaru-theme",
-      "notes": "Present under pkgs/ from zicochaos adopt."
+      "availability": "default",
+      "notes": "Upstream Arch name mapped to the local flake package supplied by the module.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "yay",
+      "status": "exclude",
+      "notes": "Arch package database/build tooling is outside desktop parity. Nix packages and rebuilds replace host pacman/AUR operations (ADR-0002/0009).",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "yay-debug",
+      "status": "exclude",
+      "notes": "Arch package database/build tooling is outside desktop parity. Nix packages and rebuilds replace host pacman/AUR operations (ADR-0002/0009).",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "yt-dlp",
+      "status": "nixpkgs",
+      "attr": "yt-dlp",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "yt6801-dkms",
+      "status": "exclude",
+      "notes": "Arch out-of-tree driver packaging is not shipped; the host must select a compatible NixOS kernel/driver configuration.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
+    },
+    {
+      "upstream": "zbar",
+      "status": "nixpkgs",
+      "attr": "zbar",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "zoxide",
+      "status": "nixpkgs",
+      "attr": "zoxide",
+      "availability": "default",
+      "notes": "Included in the default module package/font set.",
+      "sources": [
+        "install/omarchy-base.packages"
+      ]
+    },
+    {
+      "upstream": "zram-generator",
+      "status": "host",
+      "options": [
+        "zramSwap.enable"
+      ],
+      "notes": "NixOS generates full-RAM zstd zram configuration; enabled by default.",
+      "sources": [
+        "install/omarchy-other.packages"
+      ]
     }
   ],
-  "nixpkgs_candidates": [
-    "aether",
-    "alsa-utils",
-    "apple-bcm-firmware",
-    "apple-t2-audio-config",
-    "asdcontrol",
-    "asusctl",
-    "autoconf-archive",
-    "avahi",
-    "base",
-    "base-devel",
-    "bash-completion",
-    "bat",
-    "bluez",
-    "bluez-tools",
-    "bluez-utils",
-    "bolt",
-    "brightnessctl",
-    "broadcom-wl",
-    "btop",
-    "btrfs-progs",
-    "chromium",
-    "clang",
-    "cliamp",
-    "cups",
-    "cups-filters",
-    "cups-pk-helper",
-    "ddcutil",
-    "dell-xps-touchpad-haptics",
-    "dkms",
-    "docker",
-    "docker-buildx",
-    "docker-compose",
-    "dosfstools",
-    "dotnet-runtime",
-    "dua-cli",
-    "egl-wayland",
-    "evince",
-    "exfatprogs",
-    "expac",
-    "eza",
-    "fakeroot",
-    "fastfetch",
-    "fcitx5",
-    "fcitx5-gtk",
-    "fcitx5-qt",
-    "fd",
-    "ffmpegthumbnailer",
-    "fontconfig",
-    "foot",
-    "fzf",
-    "git",
-    "gnome-disk-utility",
-    "gnome-keyring",
-    "gnome-themes-extra",
-    "gpu-screen-recorder",
-    "grim",
-    "gst-plugin-pipewire",
-    "gtk4-layer-shell",
-    "gum",
-    "gvfs-mtp",
-    "gvfs-nfs",
-    "gvfs-smb",
-    "herdr",
-    "hyprland-guiutils",
-    "hyprland-preview-share-picker",
-    "hyprpicker",
-    "hyprsunset",
-    "imagemagick",
-    "imv",
-    "inetutils",
-    "inotify-tools",
-    "intel-ipu7-camera",
-    "intel-lpmd",
-    "intel-media-driver",
-    "inxi",
-    "jq",
-    "kdenlive",
-    "kernel-modules-hook",
-    "lazydocker",
-    "lazygit",
-    "less",
-    "lib32-nvidia-580xx-utils",
-    "lib32-nvidia-utils",
-    "libpulse",
-    "libreoffice-fresh",
-    "libsecret",
-    "libva-intel-driver",
-    "libva-nvidia-driver",
-    "libvips",
-    "libvpl",
-    "libyaml",
-    "limine",
-    "limine-mkinitcpio-hook",
-    "limine-snapper-sync",
-    "linux",
-    "linux-firmware",
-    "linux-firmware-marvell",
-    "linux-headers",
-    "linux-ptl",
-    "linux-ptl-headers",
-    "linux-t2",
-    "linux-t2-headers",
-    "llvm",
-    "localsend",
-    "lsp-plugins-lv2",
-    "lua51",
-    "luarocks",
-    "macbook12-spi-driver-dkms",
-    "man-db",
-    "mariadb-libs",
-    "mise-bin",
-    "moonlight-qt",
-    "mpv",
-    "mpv-mpris",
-    "nautilus",
-    "nautilus-python",
-    "networkmanager",
-    "noto-fonts",
-    "noto-fonts-cjk",
-    "noto-fonts-emoji",
-    "nss-mdns",
-    "nvidia-580xx-dkms",
-    "nvidia-580xx-utils",
-    "nvidia-dkms",
-    "nvidia-open-dkms",
-    "nvidia-utils",
-    "nvim",
-    "obs-studio",
-    "obsidian",
-    "omacalc",
-    "omacut",
-    "omarchy-nvim",
-    "omawrite",
-    "pacman-contrib",
-    "pamixer",
-    "pinta",
-    "pipewire",
-    "pipewire-alsa",
-    "pipewire-jack",
-    "pipewire-pulse",
-    "plocate",
-    "plymouth",
-    "postgresql-libs",
-    "power-profiles-daemon",
-    "python-gobject",
-    "python-poetry-core",
-    "qemu-user-static-binfmt",
-    "qmk-hid",
-    "qrencode",
-    "qt6-imageformats",
-    "qt6-wayland",
-    "quickshell",
-    "ripgrep",
-    "ruby",
-    "sddm",
-    "slurp",
-    "snapper",
-    "socat",
-    "sof-firmware",
-    "starship",
-    "sushi",
-    "system-config-printer",
-    "t2fanrd",
-    "tensaku",
-    "tesseract",
-    "tesseract-data-eng",
-    "thermald",
-    "tldr",
-    "tmux",
-    "tobi-try",
-    "tree-sitter-cli",
-    "ttf-ia-writer",
-    "ttf-jetbrains-mono-nerd-basic",
-    "ttfx",
-    "tuxedo-drivers-nocompatcheck-dkms",
-    "tzupdate",
-    "udiskie",
-    "ufw",
-    "ufw-docker",
-    "unzip",
-    "usage",
-    "uwsm",
-    "vpl-gpu-rt",
-    "vulkan-asahi",
-    "vulkan-intel",
-    "vulkan-radeon",
-    "webp-pixbuf-loader",
-    "whois",
-    "wireless-regdb",
-    "wireplumber",
-    "wl-clipboard",
-    "woff2-font-awesome",
-    "wtype",
-    "xdg-desktop-portal-gtk",
-    "xdg-desktop-portal-hyprland",
-    "xdg-terminal-exec",
-    "xournalpp",
-    "yaru-icon-theme",
-    "yay",
-    "yay-debug",
-    "yt-dlp",
-    "yt6801-dkms",
-    "zbar",
-    "zoxide",
-    "zram-generator"
+  "extra_packages": [
+    {
+      "upstream": "cups-browsed",
+      "status": "exclude",
+      "evidence": [
+        "modules/nixos/default.nix"
+      ],
+      "notes": "Default-off per upstream migrations/1788009111.sh. CUPS remains enabled; consumers may explicitly enable services.printing.browsed.enable. Existing queues are not deleted."
+    },
+    {
+      "upstream": "fish",
+      "status": "nixpkgs",
+      "attr": "fish",
+      "availability": "default",
+      "evidence": [
+        "modules/nixos/default.nix"
+      ],
+      "notes": "Default interactive shell per ADR-0011; explicit host/account shell choices win and omarchy.fish.enable = false opts out. Bash remains the script runtime."
+    },
+    {
+      "upstream": "omarchy",
+      "status": "pkgs",
+      "attr": "omarchy",
+      "availability": "default",
+      "evidence": [
+        "flake.nix",
+        "pkgs/omarchy.nix"
+      ],
+      "notes": "Port package outside install/*.packages; supplied by the default Omarchy module. Consumers may disable the Fish profile or boot/login themes through omarchy options."
+    },
+    {
+      "upstream": "omarchy-fish",
+      "status": "pkgs",
+      "attr": "omarchy-fish",
+      "availability": "default",
+      "evidence": [
+        "flake.nix",
+        "pkgs/omarchy-fish.nix"
+      ],
+      "notes": "Port package outside install/*.packages; supplied by the default Omarchy module. Consumers may disable the Fish profile or boot/login themes through omarchy options."
+    },
+    {
+      "upstream": "plymouth-omarchy-theme",
+      "status": "pkgs",
+      "attr": "plymouth-omarchy-theme",
+      "availability": "default",
+      "evidence": [
+        "flake.nix",
+        "pkgs/plymouth-omarchy-theme.nix"
+      ],
+      "notes": "Port package outside install/*.packages; supplied by the default Omarchy module. Consumers may disable the Fish profile or boot/login themes through omarchy options."
+    },
+    {
+      "upstream": "sddm-omarchy-theme",
+      "status": "pkgs",
+      "attr": "sddm-omarchy-theme",
+      "availability": "default",
+      "evidence": [
+        "flake.nix",
+        "pkgs/sddm-omarchy-theme.nix"
+      ],
+      "notes": "Port package outside install/*.packages; supplied by the default Omarchy module. Consumers may disable the Fish profile or boot/login themes through omarchy options."
+    }
   ]
 }

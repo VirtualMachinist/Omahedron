@@ -29,6 +29,8 @@ Owner mix: Nix/CI, vendor, Schema, SecOps, UX/metal.
 
 Exit: public module imports, Latitude session matches v4.0.2 desktop targets in SPEC, ledger complete for that tag.
 
+Current implementation: pinned port, native full-system build, Fish/desktop/UX VM pre-gate, and direct script/package ledger enforcement are in place. Next is the Latitude metal checklist and lite dogfood; the product tag remains gated on that evidence. The package ledger explicitly retains seven unaudited optional hardware mappings. Normalize inherited stub output to the ADR-0009 prefix as follow-up compatibility work.
+
 ## Next + 1 — harden the rebuild (`4.0.2.x` / first security follow)
 
 - Channel refs (`stable` / `rc` / `edge`) as documented in CHANNELS.md

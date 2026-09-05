@@ -1,5 +1,5 @@
 {
-  "$comment": "Refined from basecamp/omarchy v4.0.2 bin/ (346e69e1). Heuristic\u2192policy: vendor rows that pkgs/omarchy.nix stub_declarative/stub_handled or cat> replaces are stub/wrap. 4.0.0.alpha version string remains upstream hold.",
+  "$comment": "Hand-reviewed classification of the pinned upstream bin inventory and port helpers. Enforced by checks.omarchy-ledgers.",
   "pin": "v4.0.2",
   "upstream_rev": "346e69e1cec6c4e8924531874af6ba010a1bc99e",
   "generated": false,
@@ -89,32 +89,36 @@
     },
     {
       "id": "omarchy-apply-hardware",
-      "class": "na",
+      "class": "stub",
       "upstream": "bin/omarchy-apply-hardware",
-      "stand_in": "NixOS hardware + firmware modules",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
       "since_pin": "v4.0.2",
-      "phase": "never",
-      "reason": "iso-apply"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-apply-lock",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-apply-lock",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-apply-system",
-      "class": "na",
+      "class": "stub",
       "upstream": "bin/omarchy-apply-system",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
       "since_pin": "v4.0.2",
-      "phase": "never",
-      "reason": "iso-apply"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-audio-input-mute",
@@ -262,21 +266,23 @@
     },
     {
       "id": "omarchy-branding-about",
-      "class": "vendor",
+      "class": "wrap",
       "upstream": "bin/omarchy-branding-about",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-branding-screensaver",
-      "class": "vendor",
+      "class": "wrap",
       "upstream": "bin/omarchy-branding-screensaver",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-brightness-display",
@@ -343,12 +349,13 @@
     },
     {
       "id": "omarchy-capture-screenrecording",
-      "class": "vendor",
+      "class": "wrap",
       "upstream": "bin/omarchy-capture-screenrecording",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-capture-screenrecording-with-webcam",
@@ -399,23 +406,22 @@
       "id": "omarchy-channel-current",
       "class": "wrap",
       "upstream": "bin/omarchy-channel-current",
-      "stand_in": "pkgs/omarchy.nix replacement",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
       "phase": "v1",
-      "reason": "flake-body",
-      "notes": "flake cat> stand-in at pin"
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-channel-set",
       "class": "stub",
       "upstream": "bin/omarchy-channel-set",
-      "stand_in": "packages.map + nixos-rebuild / omarchy-nix-add",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "pkgs/omarchy.nix stub_declarative at pin"
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-chromium-copy-url-host",
@@ -500,12 +506,13 @@
     },
     {
       "id": "omarchy-debug",
-      "class": "vendor",
+      "class": "wrap",
       "upstream": "bin/omarchy-debug",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-debug-idle",
@@ -518,12 +525,13 @@
     },
     {
       "id": "omarchy-default-agent",
-      "class": "vendor",
+      "class": "wrap",
       "upstream": "bin/omarchy-default-agent",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-default-browser",
@@ -590,32 +598,36 @@
     },
     {
       "id": "omarchy-dev-install-ydoo",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-dev-install-ydoo",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-dev-link",
-      "class": "na",
+      "class": "stub",
       "upstream": "bin/omarchy-dev-link",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
       "since_pin": "v4.0.2",
-      "phase": "never",
-      "reason": "mutable-usr",
-      "notes": "Arch mutable /usr/share/omarchy link. Not on NixOS."
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-dev-pkg-test",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-dev-pkg-test",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-dev-status",
@@ -646,12 +658,14 @@
     },
     {
       "id": "omarchy-dev-unlink",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-dev-unlink",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-disk-speedtest",
@@ -673,12 +687,14 @@
     },
     {
       "id": "omarchy-dns",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-dns",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-done",
@@ -718,12 +734,13 @@
     },
     {
       "id": "omarchy-file-select",
-      "class": "vendor",
+      "class": "wrap",
       "upstream": "bin/omarchy-file-select",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-font-current",
@@ -768,7 +785,8 @@
       "stand_in": null,
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-git-url-check",
@@ -790,21 +808,25 @@
     },
     {
       "id": "omarchy-hibernation-remove",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-hibernation-remove",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-hibernation-setup",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-hibernation-setup",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-hook",
@@ -822,7 +844,8 @@
       "stand_in": null,
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-hw-asus-expertbook-b9406",
@@ -1276,333 +1299,343 @@
     },
     {
       "id": "omarchy-install-ai-chatgpt",
-      "class": "na",
+      "class": "wrap",
       "upstream": "bin/omarchy-install-ai-chatgpt",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-install-and-launch",
-      "class": "na",
+      "class": "vendor",
       "upstream": "bin/omarchy-install-and-launch",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": null,
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-install-app",
-      "class": "na",
+      "class": "vendor",
       "upstream": "bin/omarchy-install-app",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": null,
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-install-browser",
-      "class": "na",
+      "class": "stub",
       "upstream": "bin/omarchy-install-browser",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-install-chromium-copy-url",
-      "class": "na",
+      "class": "wrap",
       "upstream": "bin/omarchy-install-chromium-copy-url",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-install-chromium-google-account",
-      "class": "na",
+      "class": "vendor",
       "upstream": "bin/omarchy-install-chromium-google-account",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": null,
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-install-chromium-ytdlp",
-      "class": "na",
+      "class": "wrap",
       "upstream": "bin/omarchy-install-chromium-ytdlp",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-install-dev-env",
-      "class": "na",
+      "class": "wrap",
       "upstream": "bin/omarchy-install-dev-env",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-install-docker-dbs",
-      "class": "na",
+      "class": "vendor",
       "upstream": "bin/omarchy-install-docker-dbs",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": null,
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-install-editor-emacs",
-      "class": "na",
+      "class": "vendor",
       "upstream": "bin/omarchy-install-editor-emacs",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": null,
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-install-editor-helix",
-      "class": "na",
+      "class": "vendor",
       "upstream": "bin/omarchy-install-editor-helix",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": null,
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-install-editor-vscode",
-      "class": "na",
+      "class": "vendor",
       "upstream": "bin/omarchy-install-editor-vscode",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": null,
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-install-editor-zed",
-      "class": "na",
+      "class": "vendor",
       "upstream": "bin/omarchy-install-editor-zed",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": null,
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-install-font",
-      "class": "na",
+      "class": "vendor",
       "upstream": "bin/omarchy-install-font",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": null,
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-install-gaming-battlenet",
-      "class": "na",
+      "class": "vendor",
       "upstream": "bin/omarchy-install-gaming-battlenet",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": null,
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-install-gaming-geforce-now",
-      "class": "na",
+      "class": "vendor",
       "upstream": "bin/omarchy-install-gaming-geforce-now",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": null,
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-install-gaming-gpu-lib32",
-      "class": "na",
+      "class": "vendor",
       "upstream": "bin/omarchy-install-gaming-gpu-lib32",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": null,
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-install-gaming-heroic",
-      "class": "na",
+      "class": "vendor",
       "upstream": "bin/omarchy-install-gaming-heroic",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": null,
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-install-gaming-lutris",
-      "class": "na",
+      "class": "vendor",
       "upstream": "bin/omarchy-install-gaming-lutris",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": null,
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-install-gaming-retroarch",
-      "class": "na",
+      "class": "vendor",
       "upstream": "bin/omarchy-install-gaming-retroarch",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": null,
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-install-gaming-steam",
-      "class": "na",
+      "class": "vendor",
       "upstream": "bin/omarchy-install-gaming-steam",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": null,
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-install-gaming-xbox-cloud",
-      "class": "na",
+      "class": "vendor",
       "upstream": "bin/omarchy-install-gaming-xbox-cloud",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": null,
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-install-gaming-xbox-controllers",
-      "class": "na",
+      "class": "stub",
       "upstream": "bin/omarchy-install-gaming-xbox-controllers",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-install-preinstalls",
-      "class": "na",
+      "class": "vendor",
       "upstream": "bin/omarchy-install-preinstalls",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": null,
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-install-service-1password",
-      "class": "na",
+      "class": "stub",
       "upstream": "bin/omarchy-install-service-1password",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-install-service-dropbox",
-      "class": "na",
+      "class": "stub",
       "upstream": "bin/omarchy-install-service-dropbox",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-install-service-nordvpn",
-      "class": "na",
+      "class": "stub",
       "upstream": "bin/omarchy-install-service-nordvpn",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-install-service-once",
-      "class": "na",
+      "class": "stub",
       "upstream": "bin/omarchy-install-service-once",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-install-service-signal",
-      "class": "na",
+      "class": "stub",
       "upstream": "bin/omarchy-install-service-signal",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-install-service-spotify",
-      "class": "na",
+      "class": "stub",
       "upstream": "bin/omarchy-install-service-spotify",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-install-service-sunshine",
-      "class": "na",
+      "class": "stub",
       "upstream": "bin/omarchy-install-service-sunshine",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-install-service-tailscale",
-      "class": "na",
+      "class": "stub",
       "upstream": "bin/omarchy-install-service-tailscale",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-install-terminal",
-      "class": "na",
+      "class": "wrap",
       "upstream": "bin/omarchy-install-terminal",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-installed-service-dropbox",
@@ -1611,7 +1644,8 @@
       "stand_in": null,
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-installed-service-tailscale",
@@ -1620,7 +1654,8 @@
       "stand_in": null,
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-launch-1password",
@@ -1651,12 +1686,13 @@
     },
     {
       "id": "omarchy-launch-browser",
-      "class": "vendor",
+      "class": "wrap",
       "upstream": "bin/omarchy-launch-browser",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-launch-config-editor",
@@ -1939,12 +1975,14 @@
     },
     {
       "id": "omarchy-menu-timezone",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-menu-timezone",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-menu-tmux-keybindings",
@@ -1959,12 +1997,11 @@
       "id": "omarchy-migrate",
       "class": "wrap",
       "upstream": "bin/omarchy-migrate",
-      "stand_in": "pkgs/omarchy.nix replacement",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
       "phase": "v1",
-      "reason": "flake-body",
-      "notes": "flake cat> stand-in at pin"
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-migrate-notify",
@@ -1982,7 +2019,8 @@
       "stand_in": null,
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-monitor-state",
@@ -2103,93 +2141,101 @@
     },
     {
       "id": "omarchy-pkg-add",
-      "class": "na",
+      "class": "stub",
       "upstream": "bin/omarchy-pkg-add",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-pkg-aur-accessible",
-      "class": "na",
+      "class": "stub",
       "upstream": "bin/omarchy-pkg-aur-accessible",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Reports AUR unavailable with exit 1; silent predicate, no host pacman."
     },
     {
       "id": "omarchy-pkg-aur-add",
-      "class": "na",
+      "class": "stub",
       "upstream": "bin/omarchy-pkg-aur-add",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-pkg-aur-install",
-      "class": "na",
+      "class": "stub",
       "upstream": "bin/omarchy-pkg-aur-install",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-pkg-drop",
-      "class": "na",
+      "class": "stub",
       "upstream": "bin/omarchy-pkg-drop",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-pkg-install",
-      "class": "na",
+      "class": "stub",
       "upstream": "bin/omarchy-pkg-install",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-pkg-missing",
-      "class": "na",
+      "class": "stub",
       "upstream": "bin/omarchy-pkg-missing",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Always exits 0 so remaining direct callers reach the declarative package stubs; does not query installed packages."
     },
     {
       "id": "omarchy-pkg-present",
-      "class": "na",
+      "class": "wrap",
       "upstream": "bin/omarchy-pkg-present",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-pkg-remove",
-      "class": "na",
+      "class": "stub",
       "upstream": "bin/omarchy-pkg-remove",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-plugin-add",
@@ -2211,12 +2257,13 @@
     },
     {
       "id": "omarchy-plugin-clone",
-      "class": "vendor",
+      "class": "wrap",
       "upstream": "bin/omarchy-plugin-clone",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-plugin-disable",
@@ -2252,7 +2299,8 @@
       "stand_in": null,
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-plugin-update",
@@ -2301,30 +2349,36 @@
     },
     {
       "id": "omarchy-plymouth-reset",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-plymouth-reset",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-plymouth-set",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-plymouth-set",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-plymouth-set-by-theme",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-plymouth-set-by-theme",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-plymouth-switcher",
@@ -2382,12 +2436,14 @@
     },
     {
       "id": "omarchy-provision-owner",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-provision-owner",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-provision-user",
@@ -2400,12 +2456,13 @@
     },
     {
       "id": "omarchy-refresh-applications",
-      "class": "vendor",
+      "class": "wrap",
       "upstream": "bin/omarchy-refresh-applications",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-refresh-chromium",
@@ -2418,12 +2475,13 @@
     },
     {
       "id": "omarchy-refresh-config",
-      "class": "vendor",
+      "class": "wrap",
       "upstream": "bin/omarchy-refresh-config",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-refresh-herdr",
@@ -2436,12 +2494,13 @@
     },
     {
       "id": "omarchy-refresh-hyprland",
-      "class": "vendor",
+      "class": "wrap",
       "upstream": "bin/omarchy-refresh-hyprland",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-refresh-hyprsunset",
@@ -2454,40 +2513,47 @@
     },
     {
       "id": "omarchy-refresh-limine",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-refresh-limine",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-refresh-pacman",
-      "class": "na",
+      "class": "stub",
       "upstream": "bin/omarchy-refresh-pacman",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-refresh-plymouth",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-refresh-plymouth",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-refresh-sddm",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-refresh-sddm",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-refresh-shell",
@@ -2509,33 +2575,35 @@
     },
     {
       "id": "omarchy-reinstall",
-      "class": "wrap",
-      "upstream": "bin/omarchy-reinstall",
-      "stand_in": "flake update + nixos-rebuild",
-      "user_visible": true,
-      "reason": "flake-update",
-      "since_pin": "v4.0.2",
-      "phase": "v1"
-    },
-    {
-      "id": "omarchy-reinstall-configs",
       "class": "vendor",
-      "upstream": "bin/omarchy-reinstall-configs",
+      "upstream": "bin/omarchy-reinstall",
       "stand_in": null,
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
+    },
+    {
+      "id": "omarchy-reinstall-configs",
+      "class": "stub",
+      "upstream": "bin/omarchy-reinstall-configs",
+      "stand_in": "pkgs/omarchy.nix",
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-reinstall-pkgs",
       "class": "stub",
       "upstream": "bin/omarchy-reinstall-pkgs",
-      "stand_in": "packages.map + nixos-rebuild / omarchy-nix-add",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "pkgs/omarchy.nix stub_declarative at pin"
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-reminder",
@@ -2548,214 +2616,221 @@
     },
     {
       "id": "omarchy-remove-browser",
-      "class": "na",
+      "class": "stub",
       "upstream": "bin/omarchy-remove-browser",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-remove-dev-env",
-      "class": "na",
+      "class": "wrap",
       "upstream": "bin/omarchy-remove-dev-env",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-remove-gaming-battlenet",
-      "class": "na",
+      "class": "vendor",
       "upstream": "bin/omarchy-remove-gaming-battlenet",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": null,
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-remove-gaming-geforce-now",
-      "class": "na",
+      "class": "vendor",
       "upstream": "bin/omarchy-remove-gaming-geforce-now",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": null,
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-remove-gaming-heroic",
-      "class": "na",
+      "class": "vendor",
       "upstream": "bin/omarchy-remove-gaming-heroic",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": null,
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-remove-gaming-lutris",
-      "class": "na",
+      "class": "vendor",
       "upstream": "bin/omarchy-remove-gaming-lutris",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": null,
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-remove-gaming-minecraft",
-      "class": "na",
+      "class": "vendor",
       "upstream": "bin/omarchy-remove-gaming-minecraft",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": null,
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-remove-gaming-retroarch",
-      "class": "na",
+      "class": "vendor",
       "upstream": "bin/omarchy-remove-gaming-retroarch",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": null,
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-remove-gaming-steam",
-      "class": "na",
+      "class": "vendor",
       "upstream": "bin/omarchy-remove-gaming-steam",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": null,
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-remove-gaming-xbox-cloud",
-      "class": "na",
+      "class": "vendor",
       "upstream": "bin/omarchy-remove-gaming-xbox-cloud",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": null,
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-remove-gaming-xbox-controllers",
-      "class": "na",
+      "class": "stub",
       "upstream": "bin/omarchy-remove-gaming-xbox-controllers",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-remove-launcher-entry",
-      "class": "na",
+      "class": "wrap",
       "upstream": "bin/omarchy-remove-launcher-entry",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-remove-preinstalls",
-      "class": "na",
+      "class": "vendor",
       "upstream": "bin/omarchy-remove-preinstalls",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": null,
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-remove-security-fido2",
-      "class": "na",
+      "class": "stub",
       "upstream": "bin/omarchy-remove-security-fido2",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-remove-security-fingerprint",
-      "class": "na",
+      "class": "stub",
       "upstream": "bin/omarchy-remove-security-fingerprint",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-remove-security-sshd",
-      "class": "na",
+      "class": "wrap",
       "upstream": "bin/omarchy-remove-security-sshd",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-remove-security-sudoless-docker",
       "class": "stub",
       "upstream": "bin/omarchy-remove-security-sudoless-docker",
-      "stand_in": "users.extraGroups + virtualisation.docker / declarative-note",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
-      "reason": "nixos-declarative",
       "since_pin": "v4.0.2",
       "phase": "v1",
-      "notes": "pkgs/omarchy-runtime-manifest.nix declarative-note; menu remove.security.sudoless-docker hidden"
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-remove-service-1password",
-      "class": "na",
+      "class": "vendor",
       "upstream": "bin/omarchy-remove-service-1password",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": null,
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-remove-service-dropbox",
-      "class": "na",
+      "class": "vendor",
       "upstream": "bin/omarchy-remove-service-dropbox",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": null,
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "Upstream bin/omarchy-remove-service-dropbox has no executable bit; the package preserves that mode. The Install/Remove menu uses the Nix catalog handler. Direct execution remains unavailable.",
+      "executable": false
     },
     {
       "id": "omarchy-remove-service-sunshine",
-      "class": "na",
+      "class": "stub",
       "upstream": "bin/omarchy-remove-service-sunshine",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-remove-service-tailscale",
-      "class": "na",
+      "class": "stub",
       "upstream": "bin/omarchy-remove-service-tailscale",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-restart-app",
@@ -2903,61 +2978,67 @@
     },
     {
       "id": "omarchy-screensaver",
-      "class": "vendor",
+      "class": "wrap",
       "upstream": "bin/omarchy-screensaver",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-setup-direct-boot",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-setup-direct-boot",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-setup-security-fido2",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-setup-security-fido2",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-setup-security-fingerprint",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-setup-security-fingerprint",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-setup-security-sshd",
       "class": "wrap",
       "upstream": "bin/omarchy-setup-security-sshd",
-      "stand_in": "pkgs/omarchy.nix replacement",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
       "phase": "v1",
-      "reason": "flake-body",
-      "notes": "flake cat> stand-in at pin"
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-setup-security-sudoless-docker",
       "class": "stub",
       "upstream": "bin/omarchy-setup-security-sudoless-docker",
-      "stand_in": "users.extraGroups + virtualisation.docker / declarative-note",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "pkgs/omarchy-runtime-manifest.nix declarative-note; menu setup.security.sudoless-docker hidden"
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-shell",
@@ -2997,13 +3078,14 @@
     },
     {
       "id": "omarchy-snapshot",
-      "class": "na",
+      "class": "stub",
       "upstream": "bin/omarchy-snapshot",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Create/restore print generation rollback guidance and exit 0; no snapshot is created. Invalid arguments exit 1."
     },
     {
       "id": "omarchy-state",
@@ -3034,30 +3116,36 @@
     },
     {
       "id": "omarchy-sudo-passwordless",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-sudo-passwordless",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-system-factory-reset",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-system-factory-reset",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-system-factory-reset-finish",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-system-factory-reset-finish",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-system-lid-close",
@@ -3183,7 +3271,8 @@
       "stand_in": null,
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-theme-bg-next",
@@ -3264,7 +3353,8 @@
       "stand_in": null,
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-theme-list",
@@ -3300,39 +3390,40 @@
       "stand_in": null,
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-theme-set",
-      "class": "vendor",
+      "class": "wrap",
       "upstream": "bin/omarchy-theme-set",
-      "stand_in": "HM activation also invokes it headlessly",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
       "phase": "v1",
-      "notes": "Desktop. Do not rewrite the TOML engine."
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-theme-set-browser",
-      "class": "wrap",
+      "class": "stub",
       "upstream": "bin/omarchy-theme-set-browser",
-      "stand_in": "pkgs/omarchy.nix replacement",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
       "phase": "v1",
-      "reason": "flake-body",
-      "notes": "flake cat> stand-in at pin"
+      "reason": "nixos-declarative",
+      "notes": "Silent exit 0: browser accent policy is owned by NixOS and does not follow runtime theme changes."
     },
     {
       "id": "omarchy-theme-set-browser-policy",
       "class": "stub",
       "upstream": "bin/omarchy-theme-set-browser-policy",
-      "stand_in": "programs.chromium.policies / environment.etc / declarative-note",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "pkgs/omarchy-runtime-manifest.nix declarative-note; privileged /etc policy writer; theme-set-browser already wrap no-op"
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-theme-set-claude",
@@ -3489,12 +3580,14 @@
     },
     {
       "id": "omarchy-toggle-hybrid-gpu",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-toggle-hybrid-gpu",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-toggle-idle",
@@ -3593,7 +3686,8 @@
       "stand_in": null,
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-tui-remove",
@@ -3602,7 +3696,8 @@
       "stand_in": null,
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-tui-remove-all",
@@ -3611,18 +3706,18 @@
       "stand_in": null,
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-update",
       "class": "wrap",
       "upstream": "bin/omarchy-update",
-      "stand_in": "flake update + nixos-rebuild switch",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
       "phase": "v1",
-      "reason": "flake-update",
-      "notes": "Verify zicochaos rewire still matches v4.0.2 menus."
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-update-analyze-logs",
@@ -3637,22 +3732,23 @@
       "id": "omarchy-update-aur-pkgs",
       "class": "stub",
       "upstream": "bin/omarchy-update-aur-pkgs",
-      "stand_in": "flake update pipeline / declarative",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
       "phase": "v1",
-      "reason": "nixos-handled",
-      "notes": "pkgs/omarchy.nix stub_handled at pin"
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-update-available",
-      "class": "na",
+      "class": "stub",
       "upstream": "bin/omarchy-update-available",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "No live update probe; exits 1 and prints guidance only for a TTY or verbose flag."
     },
     {
       "id": "omarchy-update-confirm",
@@ -3667,32 +3763,33 @@
       "id": "omarchy-update-dev",
       "class": "stub",
       "upstream": "bin/omarchy-update-dev",
-      "stand_in": "flake update pipeline / declarative",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
       "phase": "v1",
-      "reason": "nixos-handled",
-      "notes": "pkgs/omarchy.nix stub_handled at pin"
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-update-firmware",
-      "class": "vendor",
+      "class": "wrap",
       "upstream": "bin/omarchy-update-firmware",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-update-keyring",
       "class": "stub",
       "upstream": "bin/omarchy-update-keyring",
-      "stand_in": "flake update pipeline / declarative",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
       "phase": "v1",
-      "reason": "nixos-handled",
-      "notes": "pkgs/omarchy.nix stub_handled at pin"
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-update-lock",
@@ -3707,42 +3804,45 @@
       "id": "omarchy-update-mise",
       "class": "stub",
       "upstream": "bin/omarchy-update-mise",
-      "stand_in": "flake update pipeline / declarative",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
       "phase": "v1",
-      "reason": "nixos-handled",
-      "notes": "pkgs/omarchy.nix stub_handled at pin"
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-update-orphan-pkgs",
       "class": "stub",
       "upstream": "bin/omarchy-update-orphan-pkgs",
-      "stand_in": "flake update pipeline / declarative",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
       "phase": "v1",
-      "reason": "nixos-handled",
-      "notes": "pkgs/omarchy.nix stub_handled at pin"
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-update-pacman-guard",
-      "class": "na",
+      "class": "stub",
       "upstream": "bin/omarchy-update-pacman-guard",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-update-pkg-prune",
-      "class": "vendor",
+      "class": "stub",
       "upstream": "bin/omarchy-update-pkg-prune",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-update-requires-free-space",
@@ -3757,12 +3857,11 @@
       "id": "omarchy-update-restart",
       "class": "wrap",
       "upstream": "bin/omarchy-update-restart",
-      "stand_in": "pkgs/omarchy.nix replacement",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
       "phase": "v1",
-      "reason": "flake-body",
-      "notes": "flake cat> stand-in at pin"
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-update-status",
@@ -3784,24 +3883,24 @@
     },
     {
       "id": "omarchy-update-system-pkgs",
-      "class": "na",
+      "class": "wrap",
       "upstream": "bin/omarchy-update-system-pkgs",
-      "stand_in": "packages.map + nixos-rebuild",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "reason": "pacman",
       "since_pin": "v4.0.2",
-      "phase": "never"
+      "phase": "v1",
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-update-system-pkgs-when-conflicted",
       "class": "stub",
       "upstream": "bin/omarchy-update-system-pkgs-when-conflicted",
-      "stand_in": "flake update pipeline / declarative",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
       "phase": "v1",
-      "reason": "nixos-handled",
-      "notes": "pkgs/omarchy.nix stub_handled at pin"
+      "reason": "nixos-declarative",
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-update-time",
@@ -3825,32 +3924,32 @@
       "id": "omarchy-upgrade-to-quattro",
       "class": "stub",
       "upstream": "bin/omarchy-upgrade-to-quattro",
-      "stand_in": "packages.map + nixos-rebuild / omarchy-nix-add",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "pkgs/omarchy.nix stub_declarative at pin"
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-upload-log",
-      "class": "vendor",
+      "class": "wrap",
       "upstream": "bin/omarchy-upload-log",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-version",
       "class": "wrap",
       "upstream": "bin/omarchy-version",
-      "stand_in": "pkgs/omarchy.nix replacement",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
       "phase": "v1",
-      "reason": "flake-body",
-      "notes": "flake cat> stand-in at pin"
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-version-branch",
@@ -3865,23 +3964,23 @@
       "id": "omarchy-version-channel",
       "class": "stub",
       "upstream": "bin/omarchy-version-channel",
-      "stand_in": "packages.map + nixos-rebuild / omarchy-nix-add",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "pkgs/omarchy.nix stub_declarative at pin"
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-version-pkgs",
       "class": "stub",
       "upstream": "bin/omarchy-version-pkgs",
-      "stand_in": "packages.map + nixos-rebuild / omarchy-nix-add",
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "pkgs/omarchy.nix stub_declarative at pin"
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
     },
     {
       "id": "omarchy-voxtype-config",
@@ -3894,12 +3993,13 @@
     },
     {
       "id": "omarchy-voxtype-install",
-      "class": "vendor",
+      "class": "wrap",
       "upstream": "bin/omarchy-voxtype-install",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-voxtype-model",
@@ -3917,7 +4017,8 @@
       "stand_in": null,
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
     },
     {
       "id": "omarchy-voxtype-status",
@@ -3957,64 +4058,117 @@
     },
     {
       "id": "omarchy-webapp-handler-hey",
-      "class": "stub",
+      "class": "vendor",
       "upstream": "bin/omarchy-webapp-handler-hey",
       "stand_in": null,
       "user_visible": true,
-      "reason": "webapps-phased",
       "since_pin": "v4.0.2",
-      "phase": "v1.1"
+      "phase": "v1.1",
+      "notes": "Upstream body retained; full workflow support remains phased to v1.1. Calls to Arch package helpers reach NixOS stubs; retaining the command does not claim end-to-end support."
     },
     {
       "id": "omarchy-webapp-handler-zoom",
-      "class": "stub",
+      "class": "vendor",
       "upstream": "bin/omarchy-webapp-handler-zoom",
       "stand_in": null,
       "user_visible": true,
-      "reason": "webapps-phased",
       "since_pin": "v4.0.2",
-      "phase": "v1.1"
+      "phase": "v1.1",
+      "notes": "Upstream body retained; full workflow support remains phased to v1.1. Calls to Arch package helpers reach NixOS stubs; retaining the command does not claim end-to-end support."
     },
     {
       "id": "omarchy-webapp-install",
-      "class": "stub",
+      "class": "vendor",
       "upstream": "bin/omarchy-webapp-install",
       "stand_in": null,
       "user_visible": true,
       "since_pin": "v4.0.2",
       "phase": "v1.1",
-      "reason": "webapps-phased"
+      "notes": "Upstream body retained; full workflow support remains phased to v1.1. Calls to Arch package helpers reach NixOS stubs; retaining the command does not claim end-to-end support."
     },
     {
       "id": "omarchy-webapp-remove",
-      "class": "stub",
+      "class": "vendor",
       "upstream": "bin/omarchy-webapp-remove",
       "stand_in": null,
       "user_visible": true,
-      "reason": "webapps-phased",
       "since_pin": "v4.0.2",
-      "phase": "v1.1"
+      "phase": "v1.1",
+      "notes": "Upstream body retained; full workflow support remains phased to v1.1. Calls to Arch package helpers reach NixOS stubs; retaining the command does not claim end-to-end support."
     },
     {
       "id": "omarchy-webapp-remove-all",
-      "class": "stub",
+      "class": "vendor",
       "upstream": "bin/omarchy-webapp-remove-all",
       "stand_in": null,
       "user_visible": true,
-      "reason": "webapps-phased",
       "since_pin": "v4.0.2",
-      "phase": "v1.1"
+      "phase": "v1.1",
+      "notes": "Upstream body retained; full workflow support remains phased to v1.1. Calls to Arch package helpers reach NixOS stubs; retaining the command does not claim end-to-end support."
     },
     {
       "id": "omarchy-windows-vm",
-      "class": "stub",
+      "class": "vendor",
       "upstream": "bin/omarchy-windows-vm",
       "stand_in": null,
       "user_visible": true,
       "since_pin": "v4.0.2",
       "phase": "v1.2",
-      "reason": "windows-vm-phased",
-      "notes": "Destination yes. Not a v1 ship gate."
+      "notes": "Upstream body retained; full workflow support remains phased to v1.2. Calls to Arch package helpers reach NixOS stubs; retaining the command does not claim end-to-end support."
+    }
+  ],
+  "port_scripts": [
+    {
+      "id": "omarchy-nix-add",
+      "class": "wrap",
+      "upstream": "pkgs/omarchy.nix",
+      "stand_in": "pkgs/omarchy.nix",
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1",
+      "notes": "Port-owned NixOS package/catalog helper."
+    },
+    {
+      "id": "omarchy-nix-declarative-note",
+      "class": "stub",
+      "upstream": "pkgs/omarchy.nix",
+      "stand_in": "pkgs/omarchy.nix",
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1",
+      "notes": "Port-owned package guidance stub; prints NixOS instructions and exits 0, without the ADR-0009 prefix.",
+      "reason": "nixos-declarative"
+    },
+    {
+      "id": "omarchy-nix-pkglib",
+      "class": "wrap",
+      "upstream": "pkgs/omarchy.nix",
+      "stand_in": "pkgs/omarchy.nix",
+      "user_visible": false,
+      "since_pin": "v4.0.2",
+      "phase": "v1",
+      "notes": "Port-owned shared Bash library, sourced by add/remove/update helpers; intentionally not executable.",
+      "executable": false
+    },
+    {
+      "id": "omarchy-nix-remove",
+      "class": "wrap",
+      "upstream": "pkgs/omarchy.nix",
+      "stand_in": "pkgs/omarchy.nix",
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1",
+      "notes": "Port-owned NixOS package/catalog helper."
+    },
+    {
+      "id": "omarchy-nix-search",
+      "class": "wrap",
+      "upstream": "pkgs/omarchy.nix",
+      "stand_in": "pkgs/omarchy.nix",
+      "user_visible": true,
+      "since_pin": "v4.0.2",
+      "phase": "v1",
+      "notes": "Port-owned NixOS package/catalog helper."
     }
   ]
 }

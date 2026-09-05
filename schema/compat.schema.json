@@ -19,14 +19,24 @@
     },
     "class": {
       "type": "string",
-      "enum": ["vendor", "wrap", "stub", "host", "na", "drop"]
+      "enum": [
+        "vendor",
+        "wrap",
+        "stub",
+        "host",
+        "na",
+        "drop"
+      ]
     },
     "upstream": {
       "type": "string",
       "description": "Path or command in omarchy-src, e.g. bin/omarchy-update."
     },
     "stand_in": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "description": "NixOS option, wrap name, or null."
     },
     "user_visible": {
@@ -43,10 +53,21 @@
     },
     "phase": {
       "type": "string",
-      "enum": ["v1", "v1.1", "v1.2", "later", "never"]
+      "enum": [
+        "v1",
+        "v1.1",
+        "v1.2",
+        "later",
+        "never"
+      ]
     },
     "notes": {
       "type": "string"
+    },
+    "executable": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether the packaged file has executable bits. False requires notes (sourced library or inherited upstream mode)."
     }
   }
 }
