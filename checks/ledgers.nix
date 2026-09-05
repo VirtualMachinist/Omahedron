@@ -96,5 +96,10 @@ pkgs.runCommand "omarchy-ledgers"
       --upstream ${omarchy-src} \
       --packaged ${self.packages.${system}.omarchy}/share/omarchy \
       --evidence ${evidence}
+    ${python}/bin/python3 ${./.}/stub_output.py \
+      --ledger ${../schema/scripts.lock.json} \
+      --packaged ${self.packages.${system}.omarchy}/share/omarchy \
+      --bash ${pkgs.bash}/bin/bash \
+      --cat ${pkgs.coreutils}/bin/cat
     touch "$out"
   ''

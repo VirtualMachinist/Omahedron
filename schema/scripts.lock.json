@@ -96,7 +96,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-apply-lock",
@@ -107,7 +107,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-apply-system",
@@ -118,7 +118,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-audio-input-mute",
@@ -421,7 +421,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-chromium-copy-url-host",
@@ -605,7 +605,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-dev-link",
@@ -616,7 +616,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-dev-pkg-test",
@@ -627,7 +627,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-dev-status",
@@ -665,7 +665,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-disk-speedtest",
@@ -694,7 +694,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-done",
@@ -815,7 +815,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-hibernation-setup",
@@ -826,7 +826,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-hook",
@@ -1336,7 +1336,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-install-chromium-copy-url",
@@ -1527,7 +1527,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-install-preinstalls",
@@ -1548,7 +1548,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-install-service-dropbox",
@@ -1559,7 +1559,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-install-service-nordvpn",
@@ -1570,7 +1570,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-install-service-once",
@@ -1581,7 +1581,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-install-service-signal",
@@ -1592,7 +1592,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-install-service-spotify",
@@ -1603,7 +1603,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-install-service-sunshine",
@@ -1614,7 +1614,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-install-service-tailscale",
@@ -1625,7 +1625,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-install-terminal",
@@ -1982,7 +1982,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-menu-tmux-keybindings",
@@ -2148,7 +2148,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-pkg-aur-accessible",
@@ -2170,7 +2170,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-pkg-aur-install",
@@ -2181,7 +2181,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-pkg-drop",
@@ -2192,7 +2192,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-pkg-install",
@@ -2203,7 +2203,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-pkg-missing",
@@ -2235,7 +2235,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-plugin-add",
@@ -2356,7 +2356,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-plymouth-set",
@@ -2367,7 +2367,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-plymouth-set-by-theme",
@@ -2378,7 +2378,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-plymouth-switcher",
@@ -2443,7 +2443,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-provision-user",
@@ -2520,7 +2520,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-refresh-pacman",
@@ -2531,7 +2531,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-refresh-plymouth",
@@ -2542,7 +2542,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-refresh-sddm",
@@ -2553,7 +2553,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-refresh-shell",
@@ -2592,7 +2592,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-reinstall-pkgs",
@@ -2603,7 +2603,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-reminder",
@@ -2623,7 +2623,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-remove-dev-env",
@@ -2724,7 +2724,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-remove-launcher-entry",
@@ -2755,7 +2755,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-remove-security-fingerprint",
@@ -2766,7 +2766,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-remove-security-sshd",
@@ -2787,7 +2787,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-remove-service-1password",
@@ -2807,8 +2807,7 @@
       "user_visible": false,
       "since_pin": "v4.0.2",
       "phase": "v1",
-      "notes": "Upstream bin/omarchy-remove-service-dropbox has no executable bit; the package preserves that mode. The Install/Remove menu uses the Nix catalog handler. Direct execution remains unavailable.",
-      "executable": false
+      "notes": "Upstream body retained, with missing executable bits repaired in pkgs/omarchy.nix. The menu uses the Nix catalog removal handler; downstream package removal still reaches the NixOS stub."
     },
     {
       "id": "omarchy-remove-service-sunshine",
@@ -2819,7 +2818,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-remove-service-tailscale",
@@ -2830,7 +2829,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-restart-app",
@@ -2995,7 +2994,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-setup-security-fido2",
@@ -3006,7 +3005,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-setup-security-fingerprint",
@@ -3017,7 +3016,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-setup-security-sshd",
@@ -3038,7 +3037,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-shell",
@@ -3085,7 +3084,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Create/restore print generation rollback guidance and exit 0; no snapshot is created. Invalid arguments exit 1."
+      "notes": "Create/restore print the ADR-0009 prefix and generation rollback guidance, then exit 0; no snapshot is created. Invalid arguments print usage to stderr and exit 1."
     },
     {
       "id": "omarchy-state",
@@ -3123,7 +3122,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-system-factory-reset",
@@ -3134,7 +3133,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-system-factory-reset-finish",
@@ -3145,7 +3144,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-system-lid-close",
@@ -3423,7 +3422,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-theme-set-claude",
@@ -3587,7 +3586,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-toggle-idle",
@@ -3737,7 +3736,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-update-available",
@@ -3748,7 +3747,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "No live update probe; exits 1 and prints guidance only for a TTY or verbose flag."
+      "notes": "No live update probe; exits 1. TTY/verbose output starts with the ADR-0009 prefix; the non-TTY bar predicate stays silent."
     },
     {
       "id": "omarchy-update-confirm",
@@ -3768,7 +3767,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-update-firmware",
@@ -3789,7 +3788,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-update-lock",
@@ -3809,7 +3808,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-update-orphan-pkgs",
@@ -3820,7 +3819,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-update-pacman-guard",
@@ -3831,7 +3830,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-update-pkg-prune",
@@ -3842,7 +3841,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-update-requires-free-space",
@@ -3900,7 +3899,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-update-time",
@@ -3929,7 +3928,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-upload-log",
@@ -3969,7 +3968,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-version-pkgs",
@@ -3980,7 +3979,7 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. These inherited stubs do not yet use the ADR-0009 parseable prefix."
+      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
     },
     {
       "id": "omarchy-voxtype-config",
@@ -4136,7 +4135,7 @@
       "user_visible": true,
       "since_pin": "v4.0.2",
       "phase": "v1",
-      "notes": "Port-owned package guidance stub; prints NixOS instructions and exits 0, without the ADR-0009 prefix.",
+      "notes": "Port-owned package guidance stub; prints NixOS instructions and exits 0, with the ADR-0009 prefix.",
       "reason": "nixos-declarative"
     },
     {

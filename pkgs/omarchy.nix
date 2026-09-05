@@ -375,6 +375,7 @@ stdenv.mkDerivation (finalAttrs: {
           cat >"$path" <<EOF
     #!/bin/bash
     # omarchy-nix: $name is pacman/Arch packaging; packages are declarative on NixOS.
+    echo "omahedron: stub: nixos-declarative"
     echo "NixOS: packages are declarative — add packages to your flake config and nixos-rebuild switch (via $name)"
     exit 0
     EOF
@@ -394,6 +395,7 @@ stdenv.mkDerivation (finalAttrs: {
           cat >"$path" <<EOF
     #!/bin/bash
     # omarchy-nix: $name has no NixOS analogue (pacman/AUR/mise/orphans).
+    echo "omahedron: stub: nixos-declarative"
     echo "NixOS: handled declaratively (via $name)"
     exit 0
     EOF
@@ -440,6 +442,12 @@ stdenv.mkDerivation (finalAttrs: {
           stub_handled "$s"
         done
 
+        # Upstream bin/omarchy-remove-service-dropbox lacks executable bits.
+        # Preserve its body while making direct invocation behave like the
+        # other vendored helpers (the menu uses the Nix catalog handler).
+        test -f bin/omarchy-remove-service-dropbox
+        chmod +x bin/omarchy-remove-service-dropbox
+
         # AUR reachability check: report unavailable so any remaining caller
         # that gates on it skips AUR work cleanly.
         cat > bin/omarchy-pkg-aur-accessible <<'EOF'
@@ -463,6 +471,7 @@ stdenv.mkDerivation (finalAttrs: {
     #!/bin/bash
     # omarchy-nix: $name writes /etc/pam.d/* on Arch; PAM services are
     # declarative on NixOS (security.pam.services, omarchy module blocks K/L).
+    echo "omahedron: stub: nixos-declarative"
     echo "NixOS: lock-screen PAM is declarative."
     echo "  omarchy-lock-password    — always present when omarchy.enable = true"
     echo "  omarchy-lock-fingerprint — set omarchy.fingerprint.enable = true in your flake, rebuild, then enroll with fprintd-enroll"
@@ -490,6 +499,7 @@ stdenv.mkDerivation (finalAttrs: {
             #!/bin/bash
             # omarchy-nix: upstream ${name} mutates Arch system state; on NixOS that
             # state is owned declaratively.
+            echo "omahedron: stub: nixos-declarative"
             echo "NixOS: ${m.note}"
             echo "(via ${name} — neutralized; nothing was changed)"
             exit 0
@@ -944,6 +954,7 @@ stdenv.mkDerivation (finalAttrs: {
     # omarchy-nix: no pacman update probe. Exit non-zero so the shell clears
     # the update indicator. Verbose when stdout is a TTY or -v is passed.
     if [[ -t 1 || ''${1:-} == "-v" || ''${1:-} == "--verbose" ]]; then
+      echo "omahedron: stub: nixos-declarative"
       echo "NixOS: omarchy-update-available has no pacman probe."
       echo "Use Update → Omarchy (omarchy-update) to flake-update + rebuild,"
       echo "or manage the system with nixos-rebuild directly."
@@ -978,6 +989,7 @@ stdenv.mkDerivation (finalAttrs: {
 
     case "$COMMAND" in
     create)
+      echo "omahedron: stub: nixos-declarative"
       echo -e "\e[33mNixOS: skipping snapper snapshot.\e[0m"
       echo "NixOS rollbacks use boot generations:"
       echo "  sudo nixos-rebuild list-generations"
@@ -986,6 +998,7 @@ stdenv.mkDerivation (finalAttrs: {
       exit 0
       ;;
     restore)
+      echo "omahedron: stub: nixos-declarative"
       echo "NixOS: use 'sudo nixos-rebuild list-generations' / boot menu to roll back."
       exit 0
       ;;
@@ -1580,6 +1593,7 @@ stdenv.mkDerivation (finalAttrs: {
     # omarchy-nix: menu helper for Install/Remove Package/AUR on NixOS.
 
     cat <<'MSG'
+    omahedron: stub: nixos-declarative
     NixOS: packages are declarative
 
     Arch Omarchy installs packages with pacman/yay. On NixOS, add packages to
