@@ -272,6 +272,15 @@
             };
         in
         {
+          omarchy-ledgers = import ./checks/ledgers.nix {
+            inherit
+              pkgs
+              nixpkgs
+              self
+              system
+              omarchy-src
+              ;
+          };
           omarchy-desktop = pkgs.testers.nixosTest (loadTest ./tests/desktop.nix);
           # UX/acceptance test: exercises real user behavior (Super+Enter ->
           # foot, session env, default browser, cursor, first-run, systemd user

@@ -2,7 +2,7 @@
 
 Human ledger of every stub and NixOS-ism. Machine source of truth is [schema/scripts.lock.json](../schema/scripts.lock.json) and [schema/packages.map.json](../schema/packages.map.json). If prose and JSON disagree, JSON wins and this file must be updated in the same commit.
 
-Status at pin v4.0.2 (Schema refine): **inventory refined** in `schema/scripts.lock.json` (431 upstream bins + pacman seed) — vendor rows that `pkgs/omarchy.nix` replaces via `stub_declarative` / `stub_handled` / `cat>` are now `stub`/`wrap`. `packages.map.json` unchanged this pass. Classes below remain the policy ledger; JSON wins on conflict.
+Status at pin v4.0.2: CI directly enforces both JSON ledgers through `checks.omarchy-ledgers`. The script inventory covers **431 upstream commands** (329 vendor, 32 wrap, 70 stub), the `pacman` N/A policy row, and five port helpers. The package map covers **206 names from both upstream install lists**, plus six explicit entries outside those lists. Manifest data files are no longer presented as packages.
 
 ## How to read a row
 
@@ -91,4 +91,7 @@ Recorded from zicochaos UPSTREAM.md. Re-verify against v4.0.2; do not copy blind
 | Runtime classify: sudoless-docker ×2 + theme-set-browser-policy | stub | `declarative-note` in `pkgs/omarchy-runtime-manifest.nix`; menus `setup.security.sudoless-docker` / `remove.security.sudoless-docker` hidden. Lock rows stub (nixos-declarative). |
 | Interactive shell | host | Fish and the vendored profile are enabled by default (ADR-0011), using `users.defaultUserShell`. Explicit host/account shells win; `omarchy.fish.enable = false` opts out. Bash remains the script runtime. |
 | Automatic printer discovery | host | `services.printing.browsed.enable` defaults to `false`, matching the daemon removal in upstream v4.0.2 migration `1788009111.sh`; CUPS printing remains enabled. Consumers may explicitly enable discovery through NixOS. The Arch migration and hardening drop-in are not applied, and existing generated queues are not deleted; stale `implicitclass` queues may need manual removal or reconfiguration. |
-| Schema lock refine (post-PR1) | stub/wrap | Vendor→stub for stub_declarative/stub_handled (incl. reinstall-pkgs, update-aur-pkgs, update-system-pkgs-when-conflicted); vendor→wrap for flake `cat>` stand-ins still marked vendor. host/drop counts still 0 — version *file* host note above; menu NordVPN/ONCE stay drop patches not lock rows. |
+| Ledger enforcement | vendor/wrap/stub | Classification now describes the shipped command body. A retained installer that calls a package stub is still vendor-class; that does not claim a complete install flow. Package attributes marked `available` are validated counterparts, not claims of default installation. |
+| Stub output debt | stub | Inherited declarative stubs mostly print `NixOS: …` and exit 0, rather than the ADR-0009 parseable prefix. Predicate/silent no-ops document their exit behavior in JSON. This check records the current behavior; prefix normalization remains follow-up work. |
+| Optional hardware mappings | gap | `intel-ipu7-camera`, `intel-lpmd`, `dell-xps-touchpad-haptics`, `apple-bcm-firmware`, `apple-t2-audio-config`, `t2fanrd`, and `qmk-hid` have no audited mapping. None is advertised as installed or supported. |
+| Dropbox removal helper mode | vendor | Upstream `bin/omarchy-remove-service-dropbox` lacks executable bits, which the package preserves. JSON records `executable: false`; the menu uses the Nix catalog removal handler. Direct execution is unavailable. |

@@ -58,6 +58,7 @@ jobs:
           # VM harnesses run through the manual checks-system job below.
           # Run the manifest / package / eval checks already defined in flake.nix.
           checks=(
+            omarchy-ledgers
             omarchy-skill
             catalog-consistency
             omarchy-migrations
