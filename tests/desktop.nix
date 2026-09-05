@@ -91,10 +91,10 @@
       # requires wayland.enable / xserver doesn't fire.
       services.displayManager.sddm.enable = false;
       services.getty.autologinUser = "demo";
-      programs.bash.loginShellInit = ''
-        if [ "$(tty)" = "/dev/tty1" ]; then
+      programs.fish.loginShellInit = ''
+        if test (tty) = /dev/tty1
           exec Hyprland >/tmp/hyprland.log 2>&1
-        fi
+        end
       '';
     };
 

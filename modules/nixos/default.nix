@@ -788,10 +788,10 @@ in
         services.power-profiles-daemon.enable = lib.mkDefault true;
         services.printing = {
           enable = lib.mkDefault true;
-          # cups-browsed: remote printer discovery. The seeded autostart
-          # print-applet.desktop expects a running CUPS. nixpkgs 26.05 exposes
-          # this as services.printing.browsed (not .cups-browsed).
-          browsed.enable = lib.mkDefault true;
+          # Upstream v4.0.2 migrations/1788009111.sh removes cups-browsed.
+          # Keep CUPS for configured printers, but disable automatic queue
+          # discovery. A consumer can explicitly opt back in via NixOS.
+          browsed.enable = lib.mkDefault false;
         };
         virtualisation.docker.enable = lib.mkDefault true;
         # gnome-keyring: upstream ships it; the old "out of scope" note in
@@ -878,7 +878,7 @@ in
 
         # Mask NetworkManager-wait-online (upstream migration 1784568652):
         # graphical.target was gated on network-online.target because
-        # cups-browsed (enabled above) orders after it, so the desktop waited
+        # cups-browsed (now opt-in) orders after it, so the desktop waited
         # for DHCP/Wi-Fi association at boot. Declaring the unit with
         # enable = false makes nixpkgs link it to /dev/null (a systemd mask).
         systemd.services.NetworkManager-wait-online.enable = lib.mkDefault false;
@@ -982,10 +982,9 @@ in
           options usbcore autosuspend=-1
         '';
 
-        # Auto-register remote IPP printers discovered via Avahi (upstream
-        # etc/cups/cups-browsed.conf): nixpkgs renders browsedConf to
-        # /etc/cups/cups-browsed.conf; without it cups-browsed 2.x does not
-        # create queues for discovered printers.
+        # Preserve upstream etc/cups/cups-browsed.conf for consumers who
+        # explicitly enable discovery. NixOS only renders this configuration
+        # into the CUPS tree when services.printing.browsed.enable is true.
         services.printing.browsedConf = lib.mkDefault ''
           CreateRemotePrinters Yes
         '';
@@ -1380,13 +1379,12 @@ in
         '';
       })
 
-      # (M) Opt-in Fish shell profile. Installs fish + the
+      # (M) Default interactive Fish shell (ADR-0011). Installs fish + the
       # vendored omarchy-fish profile (share/fish/vendor_*). nixpkgs' fish
       # module links vendor_{conf,completions,functions}.d into the system
       # profile by default (programs.fish.vendor.*.enable = true), so no
-      # extra pathsToLink is needed. The login shell stays a per-account
-      # consumer setting (users.users.<name>.shell = pkgs.fish) — the module
-      # must not guess which account to mutate.
+      # extra pathsToLink is needed. NixOS applies defaultUserShell to normal
+      # users and root; explicit host/per-account shell settings win.
       (lib.mkIf cfg.fish.enable {
         assertions = [
           {
@@ -1395,6 +1393,9 @@ in
           }
         ];
         programs.fish.enable = true;
+        # NixOS already sets Bash at mkDefault (1000). Prefer Fish over that
+        # fallback while allowing an ordinary consumer assignment (100) to win.
+        users.defaultUserShell = lib.mkOverride 900 pkgs.fish;
         environment.systemPackages = [ cfg.fish.package ];
       })
     ]

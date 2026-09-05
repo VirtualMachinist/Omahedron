@@ -147,10 +147,10 @@
       # does not fire (see tests/desktop.nix).
       services.displayManager.sddm.enable = false;
       services.getty.autologinUser = "demo";
-      programs.bash.loginShellInit = ''
-        if [ "$(tty)" = "/dev/tty1" ]; then
+      programs.fish.loginShellInit = ''
+        if test (tty) = /dev/tty1
           exec uwsm start -e -D Hyprland hyprland.desktop >/tmp/hyprland.log 2>&1
-        fi
+        end
       '';
     };
 
@@ -181,12 +181,14 @@
         # HYPRLAND_INSTANCE_SIGNATURE from the runtime dir (uwsm/Hyprland
         # create /run/user/1000/hypr/<signature>). The wrapper groups cmd with
         # single quotes, so cmd may use double quotes but not single quotes.
+        # These test payloads use POSIX shell syntax; select Bash explicitly.
+        # The actual graphical login above still uses the default Fish shell.
         prefix = (
             "export XDG_RUNTIME_DIR=/run/user/1000; "
             "export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus; "
             "export HYPRLAND_INSTANCE_SIGNATURE=$(ls /run/user/1000/hypr | head -1); "
         )
-        return "su - demo -c '" + prefix + cmd + "'"
+        return "su - demo -s ${pkgs.bashInteractive}/bin/bash -c '" + prefix + cmd + "'"
 
     # --- (1b) Session env: XDG_SESSION_DESKTOP=Hyprland. -------------------
     # uwsm -D Hyprland sets this; Hyprland's autostart.lua then runs

@@ -2,8 +2,8 @@
 #
 # Where checks.omarchy-fish-package / omarchy-fish-parity guard the vendored
 # tree and checks.omarchy-fish-module covers the eval-time wiring (including
-# the default-OFF state on the demo config), this test boots a VM with the
-# profile ON and fish as the demo user's login shell, and asserts the
+# default-on and opt-out states), this test boots a VM with no explicit Fish
+# or account-shell setting and asserts the default login shell and
 # runtime behavior end to end:
 #   - fish is the login shell; the vendor_* dirs land in the system profile;
 #   - an interactive fish session sees the omarchy functions (including the
@@ -51,13 +51,11 @@
       omarchy.managedPackagesFile = null; # hermetic check (host /etc must not leak in)
       omarchy.full_name = "Test User";
       omarchy.email_address = "test@omarchy-nix.invalid";
-      omarchy.fish.enable = true;
 
       users.users.demo = {
         isNormalUser = true;
         uid = 1000;
         password = "demo";
-        shell = pkgs.fish;
         extraGroups = [ "wheel" ];
       };
 

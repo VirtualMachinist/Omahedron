@@ -1,5 +1,5 @@
 # Omarchy shell configuration for Fish (upstream: omacom-io/omarchy-fish),
-# vendored as an opt-in profile.
+# vendored as the default interactive profile (opt-out via omarchy.fish.enable).
 #
 # Pin: temporarily the zicochaos/omarchy-fish fork rev carrying PR
 # omacom-io/omarchy-fish#7 (Quattro bash parity: cy/mup/rsw/lsw/dsw/tds
@@ -122,7 +122,7 @@ stdenvNoCC.mkDerivation {
   '';
 
   meta = {
-    description = "Omarchy shell configuration for Fish (opt-in vendored profile)";
+    description = "Omarchy shell configuration for Fish (vendored profile)";
     homepage = "https://github.com/omacom-io/omarchy-fish";
     license = lib.licenses.mit;
     mainProgram = "omarchy-setup-fish";

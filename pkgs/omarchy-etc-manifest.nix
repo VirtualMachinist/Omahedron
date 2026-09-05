@@ -13,7 +13,7 @@
 #   covered  — satisfied by an already-existing mechanism (see comment)
 #   na       — Arch-stack specific, no NixOS counterpart (reason in comment)
 {
-  "cups/cups-browsed.conf" = "native"; # services.printing.browsedConf (CreateRemotePrinters Yes)
+  "cups/cups-browsed.conf" = "native"; # services.printing.browsedConf (CreateRemotePrinters Yes), rendered only when discovery is explicitly enabled
   "cups/cups-files.conf" = "na"; # Arch CUPS User/Group 209 + SystemGroup cups-browsed; NixOS printing owns cups-files
   "docker/daemon.json" = "native"; # virtualisation.docker.daemon.settings — log rotation only; dns/bip pins deliberately dropped (no resolved bridge integration on NixOS)
   "fastfetch/config.jsonc" = "seed"; # HM seed ~/.config/fastfetch/config.jsonc
@@ -43,7 +43,7 @@
   "systemd/resolved.conf.d/20-docker-dns.conf" = "na"; # resolved bridge listener not in use; docker defaults pass the host resolver through to containers
   "systemd/system.conf.d/10-faster-shutdown.conf" = "native"; # systemd.settings.Manager.DefaultTimeoutStopSec = "5s"
   "systemd/system.conf.d/20-omarchy-nofile.conf" = "native"; # systemd.settings.Manager.DefaultLimitNOFILE
-  "systemd/system/cups-browsed.service.d/10-omarchy.conf" = "na"; # Arch service overlay not installed; NixOS discovery remains enabled (see COMPAT gap)
+  "systemd/system/cups-browsed.service.d/10-omarchy.conf" = "na"; # Arch overlay not installed; discovery defaults off per migration 1788009111
   "systemd/system/docker.service.d/no-block-boot.conf" = "native"; # systemd.services.docker.unitConfig.DefaultDependencies = false
   "systemd/system/plocate-updatedb.service.d/ac-only.conf" = "native"; # services.locate (plocate) + systemd.services.update-locatedb ConditionACPower (nixpkgs unit name)
   "systemd/system/user@.service.d/10-faster-shutdown.conf" = "native"; # systemd.services."user@".serviceConfig.TimeoutStopSec = "5s"

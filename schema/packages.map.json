@@ -5,6 +5,18 @@
   "generated": true,
   "packages": [
     {
+      "upstream": "fish",
+      "status": "nixpkgs",
+      "attr": "fish",
+      "notes": "Default interactive shell through users.defaultUserShell (ADR-0011); explicit shell choices win and omarchy.fish.enable = false opts out. Bash remains the script runtime."
+    },
+    {
+      "upstream": "cups-browsed",
+      "status": "exclude",
+      "attr": null,
+      "notes": "Excluded by default to match v4.0.2 migration 1788009111.sh. CUPS printing remains enabled; consumers may explicitly enable services.printing.browsed.enable. Existing generated queues are not deleted."
+    },
+    {
       "upstream": "aether",
       "status": "pkgs",
       "attr": "aether",
@@ -68,7 +80,7 @@
       "upstream": "omarchy-fish",
       "status": "pkgs",
       "attr": "omarchy-fish",
-      "notes": "Present under pkgs/ from zicochaos adopt."
+      "notes": "Vendored profile installed by default with omarchy.fish.enable; opt-out omits it. Present under pkgs/ from zicochaos adopt."
     },
     {
       "upstream": "omarchy-migrations",
