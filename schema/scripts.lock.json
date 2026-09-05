@@ -4063,7 +4063,8 @@
       "stand_in": null,
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1.1",
+      "notes": "Upstream body retained; full workflow support remains phased to v1.1. Calls to Arch package helpers reach NixOS stubs; retaining the command does not claim end-to-end support."
     },
     {
       "id": "omarchy-webapp-handler-zoom",
@@ -4072,7 +4073,8 @@
       "stand_in": null,
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1.1",
+      "notes": "Upstream body retained; full workflow support remains phased to v1.1. Calls to Arch package helpers reach NixOS stubs; retaining the command does not claim end-to-end support."
     },
     {
       "id": "omarchy-webapp-install",
@@ -4081,8 +4083,8 @@
       "stand_in": null,
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1",
-      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
+      "phase": "v1.1",
+      "notes": "Upstream body retained; full workflow support remains phased to v1.1. Calls to Arch package helpers reach NixOS stubs; retaining the command does not claim end-to-end support."
     },
     {
       "id": "omarchy-webapp-remove",
@@ -4091,8 +4093,8 @@
       "stand_in": null,
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1",
-      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
+      "phase": "v1.1",
+      "notes": "Upstream body retained; full workflow support remains phased to v1.1. Calls to Arch package helpers reach NixOS stubs; retaining the command does not claim end-to-end support."
     },
     {
       "id": "omarchy-webapp-remove-all",
@@ -4101,8 +4103,8 @@
       "stand_in": null,
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1",
-      "notes": "Upstream body retained. Calls into Arch package helpers reach NixOS stubs; this classification does not claim the install/remove flow is complete."
+      "phase": "v1.1",
+      "notes": "Upstream body retained; full workflow support remains phased to v1.1. Calls to Arch package helpers reach NixOS stubs; retaining the command does not claim end-to-end support."
     },
     {
       "id": "omarchy-windows-vm",
@@ -4111,8 +4113,8 @@
       "stand_in": null,
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1",
-      "notes": "Upstream helper retained; Windows VM workflow remains phased and unverified."
+      "phase": "v1.2",
+      "notes": "Upstream body retained; full workflow support remains phased to v1.2. Calls to Arch package helpers reach NixOS stubs; retaining the command does not claim end-to-end support."
     }
   ],
   "port_scripts": [
