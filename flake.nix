@@ -91,6 +91,10 @@
           pkgs = pkgsFor system;
         in
         {
+          hyprland = pkgs.callPackage ./pkgs/hyprland.nix {
+            upstreamHyprland = inputs.hyprland.packages.${system}.hyprland;
+            glaze = inputs.hyprland.inputs.nixpkgs.legacyPackages.${system}.glaze;
+          };
           omarchy = pkgs.callPackage ./pkgs/omarchy.nix {
             inherit omarchy-src;
             version = omarchyVersion;
@@ -223,6 +227,9 @@
               # Guarded by omarchy.enable: merely IMPORTING the module
               # must not change the host's Mesa.
               (lib.mkIf config.omarchy.enable {
+                # Keep the pinned compositor with its compatible Glaze build
+                # dependency. Explicit consumer package assignments still win.
+                programs.hyprland.package = lib.mkOverride 500 hostPackages.hyprland;
                 hardware.graphics.package =
                   lib.mkOverride 500
                     inputs.hyprland.inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system}.mesa;
@@ -2183,9 +2190,9 @@ c";
               # source file: this check is eval-only by design. Forcing
               # cfg.system.build.toplevel (as it used to) or building the
               # generated pam file realizes the desktop closure — the etc
-              # source chains to sessionData.desktops -> Hyprland — which GHA
-              # checks-light must not build (Hyprland's cmake FetchContent
-              # needs git; CI run 33899110349). The generated
+              # source chains to sessionData.desktops -> Hyprland. Keep that
+              # closure in the manual system/VM job, outside checks-light.
+              # The generated
               # /etc/pam/environment is exactly this text, and the login-time
               # pam_env expansion is covered end to end by the omarchy-fish
               # VM test (tests/fish.nix) and metal.
