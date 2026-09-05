@@ -871,6 +871,44 @@
                 cmp -s "$TMPDIR/before" "$TMPDIR/after" \
                   || fail "case5: adapter is not idempotent"
 
+                # The v4.0.2 XCompose adapter keeps custom sequences and
+                # unrelated includes, and tolerates a failed live restart.
+                cat > "$STUB/omarchy-restart-xcompose" <<'RESTART'
+                #!/bin/sh
+                printf 'restart\n' >> "$XCOMPOSE_RESTART_LOG"
+                exit 1
+                RESTART
+                chmod +x "$STUB/omarchy-restart-xcompose"
+                COMPOSE_ROOT="$TMPDIR/omarchy & a|b"
+                run_compose_adapter() {
+                  HOME="$H" OMARCHY_PATH="$COMPOSE_ROOT" XCOMPOSE_RESTART_LOG="$TMPDIR/compose-restarts" \
+                    bash ${omarchyPkg}/share/omarchy/migrations-nix/1788102906.sh >/dev/null
+                }
+                run_compose_adapter
+                [ ! -e "$H/.XCompose" ] && [ ! -e "$TMPDIR/compose-restarts" ] \
+                  || fail "XCompose: missing file must remain absent without a restart"
+                printf '%s\n' 'include "%L"' \
+                  '  include "/home/demo/.local/share/omarchy/default/xcompose"  ' \
+                  'include "/home/demo/custom-compose"' '<Multi_key> <o> <o> : "custom"' > "$H/.XCompose"
+                printf '%s\n' 'include "%L"' "  include \"$COMPOSE_ROOT/default/xcompose\"" \
+                  'include "/home/demo/custom-compose"' '<Multi_key> <o> <o> : "custom"' > "$TMPDIR/compose-expected"
+                run_compose_adapter
+                cmp -s "$TMPDIR/compose-expected" "$H/.XCompose" \
+                  || fail "XCompose: legacy include repair changed custom content" "$H/.XCompose"
+                [ "$(wc -l < "$TMPDIR/compose-restarts")" -eq 1 ] \
+                  || fail "XCompose: repair must attempt a restart"
+                run_compose_adapter
+                cmp -s "$TMPDIR/compose-expected" "$H/.XCompose" \
+                  || fail "XCompose: repair is not idempotent" "$H/.XCompose"
+                printf '%s\n' 'include "%L"' 'include "/home/demo/custom-compose"' \
+                  '<Multi_key> <o> <o> : "custom"' > "$H/.XCompose"
+                cp "$H/.XCompose" "$TMPDIR/compose-expected"
+                run_compose_adapter
+                cmp -s "$TMPDIR/compose-expected" "$H/.XCompose" \
+                  || fail "XCompose: unrelated includes were changed" "$H/.XCompose"
+                [ "$(wc -l < "$TMPDIR/compose-restarts")" -eq 1 ] \
+                  || fail "XCompose: unchanged files must not trigger a restart"
+
                 touch $out
               '';
           # /etc overlay parity: upstream's Arch etc/ tree (classified in

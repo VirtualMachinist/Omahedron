@@ -43,7 +43,7 @@
   "systemd/resolved.conf.d/20-docker-dns.conf" = "na"; # resolved bridge listener not in use; docker defaults pass the host resolver through to containers
   "systemd/system.conf.d/10-faster-shutdown.conf" = "native"; # systemd.settings.Manager.DefaultTimeoutStopSec = "5s"
   "systemd/system.conf.d/20-omarchy-nofile.conf" = "native"; # systemd.settings.Manager.DefaultLimitNOFILE
-  "systemd/system/cups-browsed.service.d/10-omarchy.conf" = "na"; # cups-browsed sandbox drop-in; cups-browsed not default on NixOS omarchy
+  "systemd/system/cups-browsed.service.d/10-omarchy.conf" = "na"; # Arch service overlay not installed; NixOS discovery remains enabled (see COMPAT gap)
   "systemd/system/docker.service.d/no-block-boot.conf" = "native"; # systemd.services.docker.unitConfig.DefaultDependencies = false
   "systemd/system/plocate-updatedb.service.d/ac-only.conf" = "native"; # services.locate (plocate) + systemd.services.update-locatedb ConditionACPower (nixpkgs unit name)
   "systemd/system/user@.service.d/10-faster-shutdown.conf" = "native"; # systemd.services."user@".serviceConfig.TimeoutStopSec = "5s"
