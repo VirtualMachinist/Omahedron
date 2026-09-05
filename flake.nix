@@ -920,6 +920,10 @@
           omarchy-etc-parity =
             let
               demoCfg = self.nixosConfigurations.demo.config;
+              discoveryCfg =
+                (self.nixosConfigurations.demo.extendModules {
+                  modules = [ { services.printing.browsed.enable = true; } ];
+                }).config;
               omarchyPkg = self.packages.${system}.omarchy;
               manifest = import ./pkgs/omarchy-etc-manifest.nix;
               manifestKeys = builtins.sort (a: b: a < b) (builtins.attrNames manifest);
@@ -975,8 +979,16 @@
               throw "demo config missing NOPASSWD timedatectl set-timezone (etc/sudoers.d/omarchy-tzupdate)"
             else if !(hasInfix "passwd_tries=10" demoCfg.security.sudo.extraConfig) then
               throw "demo config missing passwd_tries=10 (etc/sudoers.d/omarchy-passwd-tries)"
-            else if !(hasInfix "CreateRemotePrinters Yes" demoCfg.services.printing.browsedConf) then
-              throw "demo config missing CreateRemotePrinters Yes (etc/cups/cups-browsed.conf)"
+            else if !demoCfg.services.printing.enable || !(demoCfg.systemd.services ? cups) then
+              throw "configured-printer CUPS service must remain enabled"
+            else if demoCfg.services.printing.browsed.enable || (demoCfg.systemd.services ? cups-browsed) then
+              throw "automatic printer discovery must default to off (migration 1788009111.sh)"
+            else if
+              !discoveryCfg.services.printing.browsed.enable || !(discoveryCfg.systemd.services ? cups-browsed)
+            then
+              throw "explicit printer-discovery opt-in must enable the NixOS service"
+            else if !(hasInfix "CreateRemotePrinters Yes" discoveryCfg.services.printing.browsedConf) then
+              throw "printer-discovery opt-in lost CreateRemotePrinters Yes (etc/cups/cups-browsed.conf)"
             else if !(hasInfix "autosuspend=-1" demoCfg.boot.extraModprobeConfig) then
               throw "demo config missing usbcore autosuspend=-1 (etc/modprobe.d/omarchy-usb-autosuspend.conf)"
             else if (demoCfg.environment.etc."gnupg/dirmngr.conf".source or null) == null then
@@ -1091,6 +1103,10 @@
                 sessionPackages = map (p: p.name or "unknown") c.services.displayManager.sessionPackages;
                 sddm = c.services.displayManager.sddm.enable;
                 hyprland = c.programs.hyprland.enable;
+                fish = c.programs.fish.enable;
+                defaultUserShell = toString c.users.defaultUserShell;
+                printing = c.services.printing.enable;
+                printerDiscovery = c.services.printing.browsed.enable;
                 etcNames = builtins.attrNames c.environment.etc;
                 substituters = c.nix.settings.substituters or [ ];
               };
@@ -2110,12 +2126,10 @@ c";
 
               touch $out
             '';
-          # Fish wiring: with omarchy.fish.enable = true the module
-          # sets programs.fish.enable and puts the vendored profile in the
-          # system profile; the default (off) adds neither (demo config is the
-          # off witness). Same eval-time assertion pattern as the disabled-state
-          # module check. Eval-only: it must not realize the desktop closure
-          # (toplevel / built pam source) — GHA cannot build Hyprland.
+          # Fish defaults (ADR-0011): install the profile and select Fish for
+          # accounts using the host default. Cover opt-out, explicit host and
+          # account shells, and service accounts without building the desktop
+          # closure. Runtime login behavior stays in tests/fish.nix.
           omarchy-fish-module =
             let
               fishPkg = self.packages.${system}.omarchy-fish;
@@ -2131,7 +2145,17 @@ c";
                     self.nixosModules.default
                     {
                       omarchy.enable = true;
-                      omarchy.fish.enable = true;
+                      users.users = {
+                        demo.isNormalUser = true;
+                        shelloverride = {
+                          isNormalUser = true;
+                          shell = pkgs.bashInteractive;
+                        };
+                        serviceaccount = {
+                          isSystemUser = true;
+                          group = "nogroup";
+                        };
+                      };
                       fileSystems."/".device = "/dev/null";
                       fileSystems."/".fsType = "ext4";
                       boot.loader.grub.device = "nodev";
@@ -2141,11 +2165,17 @@ c";
                   ];
                 };
               cfg = (mkEval { }).config;
+              offCfg =
+                (mkEval {
+                  omarchy.fish.enable = false;
+                  omarchy.fish.package = null;
+                }).config;
+              customDefaultCfg = (mkEval { users.defaultUserShell = pkgs.bashInteractive; }).config;
               # Consumer overrides EDITOR only: the SUDO_EDITOR indirection
               # must stay intact so pam_env expands the override at login
               # (upstream's SUDO_EDITOR="$EDITOR" semantics).
               editorCfg = (mkEval { environment.sessionVariables.EDITOR = "nvim"; }).config;
-              hasFish = builtins.any (p: (p.drvPath or "") == fishPkg.drvPath) cfg.environment.systemPackages;
+              hasFish = c: builtins.any (p: (p.drvPath or "") == fishPkg.drvPath) c.environment.systemPackages;
               # pam_env expands ${EDITOR} at login in file order — the
               # EDITOR line must precede the SUDO_EDITOR line and the
               # indirection must survive the renderer verbatim. Assert on the
@@ -2176,17 +2206,40 @@ c";
               linesBefore = splitString "\n" before;
               editorBefore = any (hasPrefix "EDITOR ") linesBefore;
             in
-            if !cfg.programs.fish.enable then
-              throw "omarchy.fish.enable did not set programs.fish.enable"
-            else if !hasFish then
+            if !cfg.omarchy.fish.enable || !cfg.programs.fish.enable then
+              throw "Fish must be enabled by default with omarchy.enable"
+            else if !hasFish cfg then
               throw "omarchy-fish package missing from environment.systemPackages"
-            else if self.nixosConfigurations.demo.config.programs.fish.enable then
-              throw "fish must default to off — demo config has programs.fish.enable"
+            else if cfg.users.defaultUserShell != pkgs.fish || cfg.users.users.demo.shell != pkgs.fish then
+              throw "default interactive users must select Fish"
+            else if cfg.users.users.root.shell != pkgs.fish then
+              throw "root must follow the native NixOS defaultUserShell setting"
+            else if cfg.users.users.shelloverride.shell != pkgs.bashInteractive then
+              throw "an explicit per-account shell must override the Fish default"
+            else if cfg.users.users.serviceaccount.shell != pkgs.shadow then
+              throw "service accounts must retain their NixOS nologin shell"
+            else if offCfg.programs.fish.enable || hasFish offCfg then
+              throw "Fish opt-out must omit the program and vendored profile"
+            else if
+              offCfg.users.defaultUserShell != pkgs.bashInteractive
+              || offCfg.users.users.demo.shell != pkgs.bashInteractive
+            then
+              throw "Fish opt-out must retain the normal NixOS Bash default"
+            else if customDefaultCfg.users.users.demo.shell != pkgs.bashInteractive then
+              throw "an explicit host default shell must override the Fish default"
+            else if self.nixosConfigurations.demo.config.users.users.demo.shell != pkgs.fish then
+              throw "the demo configuration must use the default Fish login shell"
             else if cfg.environment.sessionVariables.SUDO_EDITOR != "\${EDITOR}" then
               throw "SUDO_EDITOR must carry the pam_env \${EDITOR} indirection"
             else if editorCfg.environment.sessionVariables.SUDO_EDITOR != "\${EDITOR}" then
               throw "SUDO_EDITOR indirection must survive an EDITOR override"
-            else if any (a: !a.assertion) cfg.assertions then
+            else if
+              any (c: any (a: !a.assertion) c.assertions) [
+                cfg
+                offCfg
+                customDefaultCfg
+              ]
+            then
               # Replaces the old cfg.system.build.toplevel.drvPath force:
               # assertions are still fully evaluated, but the toplevel (and
               # with it the desktop closure) is never realized.

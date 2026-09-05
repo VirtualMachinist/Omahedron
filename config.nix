@@ -95,18 +95,17 @@
       '';
     };
 
-    # Opt-in Fish shell profile. Off by default — Bash stays the
-    # Omarchy default shell. Enabling only installs fish + the vendored
-    # profile; the login shell remains an explicit per-account setting
-    # (users.users.<name>.shell = pkgs.fish) because the module must not
-    # guess which account to mutate.
+    # Default interactive shell and vendored profile (ADR-0011).
+    # NixOS owns account defaults; explicit host/per-account shells win.
     fish.enable = lib.mkOption {
       type = lib.types.bool;
-      default = false;
+      default = true;
       description = ''
         Install Fish and the vendored Omarchy Fish profile
-        (share/fish/vendor_*). Login-shell selection is NOT changed — set
-        users.users.<name>.shell = pkgs.fish on the account yourself.
+        (share/fish/vendor_*) and default users.defaultUserShell to Fish.
+        Explicit users.defaultUserShell or users.users.<name>.shell values
+        take precedence. Set false to keep the host's normal shell default
+        and omit the vendored profile. Bash remains the script runtime.
       '';
     };
 

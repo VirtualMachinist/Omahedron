@@ -53,16 +53,22 @@ stubs). Set automatically by the flake; `null` skips nvim config seeding.
 
 ## Shell
 
-### `omarchy.fish.enable` *(bool, default `false`)*
+### `omarchy.fish.enable` *(bool, default `true`)*
 
 Install Fish and the vendored Omarchy Fish profile (`omarchy-fish`, pinned
 `1.5.0-unstable-2026-07-31` — the fork rev carrying
 [omacom-io/omarchy-fish#7](https://github.com/omacom-io/omarchy-fish/pull/7)
 — + fzf.fish v10.3): sets `programs.fish.enable` and adds the package
 to the system profile, whose `share/fish/vendor_*` directories Fish reads
-automatically. Does NOT change any account's login shell; that stays an
-explicit per-account setting (`users.users.<name>.shell = pkgs.fish`). Off
-by default; the Bash profile is untouched either way. User functions in
+automatically. With `omarchy.enable = true`, it also defaults
+`users.defaultUserShell` to Fish, affecting normal users and root without an
+explicit shell. Service accounts keep their NixOS shell settings. Explicit
+host or account shell choices take precedence, for example
+`users.users.alice.shell = pkgs.bashInteractive`.
+
+Set `omarchy.fish.enable = false` to omit the profile and retain the host's
+normal shell default (Bash on an otherwise uncustomized NixOS system).
+Bash remains available for scripts in either case. User functions in
 `~/.config/fish/functions/` override the vendor ones.
 
 ### `omarchy.fish.package` *(nullOr package, default `null`, injected by the flake)*
