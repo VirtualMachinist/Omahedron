@@ -1,5 +1,5 @@
 # Omahedron CI: package build and non-VM checks before release validation.
-# VM nixosTest checks (omarchy-desktop / ux / fish) stay local/metal; not run on github-hosted.
+# Full system and VM checks are manual; VM runs verify native KVM first.
 name: ci
 
 on:
@@ -8,13 +8,21 @@ on:
     branches: [main]
   workflow_dispatch:
     inputs:
-      vm_preflight:
-        description: Probe native x86_64 KVM and storage for the VM pre-gate
-        type: boolean
-        default: false
+      validation:
+        description: Validation scope (VM results are a pre-gate, not metal sign-off)
+        type: choice
+        default: light
+        options:
+          - light
+          - preflight
+          - system
+          - fish
+          - desktop
+          - ux
+          - all
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
+  group: ci-${{ github.workflow }}-${{ github.ref }}-${{ inputs.validation || 'light' }}
   cancel-in-progress: true
 
 permissions:
@@ -22,7 +30,7 @@ permissions:
 
 jobs:
   checks-light:
-    if: ${{ !inputs.vm_preflight }}
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.validation == 'light' }}
     name: checks-light (non-VM)
     runs-on: ubuntu-latest
     timeout-minutes: 180
@@ -47,7 +55,7 @@ jobs:
       - name: non-VM checks (x86_64-linux)
         run: |
           set -euo pipefail
-          # Skip nixosTest VM harnesses (need KVM / nested virt on github-hosted).
+          # VM harnesses run through the manual checks-system job below.
           # Run the manifest / package / eval checks already defined in flake.nix.
           checks=(
             omarchy-skill
@@ -74,10 +82,13 @@ jobs:
             echo "::endgroup::"
           done
 
-  vm-preflight:
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.vm_preflight }}
+  checks-system:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.validation != 'light' }}
+    name: checks-system (${{ inputs.validation }})
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 360
+    env:
+      VALIDATION: ${{ inputs.validation }}
     steps:
       - name: Check native KVM and storage
         run: |
@@ -85,7 +96,15 @@ jobs:
           test "$(uname -m)" = x86_64
           free -h
           df -h /
-          sudo du -sh /usr/local/lib/android /opt/hostedtoolcache /usr/share/dotnet /opt/ghc 2>/dev/null || true
+          if [ "$VALIDATION" != preflight ]; then
+            available=$(df -B1 --output=avail / | tail -n 1)
+            if (( available < 35 * 1024 * 1024 * 1024 )); then
+              echo 'Full system/VM builds require at least 35 GiB free on this runner.' >&2
+              exit 1
+            fi
+          fi
+          # A system closure build does not need virtualization.
+          if [ "$VALIDATION" = system ]; then exit 0; fi
           test -c /dev/kvm
           # This ephemeral runner must expose KVM to Nix's build users too.
           sudo chmod a+rw /dev/kvm
@@ -100,3 +119,46 @@ jobs:
           os.close(kvm)
           print('PASS: native x86_64 KVM can create a VM')
           PY
+
+      - uses: actions/checkout@v4
+        if: ${{ inputs.validation != 'preflight' }}
+
+      - uses: DeterminateSystems/nix-installer-action@main
+        if: ${{ inputs.validation != 'preflight' }}
+
+      - name: Full example system
+        if: ${{ inputs.validation == 'system' || inputs.validation == 'all' }}
+        run: |
+          set -euo pipefail
+          mkdir -p validation-logs
+          nix build -L --keep-going --max-jobs 2 --cores 2 --out-link result-system \
+            .#nixosConfigurations.example.config.system.build.toplevel \
+            2>&1 | tee validation-logs/system.log
+
+      - name: NixOS VM tests
+        if: ${{ contains(fromJSON('["fish", "desktop", "ux", "all"]'), inputs.validation) }}
+        run: |
+          set -euo pipefail
+          mkdir -p validation-logs
+          if [ "$VALIDATION" = all ]; then
+            suites=(fish desktop ux)
+          else
+            suites=("$VALIDATION")
+          fi
+          failed=0
+          for suite in "${suites[@]}"; do
+            if ! nix build -L --keep-going --max-jobs 2 --cores 2 \
+              --out-link "result-$suite" ".#checks.x86_64-linux.omarchy-$suite" \
+              2>&1 | tee "validation-logs/$suite.log"; then
+              failed=1
+            fi
+          done
+          exit "$failed"
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && inputs.validation != 'preflight' }}
+        with:
+          name: validation-${{ inputs.validation }}-${{ github.sha }}
+          path: validation-logs
+          if-no-files-found: ignore
+          retention-days: 7
