@@ -550,6 +550,7 @@
     ]:
         out = machine.succeed(script)
         assert "NixOS:" in out, "%s did not print its stub note: %r" % (script, out)
+        assert out.splitlines()[0] == "omahedron: stub: nixos-declarative", out
 
     # nixos-adapted no-ops: browser policy writes are gone (silent, so
     # omarchy-theme-set output stays clean) and firmware update no longer
