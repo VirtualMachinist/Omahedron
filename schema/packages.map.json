@@ -5,6 +5,12 @@
   "generated": true,
   "packages": [
     {
+      "upstream": "hyprland",
+      "status": "pkgs",
+      "attr": "hyprland",
+      "notes": "Pinned Hyprland v0.56.2 flake package with Glaze 7.2.0 from a fixed-output source, matching its CMakeLists.txt find_package(glaze 7...<8) and FetchContent fallback. Avoids selecting incompatible Glaze 8 from its nixpkgs input and fetching during configure. Explicit consumer compositor packages still win."
+    },
+    {
       "upstream": "fish",
       "status": "nixpkgs",
       "attr": "fish",
@@ -207,7 +213,6 @@
     "gvfs-nfs",
     "gvfs-smb",
     "herdr",
-    "hyprland",
     "hyprland-guiutils",
     "hyprland-preview-share-picker",
     "hyprpicker",
