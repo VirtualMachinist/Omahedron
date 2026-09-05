@@ -10,3 +10,31 @@ Internal fleet first, public later. Same rules either way.
 6. Do not use the brand Omarchanite here.
 
 PR review list is at the bottom of AGENTS.md.
+
+## Validation
+
+Pull requests and pushes to `main` run flake evaluation, formatting, the
+Omarchy package build, and 17 non-VM checks. Full system builds and the
+Fish, desktop, and UX VM suites run through the `ci` workflow's manual
+`validation` input:
+
+```sh
+gh workflow run ci.yml --ref <branch> -f validation=all
+```
+
+`all` builds the example NixOS system, then runs all three VM suites on the
+same runner. Use `system`, `fish`, `desktop`, or `ux` to select one target;
+`preflight` only checks the runner, and `light` repeats the normal PR checks.
+The full jobs require at least 35 GiB free disk space, and VM runs first
+verify that native x86_64 KVM can create a VM. Build logs are retained as
+workflow artifacts for seven days.
+
+On a native x86_64 Linux builder, the equivalent full validation is:
+
+```sh
+nix build -L .#nixosConfigurations.example.config.system.build.toplevel
+nix flake check -L
+```
+
+A successful VM run is a pre-gate. Complete the [Latitude checklist](checklists/metal.md)
+before claiming verified desktop UX or publishing a product tag.
