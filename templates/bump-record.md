@@ -24,4 +24,4 @@
 }
 ```
 
-Human notes, diffs, and signatures go below. Keep the JSON block valid so Merci can lift it into `schema/` later if we add a records directory.
+Human notes, diffs, and signatures go below. Keep the JSON block valid so Schema can lift it into `schema/` later if we add a records directory.

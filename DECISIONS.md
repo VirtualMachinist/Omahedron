@@ -10,7 +10,7 @@ Template: [templates/adr.md](templates/adr.md).
 
 - Status: accepted
 - Date: 2026-09-04
-- Deciders: human maintainer, Eli
+- Deciders: human maintainer / Maintainer role
 
 **Decision.** The distro/product name is **Omahedron**. The org is **Hedronite**. The reserved sibling brand **Omarchanite** is not used in this repository (it will be some other substrate: Home Manager-only overlay, CLI, or deploy tool — TBD). The generic category phrase “nix-omarchy” may appear in prose as a descriptor, never as the product name.
 
@@ -29,7 +29,7 @@ Template: [templates/adr.md](templates/adr.md).
 
 **Why.** Matches the real work and keeps agents from “completing” pacman or Limine.
 
-**Consequences.** README banner and changelog always name gaps. Leo owns the sentence.
+**Consequences.** README banner and changelog always name gaps. Publishing owns the sentence.
 
 ---
 
@@ -227,3 +227,60 @@ Clarifies the earlier interview question: “who is this human” is declarative
 - Date: 2026-09-04
 
 **Decision.** This working tree ships documentation, schemas, and checklists before flake code. Subagents must not invent a from-scratch flake to “get ahead.”
+
+---
+
+## ADR-0020 — Pin v4.0.2 implementation landed
+
+- Status: accepted
+- Date: 2026-09-04
+- Deciders: human maintainer / Maintainer role
+
+**Decision.** ADR-0019 (docs-first) is satisfied for the initial drop. Implementation is on `main`: zicochaos adopt + Omarchy tag **v4.0.2** pin (PR1), scripts.lock policy refine (PR2), Hyprland **v0.56.2** + `omarchyVersion = "4.0.2"` override (PR3), docs public scrub (PR5 @ `18261ac`). Product tag `omahedron-4.0.2` still waits Latitude metal + Nix/CI GHA.
+
+**Why.** Flake invent is no longer the risk; premature `omahedron-4.0.2` tagging without metal/GHA is.
+
+**Consequences.** Agents may edit `flake.nix` / `pkgs/` / modules under Maintainer GO. Do not invent a second greenfield flake. Do not tag until metal-green.
+
+**Supersedes in part:** ADR-0019’s “no flake code yet” clause — docs-first for the *drop* remains historical; the tree now has code.
+
+---
+
+## ADR-0021 — allowUnfree default (ADOPT)
+
+- Status: accepted
+- Date: 2026-09-04
+- Deciders: human maintainer (Evan law via Maintainer)
+
+**Decision.** `allowUnfree` **default on** is Omahedron / Hedronite posture. We are OSS users and contributors, not FOSS fanatics. Align with nixarchy’s Install-menu-friendly default. Do not treat “keep allowUnfree explicit / off by default” as a virtue or an Avoid in competitive notes.
+
+**Why.** Omarchy’s selectable apps are largely unfree; a default-off policy makes the Install loop die on license errors and misrepresents how the desktop is used.
+
+**Consequences.** Module / catalog unfree whitelist stays; consumers who want a free-only machine override explicitly. Competitive teardown and SecOps notes must not re-litigate this as mesh purity.
+
+---
+
+## ADR-0022 — Public scrub; fleet runbooks outside git
+
+- Status: accepted
+- Date: 2026-09-04
+
+**Decision.** Public tree must not carry named fleet operators, `docs/FLEET.md`, or `docs/WORKSPACE.md`. AGENTS.md uses role titles only (Maintainer, Nix/CI, SecOps, UX/metal, Schema, Publishing). Private copies live in the vault under `ideas/foundry/omahedron/internal/`. `.gitignore` blocks `docs/FLEET.md`, `docs/WORKSPACE.md`, `AGENTS.hedronite.md`, `.hedronite/`, `PRIVATE.md`. Flake URL examples use `github:VirtualMachinist/Omahedron`.
+
+**Why.** Public collaboration without leaking internal fleet structure. PR5.
+
+**Consequences.** Vault internal/ is SoT for fleet cards; repo AGENTS.md is the public operating manual. Do not re-commit FLEET/WORKSPACE.
+
+---
+
+## ADR-0023 — NetworkManager before graphical session
+
+- Status: accepted
+- Date: 2026-09-04
+- Landed: Omahedron PR #7 merge `4437f39`
+
+**Decision.** Order `NetworkManager.service` **Before=** `display-manager.service` (no Requires=) so Quickshell binds NM’s D-Bus name after the bus is up. Upstream QML fix is separate (omacom/omarchy#9923). Diff source: [zicochaos/omarchy-nix#4](https://github.com/zicochaos/omarchy-nix/pull/4) (VirtualMachinist); landed on Omahedron via PR #7 (`4437f39`). Upstream QML recovery remains separate.
+
+**Why.** quickshell 0.3.0 has no NameOwnerChanged recovery (basecamp/omarchy#7324); race paints NOT CONNECTED while the link is up.
+
+**Consequences.** Landed on `main` (PR #7). First-boot NM/Quickshell race mitigated by unit ordering. Do not vendor-patch QML in `pkgs/` for this; track upstream omacom/omarchy#9923 separately.

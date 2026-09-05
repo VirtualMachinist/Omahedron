@@ -1,15 +1,16 @@
 # AGENTS.md
 
-Operating manual for Hedronite directors and their subagents in this repository.
+Operating manual for maintainers and coding agents working in this repository.
 
 Read this entire file before writing code or docs. Do not reopen questions that are settled in [DECISIONS.md](DECISIONS.md) unless new facts contradict them. New facts go into a new ADR, they do not silently overwrite.
 
 ## What this repo is
 
-Omahedron: trailing-stable Omarchy desktop on NixOS. Public flake plus Hedronite daily driver. Unofficial. Desktop parity, not distro parity.
+Omahedron: trailing-stable Omarchy desktop on NixOS. Public flake intended for daily-driver use. Unofficial. Desktop parity, not distro parity.
 
 Upstream product: https://github.com/basecamp/omarchy  
 Port architecture we adopt: https://github.com/zicochaos/omarchy-nix  
+Public remote: https://github.com/VirtualMachinist/Omahedron  
 First pin: Omarchy **v4.0.2**.
 
 ## Source of truth (by domain, not by rank)
@@ -20,7 +21,7 @@ Conflicts are reconciled by domain. Do not invent a “SPEC always wins” hamme
 |---|---|---|
 | Desktop behavior the user can see | Pinned `omarchy-src` | vendored tree + cite `bin/…`, `default/…`, `themes/…`, `shell/…` |
 | OS correctness (boot, store, privileges, two bootloaders) | NixOS | modules + COMPAT class `host` / `wrap` / `stub` / `na` |
-| Release identity (what we claim to ship) | Channels policy + lockfile | [docs/CHANNELS.md](docs/CHANNELS.md), future `flake.lock` |
+| Release identity (what we claim to ship) | Channels policy + lockfile | [docs/CHANNELS.md](docs/CHANNELS.md), `flake.lock` |
 | Script classification | Ledger | [schema/scripts.lock.json](schema/scripts.lock.json) |
 | Package classification | Map | [schema/packages.map.json](schema/packages.map.json) |
 | Everything else | An ADR | [DECISIONS.md](DECISIONS.md) + [templates/adr.md](templates/adr.md) |
@@ -51,19 +52,19 @@ Code and the ledger that describes it change in the **same commit**.
 - Use the brand **Omarchanite** in this repo (reserved)
 - Rename the product away from **Omahedron** in passing
 
-## Director cards (this repo only)
+## Roles (this repo)
 
-Twelve directors exist in the Hedronite fleet. Only these touch this tree unless Eli assigns otherwise.
+Private fleet runbooks and named operator cards live **outside** this repository. In-tree work uses role titles only:
 
-### Eli — Chief Director & Fleet Orchestrator
+### Maintainer
 
-Owns: work sequencing, freeze/thaw of decisions, who is allowed to change what.
+Owns: work sequencing, freeze/thaw of decisions, who may change what, vendor/agent-glue scope when it touches this tree.
 
 Does: open bump work items, stop scope fights, refuse drive-by flakes.
 
-Does not: write vendor patches.
+Does not: silently overwrite ADRs.
 
-### Lea — Director of Infrastructural Integrity
+### Nix/CI
 
 Owns: NixOS module, HM module, flake outputs, channels as refs, CI eval.
 
@@ -71,7 +72,7 @@ Does: keep `$OMARCHY_PATH` honest, session PATH, activation, pairing with nixpkg
 
 Does not: restyle the bar.
 
-### Vini — Director of SecOps
+### SecOps
 
 Owns: security-tag response, stub honesty, “no host pacman”, sshd/sudo/polkit notes in COMPAT.
 
@@ -79,15 +80,7 @@ Does: treat official 4.0.x security notes as a bump-open event with no soak.
 
 Does not: ship a “temporary” ALPM root.
 
-### Marci — Director of SWE: R&D
-
-Owns: vendor derivation, `--replace-fail` patches, `pkgs/` for packages absent from nixpkgs, script wraps.
-
-Does: one upstream rev + glue = one commit. Cite upstream paths.
-
-Does not: clean up Quickshell because Nix would be prettier.
-
-### Sati — Director of SWE: Frontend
+### UX/metal
 
 Owns: what the user sees. Theme render, menus, first-run feel, metal checklist truthfulness.
 
@@ -95,15 +88,7 @@ Does: refuse VMSVGA “it looked fine.”
 
 Does not: accept screenshots from QEMU software framebuffer as ship evidence.
 
-### Jupi — Director of SWE: Backend + Marci
-
-Owns: agent runtime glue (Cursor, Grok, Cline, OpenCode, Devin, OMP). Vendor Omarchy’s surface; wrap Arch installers.
-
-Does: keep launch paths and skills wired on the Latitude.
-
-Does not: vendor a full cloud Grok bot onto 8 GB RAM. Cloud stays cloud.
-
-### Merci — Director of DataOps
+### Schema
 
 Owns: `schema/*`, inventories, bump records, generated-vs-hand COMPAT consistency.
 
@@ -111,7 +96,7 @@ Does: fail CI when a new `omarchy-*` appears unclassified.
 
 Does not: leave ledger rows as prose-only.
 
-### Leo — Director of Publishing
+### Publishing
 
 Owns: README banner, CHANGELOG, credits, “we are not official” language.
 
@@ -119,13 +104,9 @@ Does: every shipped tag gets “parity with Omarchy vX.Y.Z; known gaps: …”.
 
 Does not: claim Omacom support.
 
-### Out of this repo unless Eli writes an ADR
+## Coding agents (Cursor, Cline, cloud composers, …)
 
-Uri (Commerce), Nepi (Treasury), Elio (Personal Assistant), Oli (Tutor). Oli may explain Nix to the human. Oli does not merge glue.
-
-## Subagents (Cursor, Cline, Kimi, GLM, MiniMax, …)
-
-You inherit this file. You do not get a private constitution. If a director’s card and this file disagree, this file plus DECISIONS.md win and you stop to ask Eli.
+You inherit this file. You do not get a private constitution. If informal guidance and this file disagree, this file plus DECISIONS.md win and you stop to ask the Maintainer.
 
 Before any patch:
 
@@ -135,13 +116,12 @@ Before any patch:
 
 ## Implementation gate
 
-This drop has **no flake**. The first implementation commit is:
+Public remote is `github:VirtualMachinist/Omahedron`. Pin work already lands on `main` (Omarchy **v4.0.2**). Before any `omahedron-4.0.2` tag:
 
-1. Fork zicochaos/omarchy-nix into the Hedronite remote.
-2. Pin `omarchy-src` to tag `v4.0.2`.
-3. Run [checklists/bump.md](checklists/bump.md).
-4. Fill `schema/scripts.lock.json` from that tag’s `bin/`.
-5. Metal on the Latitude before any `omahedron-4.0.2` tag.
+1. Keep `omarchy-src` on the claimed pin; do not track `quattro` HEAD on user-facing stable.
+2. Run [checklists/bump.md](checklists/bump.md) on bump.
+3. Keep `schema/scripts.lock.json` aligned with that tag’s `bin/`.
+4. Metal on the Latitude before the product tag.
 
 Do not start from henrysipp/omarchy-nix. Do not start from T00fy/omanix.
 

@@ -1,6 +1,6 @@
 # ROADMAP.md
 
-Phases are gates, not vibes. Eli moves a phase only when the exit checks are true.
+Phases are gates, not vibes. Maintainer moves a phase only when the exit checks are true.
 
 ## Now — working tree 0.1 (this drop)
 
@@ -14,7 +14,7 @@ Exit:
 
 ## Next — stand up the port (`omahedron-4.0.2`)
 
-Owner mix: Lea, Marci, Merci, Vini, Sati.
+Owner mix: Nix/CI, vendor, Schema, SecOps, UX/metal.
 
 1. Fork zicochaos/omarchy-nix. Preserve license and credit.
 2. Pin `omarchy-src` to GitHub tag `v4.0.2`.

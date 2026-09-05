@@ -45,7 +45,7 @@ Reproduce upstream behavior. Diffs are NixOS-isms or known gaps, not features.
 
 ## Bump procedure (every official stable tag)
 
-Merci records a bump file from [templates/bump-record.md](../templates/bump-record.md).
+Schema records a bump file from [templates/bump-record.md](../templates/bump-record.md).
 
 1. Note old pin and new tag. Diff at least:
    - `bin/`

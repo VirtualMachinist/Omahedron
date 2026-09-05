@@ -1,4 +1,4 @@
-# Omahedron CI eval (Lea seat). Pre-tag wire-up — Evan GO via Eli 2026-09-04.
+# Omahedron CI: package build and non-VM checks before release validation.
 # VM nixosTest checks (omarchy-desktop / ux / fish) stay local/metal; not run on github-hosted.
 name: ci
 
@@ -42,7 +42,7 @@ jobs:
         run: |
           set -euo pipefail
           # Skip nixosTest VM harnesses (need KVM / nested virt on github-hosted).
-          # Fail closed on ledger / package / eval checks already defined in flake.nix.
+          # Run the manifest / package / eval checks already defined in flake.nix.
           checks=(
             omarchy-skill
             catalog-consistency
