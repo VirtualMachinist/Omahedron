@@ -12,3 +12,7 @@
 | Omarchy | Upstream product. Always “upstream” or “official” when compared. |
 
 Module option names stay `omarchy.enable` so we do not break the zicochaos consumer shape on day one. Branding lives in README, greeter copy, and changelog.
+
+## Product logo
+
+Official Omahedron mark (Evan-generated). Not Omarchy/NixOS. Separate from Hedronite gold seal.
