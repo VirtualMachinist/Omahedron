@@ -14,3 +14,13 @@ Evan-generated product mark for **Omahedron**. Owned outright by Evan — **not*
 ## Ownership
 
 Official **Omahedron** product identity. Lime/dark-green isometric cube wireframe on black. Separate from Hedronite site brandmark (gold seal).
+
+## Motion (Imagine)
+
+| File | Use |
+|---|---|
+| `omahedron-imagine-f2a010cc.mp4` | Official green-cube motion (~2.9MB) |
+| `omahedron-imagine-poster-f2a010cc.jpg` | Poster still |
+
+Source: grok.com/imagine post `f2a010cc`. Same product identity as the static mark — **not** the Hedronite gold seal.
+
