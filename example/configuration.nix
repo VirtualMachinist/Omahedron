@@ -20,7 +20,7 @@
 # consumer's default nixpkgs would (in particular WITHOUT allowUnfree — the
 # omarchy module whitelists the one unfree default app, obsidian, itself).
 #
-# Build and run as a VM (see docs/vm.md):
+# Build and run as a VM (see docs/install.md, section "Virtual machine"):
 #
 #   nix build .#nixosConfigurations.example.config.system.build.vm
 #   QEMU_OPTS="-device virtio-gpu-pci" ./result/bin/run-nixos-vm

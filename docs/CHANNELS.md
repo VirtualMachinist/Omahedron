@@ -2,6 +2,8 @@
 
 Official Omarchy names channels `stable`, `rc`, `edge`, and `dev`. Omahedron mirrors the first three. We do not advertise a fourth user channel.
 
+The release cadence described on this page is called **Omachron** in user-facing material: Omahedron trails Omarchy's stable tags on a fixed policy rather than on a calendar.
+
 ## Refs (once the flake exists)
 
 Proposed flake outputs / branches. Do not invent others.
