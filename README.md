@@ -1,5 +1,12 @@
 # Omahedron
 
+<p align="center">
+  <img src="docs/brand/omahedron-mark-256.png" alt="Omahedron product logo" width="160" />
+</p>
+
+**Product logo:** Evan-generated, owned outright — lime/dark-green isometric cube on black. **Not** the Omarchy or NixOS mark. **Not** the Hedronite gold seal (site brandmark). Brand kit: [docs/brand/](docs/brand/).
+
+
 Hedronite's independently maintained **trailing-stable rebuild of the Omarchy desktop** on NixOS.
 
 Omahedron is to [Omarchy](https://omarchy.org) what Rocky Linux / AlmaLinux are to CentOS: same product surface at a blessed upstream version, different governance, no vendor support contract.
