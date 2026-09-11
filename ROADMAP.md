@@ -13,7 +13,7 @@ Exit for *calling ourselves the port to pick*:
 - [ ] Locator purge (`$OMARCHY_NIX_FLAKE` + `/etc/nixos` only)
 - [ ] Thin `desktop` profile vs `workstation` / `unfree.enable`
 - [x] Rebase/overlay plan vs zicochaos `main` (Omarchy v4.0.3) — [docs/REBASE-PLAN.md](docs/REBASE-PLAN.md)
-- [ ] Pin catch-up or dated deferral
+- [x] Pin catch-up or dated deferral — v4.0.3 @ `0534987` (G3)
 - [ ] Nix verbs page + locator that matches or beats nixarchy
 - [ ] Hyprland/Mesa substituter proven in install.md
 - [ ] `schema/scorecard.json` checked in

@@ -326,6 +326,23 @@ let
         # libvips (nixpkgs attr `vips`): omarchy-image-picker thumbnails
         # (v4.0.0; upstream package name libvips).
         vips
+        # qt6-imageformats (nixpkgs attr qt6.qtimageformats): webp decoding
+        # for the shell — v4.0.2 stores theme backgrounds as webp
+        # (migration 1787133200 installs the Arch package; we ship it).
+        qt6.qtimageformats
+        # qt6-multimedia (nixpkgs attr qt6.qtmultimedia): native video
+        # wallpaper playback — v4.0.3 (migration 1786609204 installs the
+        # Arch qt6-multimedia + qt6-multimedia-ffmpeg pair; nixpkgs builds
+        # qtmultimedia with the ffmpeg backend included).
+        qt6.qtmultimedia
+        # vi: a standard terminal editor (v4.0.2; migration 1788596255
+        # installs the Arch `vi` package). The nixpkgs 26.05 pin has no `vi`
+        # attr — nvi provides the same `vi` command.
+        nvi
+        # cups-pk-helper: system-config-printer routes printer administration
+        # through polkit (v4.0.2 CUPS hardening; upstream installs it in
+        # omarchy-base.packages).
+        cups-pk-helper
         # fwupdmgr for omarchy-update-firmware (service enabled in parity block).
         fwupd
 
@@ -733,6 +750,12 @@ in
       # blocks (Task 5). Unknown names throw an eval error naming the file —
       # in the normal flow omarchy-nix-add validates before writing.
       #
+      # Names are nixpkgs attribute *paths*, not only top-level attrs:
+      # omarchy-nix-add accepts `nixpkgs#kdePackages.dolphin` (flake attr
+      # paths) and writes that string into the JSON. Resolve with
+      # attrByPath so a literal-dot pkgs.${n} lookup cannot reject a real
+      # nested package. Same split as catalog-consistency probes.
+      #
       # IMPORTANT: managedFeatures is config-dependent (it reads
       # cfg.managedPackagesFile). Referencing it at the mkMerge LIST level
       # would force it during the module system's property-pushing phase,
@@ -758,7 +781,14 @@ in
                   throw "${toString cfg.managedPackagesFile}: unknown feature '${builtins.head unknown}' (known: ${builtins.concatStringsSep ", " (builtins.attrNames managedFeatureDefs)})"
                 else
                   map (
-                    n: pkgs.${n} or (throw "${toString cfg.managedPackagesFile}: unknown nixpkgs attribute '${n}'")
+                    n:
+                    let
+                      path = lib.splitString "." n;
+                    in
+                    if lib.hasAttrByPath path pkgs then
+                      lib.getAttrFromPath path pkgs
+                    else
+                      throw "${toString cfg.managedPackagesFile}: unknown nixpkgs attribute '${n}'"
                   ) managedPkgs;
             }
           ]
@@ -795,9 +825,12 @@ in
         services.power-profiles-daemon.enable = lib.mkDefault true;
         services.printing = {
           enable = lib.mkDefault true;
-          # Upstream v4.0.2 migrations/1788009111.sh removes cups-browsed.
-          # Keep CUPS for configured printers, but disable automatic queue
-          # discovery. A consumer can explicitly opt back in via NixOS.
+          # cups-browsed: remote printer discovery. Upstream removed automatic
+          # printer discovery entirely in v4.0.2 (security hardening,
+          # migration 1788009111 drops cups-browsed); match that here. The
+          # seeded autostart print-applet.desktop still expects a running
+          # CUPS (kept). nixpkgs 26.05 exposes this as services.printing.browsed
+          # (not .cups-browsed).
           browsed.enable = lib.mkDefault false;
         };
         # gnome-keyring: upstream ships it; the old "out of scope" note in
@@ -958,16 +991,29 @@ in
           source = "${cfg.package}/share/omarchy/etc/gnupg/dirmngr.conf";
         };
 
-        # sudo parity (upstream etc/sudoers.d/omarchy-passwd-tries,
-        # omarchy-asdcontrol, omarchy-tzupdate): 10 password tries; NOPASSWD
-        # for asdcontrol (Apple Studio Display brightness from the bar),
-        # tzupdate and timedatectl set-timezone (menu Setup → Timezone).
-        # Profile paths (not store paths) so exclude_packages filtering
-        # still works — an uninstalled command makes the rule inert instead
-        # of a closure reference. Plain assignment, not mkDefault: nixpkgs
-        # defines its own default extraRules/extraConfig at normal priority,
-        # which would silently drop mkDefault content; same-priority
-        # definitions concatenate.
+        # Kitty base defaults (upstream etc/xdg/kitty/kitty.conf, v4.0.3):
+        # upstream moved the stock config (font, window, keybindings,
+        # listen_on) to the system XDG dir and reduced the user seed to a
+        # thin include/override file. kitty reads /etc/xdg via
+        # XDG_CONFIG_DIRS, so vendoring keeps upstream's layering — user
+        # overrides in ~/.config/kitty keep winning.
+        environment.etc."xdg/kitty/kitty.conf" = lib.mkIf (cfg.package != null) {
+          source = "${cfg.package}/share/omarchy/etc/xdg/kitty/kitty.conf";
+        };
+
+        # sudo parity (upstream etc/sudoers.d/omarchy-passwd-tries and
+        # omarchy-tzupdate): 10 password tries; NOPASSWD for tzupdate (port
+        # addition) and timedatectl set-timezone. v4.0.1 removed upstream's
+        # omarchy-asdcontrol grant (passwordless path to root): the Apple
+        # Studio Display brightness script now uses plain `sudo asdcontrol`
+        # and takes the prompt, same here. The timedatectl rule is
+        # upstream's v4.0.2 tightening: a ^-anchored regex accepting exactly
+        # one well-formed timezone argument. Profile paths (not store paths)
+        # so exclude_packages filtering still works — an uninstalled command
+        # makes the rule inert instead of a closure reference. Plain
+        # assignment, not mkDefault: nixpkgs defines its own default
+        # extraRules/extraConfig at normal priority, which would silently
+        # drop mkDefault content; same-priority definitions concatenate.
         security.sudo.extraConfig = ''
           Defaults passwd_tries=10
         '';
@@ -976,15 +1022,11 @@ in
             groups = [ "wheel" ];
             commands = [
               {
-                command = "/run/current-system/sw/bin/asdcontrol";
-                options = [ "NOPASSWD" ];
-              }
-              {
                 command = "/run/current-system/sw/bin/tzupdate";
                 options = [ "NOPASSWD" ];
               }
               {
-                command = "/run/current-system/sw/bin/timedatectl set-timezone *";
+                command = "/run/current-system/sw/bin/timedatectl ^set-timezone [A-Za-z0-9_+][A-Za-z0-9_+.-]*(/[A-Za-z0-9_+][A-Za-z0-9_+.-]*)*$";
                 options = [ "NOPASSWD" ];
               }
             ];
@@ -1304,6 +1346,9 @@ in
           # + agent diagnosis). Upstream enables it from
           # install/user/first-run/enable-user-units.sh.
           omarchy-crash-watch.wantedBy = [ "graphical-session.target" ];
+          omarchy-tailscale-receive.wantedBy = lib.mkIf config.services.tailscale.enable [
+            "graphical-session.target"
+          ];
         };
       })
 

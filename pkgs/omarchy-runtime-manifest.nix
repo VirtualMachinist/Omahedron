@@ -51,15 +51,15 @@
     };
     omarchy-setup-security-sudoless-docker = {
       class = "declarative-note";
-      note = "Sudoless Docker is declarative: set virtualisation.docker.enable = true and users.users.<name>.extraGroups = [ \"docker\" ] in your flake config (docker group ≈ passwordless root).";
+      note = "Group membership is declarative: add \"docker\" to users.users.<name>.extraGroups in your flake config and rebuild (then log out/in — the docker group is passwordless root, the same warning upstream shows).";
     };
     omarchy-remove-security-sudoless-docker = {
       class = "declarative-note";
-      note = "Sudoless Docker is declarative: remove \"docker\" from users.users.<name>.extraGroups in your flake config and rebuild.";
+      note = "Group membership is declarative: remove \"docker\" from users.users.<name>.extraGroups in your flake config and rebuild.";
     };
     omarchy-theme-set-browser-policy = {
       class = "declarative-note";
-      note = "Browser managed policies under /etc are declarative: set programs.chromium.policies / environment.etc in your flake config (theme accent color does not follow at runtime on NixOS).";
+      note = "Browser policy directories under /etc are module-owned on NixOS (programs.chromium.policies / environment.etc); the browser accent color cannot follow the theme at runtime.";
     };
     omarchy-setup-direct-boot = {
       class = "declarative-note";
@@ -215,6 +215,21 @@
     };
 
     # --- user-safe: kept verbatim; `allow` lists the audited leftovers ------
+    # v4.0.3 AI wave. The Hermes pair is unreachable on NixOS (hermes is not
+    # on the pin — menu entries dropped); kept verbatim with user-scope
+    # leftovers declared. OpenClaw IS installable (catalog install.ai.openclaw).
+    omarchy-install-ai-hermes = {
+      class = "user-safe";
+      allow = [ "systemctl-user" ];
+    };
+    omarchy-remove-ai-hermes = {
+      class = "user-safe";
+      allow = [ "systemctl-user" ];
+    };
+    omarchy-remove-ai-openclaw = {
+      class = "user-safe";
+      allow = [ "systemctl-user" ];
+    };
     omarchy-audio-tuning = {
       class = "user-safe";
       # systemctl --user manages ONLY the per-user omarchy-speaker-tuning

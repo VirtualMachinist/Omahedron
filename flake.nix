@@ -1,5 +1,5 @@
 {
-  description = "Omahedron: trailing-stable Omarchy desktop on NixOS (pinned to v4.0.2)";
+  description = "Omahedron: trailing-stable Omarchy desktop on NixOS (pinned to v4.0.3)";
 
   inputs = {
     # Stable nixpkgs (26.05) so consumers on a stable NixOS install do NOT get
@@ -10,11 +10,11 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
 
     # Upstream Omarchy is NOT a flake; we vendor the tagged tree as a
-    # derivation (see pkgs/omarchy.nix). First Omahedron pin: v4.0.2.
+    # derivation (see pkgs/omarchy.nix). First Omahedron pin: v4.0.2; G3: v4.0.3.
     # Update with:
     #   nix flake lock --update-input omarchy-src
     omarchy-src = {
-      url = "github:basecamp/omarchy/v4.0.2";
+      url = "github:basecamp/omarchy/v4.0.3";
       flake = false;
     };
 
@@ -55,10 +55,10 @@
       systems = [ "x86_64-linux" ];
       forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f system);
 
-      # Upstream tag v4.0.2 still ships version file contents "4.0.0.alpha"
-      # (commit 346e69e1). Override so package names / meta claim the desktop
+      # Upstream tag v4.0.3 still ships version file contents "4.0.0.alpha"
+      # (commit 0534987). Override so package names / meta claim the desktop
       # pin we actually consume — stop reading the stale alpha string.
-      omarchyVersion = "4.0.2";
+      omarchyVersion = "4.0.3";
 
       # External pkgs for packages/demo/tests. Global allowUnfree is
       # intentionally NOT set — it used to mask the real consumer path
@@ -964,7 +964,7 @@
                 cmp -s "$TMPDIR/before" "$TMPDIR/after" \
                   || fail "case5: adapter is not idempotent"
 
-                # The v4.0.2 XCompose adapter keeps custom sequences and
+                # The v4.0.3 XCompose adapter keeps custom sequences and
                 # unrelated includes, and tolerates a failed live restart.
                 cat > "$STUB/omarchy-restart-xcompose" <<'RESTART'
                 #!/bin/sh

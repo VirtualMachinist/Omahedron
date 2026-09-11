@@ -76,7 +76,6 @@
   "1784568652.sh" = "skip"; # mask NetworkManager-wait-online — native in the module
   #                           # (systemd.services.NetworkManager-wait-online.enable = false)
   "1784672586.sh" = "skip"; # quickshell-git via pacman (we ship nixpkgs quickshell)
-  "1784809451.sh" = "skip"; # /etc/updatedb.conf + plocate restart (system-level)
   "1784809452.sh" = "skip"; # snapper timeline cleanup (Arch/Btrfs snapper)
   "1784818437.sh" = "skip"; # PAM fingerprint lid gate (NixOS PAM is declarative)
   "1784909971.sh" = "skip"; # mise wrapper regen (mise model rejected — catalog is final)
@@ -129,22 +128,58 @@
   "1786183928.sh" = "skip"; # regenerate mise tool wrappers (mise model rejected — catalog is final;
   #                           # omarchy-refresh-applications itself stays user-safe)
 
-  # v4.0.2 pin wave (was unclassified — exposed by GHA omarchy-migrations):
-  "1787133200.sh" = "skip"; # qt6-imageformats via omarchy-pkg-add (pacman)
-  "1787399318.sh" = "skip"; # quickshell-git -> packaged quickshell via pacman
-  "1787481315.sh" = "user-safe"; # re-stage theme via omarchy-theme-refresh ($HOME / OMARCHY_PATH)
-  "1787494718.sh" = "skip"; # FIDO2 /etc/fido2 authfile ownership (system)
-  "1787515927.sh" = "skip"; # browser policy dir hardening under /etc (system)
-  "1787580187.sh" = "skip"; # docker group opt-in + sudoless-docker removal (system)
-  "1787589206.sh" = "skip"; # pacman.conf SigLevel / omarchy-keyring (Arch)
-  "1787618700.sh" = "user-safe"; # Hyprland touchpad/touchscreen toggle state files ($HOME)
-  "1787691200.sh" = "skip"; # /usr/lib/chromium/initial_preferences EULA seed (system)
-  "1787815267.sh" = "skip"; # cups-browsed account harden + pkg-add/drop (system/pacman)
-  "1787865477.sh" = "skip"; # remove user from input group via gpasswd (system)
-  "1788009111.sh" = "skip"; # NixOS defaults services.printing.browsed.enable = false; existing queues are not imperatively deleted (COMPAT)
-  "1788025225.sh" = "skip"; # purge retired installer sudoers/systemd artifacts (system)
+  # v4.0.1/v4.0.2 wave (still vendored at v4.0.3):
+  "1787133200.sh" = "skip"; # qt6-imageformats via omarchy-pkg-add (declarative: module ships
+  #                           # qt6.qtimageformats for webp theme backgrounds)
+  "1787399318.sh" = "skip"; # quickshell-git -> quickshell via pacman (module ships nixpkgs
+  #                           # quickshell; upstream 0.3.1 switch-back is what we already run)
+  "1787481315.sh" = "user-safe"; # re-stage the current theme to drop installed-theme code
+  #                           # (theme staging is $HOME-only; missing theme falls back
+  #                           # to omarchy-theme-set "Tokyo Night", also $HOME)
+  "1787494718.sh" = "skip"; # FIDO2 authfile ownership in /etc/fido2 (security.pam.u2f owns the
+  #                           # authfile declaratively on NixOS)
+  "1787515927.sh" = "skip"; # browser policy dir hardening under /etc (module-owned on NixOS)
+  "1787580187.sh" = "skip"; # docker group opt-out: gpasswd + Docker.desktop refresh (group
+  #                           # membership is users.users.<name>.extraGroups on NixOS; the port
+  #                           # never put anyone in docker by default)
+  "1787589206.sh" = "skip"; # pacman SigLevel for the [omarchy] repo (pacman)
+  "1787618700.sh" = "user-safe"; # input-device toggles: generated Lua -> plain name file
+  #                           # ($HOME/.local/state) + hyprctl reload
+  "1787691200.sh" = "skip"; # Chromium first-run EULA seed at /usr/lib/chromium (store path is
+  #                           # immutable; nixpkgs chromium answers its own first run)
+  "1787815267.sh" = "skip"; # CUPS account separation: pacman + systemctl + sysusers (CUPS is
+  #                           # services.printing on NixOS)
+  "1787865477.sh" = "skip"; # drop the input group grant via gpasswd (users.users is declarative;
+  #                           # NixOS never granted input group-wide)
+  "1788009111.sh" = "skip"; # remove cups-browsed + implicitclass queues (declarative: the module
+  #                           # sets services.printing.browsed.enable = false, same v4.0.2 intent)
+  "1788025225.sh" = "skip"; # remove privileged files from retired Omarchy installers
+  #                           # (/etc/sudoers.d, /etc/systemd leftovers — never existed on NixOS)
   "1788102906.sh" = "adapter"; # XCompose ~/.XCompose repair kept; udev half in pkgs/migrations-nix/
-  "1788112314.sh" = "skip"; # pacman.conf edge->rc channel switch (Arch)
-  "1788124236.sh" = "skip"; # sshd PasswordAuthentication harden in /etc (NixOS declarative)
+  "1788112314.sh" = "skip"; # rc channel pacman repo pointers (pacman)
+  "1788124236.sh" = "skip"; # sshd password-auth hardening via /etc/ssh drop-in (services.openssh
+  #                           # is declarative; omarchy-setup-security-sshd is nixos-adapted)
+  # --- v4.0.3 wave ---
+  "1787215483.sh" = "skip"; # mise settings upgrade.auto_prune (mise model rejected — catalog is
+  #                           # final)
+  "1787760281.sh" = "skip"; # Hermes CLI wrapper via mise (mise model rejected; hermes not in
+  #                           # nixpkgs — menu entries dropped at package time)
+  "1787843905.sh" = "user-safe"; # link omarchy agent skills into ~/.hermes/skills
+  #                           # (ln -sfn, idempotent; same model as 1786098807)
+  "1788577553.sh" = "skip"; # cursor-agent via mise wrapper (mise model rejected; cursor-agent
+  #                           # not on the pin — setup.default.agent.cursor-agent dropped)
+  "1788619462.sh" = "skip"; # Hermes theme hand-over (hermes not in nixpkgs; pkg-present
+  #                           # self-gates to exit 0, and omarchy-theme-set-hermes is $HOME-only)
+  "1788662350.sh" = "skip"; # repair root-owned system-sleep hooks + supergfxd drop-in
+  #                           # (/usr/lib/systemd — NixOS owns system units declaratively)
+  "1788724825.sh" = "skip"; # Muse Code via mise wrapper (mise model rejected; Meta's muse is
+  #                           # NOT the nixpkgs `muse` attr — that is the MusE audio sequencer;
+  #                           # setup.default.agent.muse dropped)
+  "1788745941.sh" = "user-safe"; # Kitty config repair: stock-sha refresh via
+  #                           # omarchy-refresh-config + commenting out unrestricted
+  #                           # allow_remote_control ($HOME only)
+  "1788848726.sh" = "skip"; # retire the legacy user icon font (guards on the Arch path
+  #                           # /usr/share/fonts/omarchy/omarchy.ttf; NixOS installs never ran
+  #                           # the quattro upgrader and the module ships the font declaratively)
 
 }

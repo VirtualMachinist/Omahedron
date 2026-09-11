@@ -11,7 +11,7 @@ Source: https://github.com/basecamp/omarchy (also omacom/omarchy)
 
 Facts at 2026-09-04:
 
-- Quattro = 4.x. v4.0.0 shipped 2026-08-14. Follow-ups v4.0.1, **v4.0.2** (latest stable).
+- Quattro = 4.x. v4.0.0 shipped 2026-08-14. Follow-ups v4.0.1, v4.0.2, **v4.0.3** (latest stable).
 - Stack: Arch + Hyprland (≥0.56, Lua) + one Quickshell process + ~383 `omarchy-*` bash scripts + TOML/sed theme engine.
 - `$OMARCHY_PATH` is the root (Arch: `/usr/share/omarchy`).
 - Packaging: pacman + pkgs.omarchy.org. Channels: stable, rc, edge, dev. New installs start on stable.

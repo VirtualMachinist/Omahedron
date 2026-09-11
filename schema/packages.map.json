@@ -1,7 +1,7 @@
 {
   "$comment": "Hand-reviewed exact inventory of pinned install/*.packages. Availability describes the default module or a validated attribute, not full OS/package closure parity.",
-  "pin": "v4.0.2",
-  "upstream_rev": "346e69e1cec6c4e8924531874af6ba010a1bc99e",
+  "pin": "v4.0.3",
+  "upstream_rev": "0534987009061cbe2dacdde4ad564092ab698d12",
   "generated": false,
   "packages": [
     {

@@ -1,7 +1,7 @@
 {
   "$comment": "Hand-reviewed classification of the pinned upstream bin inventory and port helpers. Enforced by checks.omarchy-ledgers.",
-  "pin": "v4.0.2",
-  "upstream_rev": "346e69e1cec6c4e8924531874af6ba010a1bc99e",
+  "pin": "v4.0.3",
+  "upstream_rev": "0534987009061cbe2dacdde4ad564092ab698d12",
   "generated": false,
   "scripts": [
     {
@@ -1858,12 +1858,13 @@
     },
     {
       "id": "omarchy-launch-webapp",
-      "class": "vendor",
+      "class": "wrap",
       "upstream": "bin/omarchy-launch-webapp",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "notes": "NixOS adaptation in pkgs/omarchy.nix; upstream command name retained."
     },
     {
       "id": "omarchy-menu",
@@ -4114,6 +4115,123 @@
       "since_pin": "v4.0.2",
       "phase": "v1.2",
       "notes": "Upstream body retained; full workflow support remains phased to v1.2. Calls to Arch package helpers reach NixOS stubs; retaining the command does not claim end-to-end support."
+    },
+    {
+      "id": "omarchy-install-ai-hermes",
+      "class": "vendor",
+      "upstream": "bin/omarchy-install-ai-hermes",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.3",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-install-ai-openclaw",
+      "class": "vendor",
+      "upstream": "bin/omarchy-install-ai-openclaw",
+      "stand_in": null,
+      "user_visible": false,
+      "since_pin": "v4.0.3",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-install-ai-t3-code",
+      "class": "vendor",
+      "upstream": "bin/omarchy-install-ai-t3-code",
+      "stand_in": null,
+      "user_visible": false,
+      "since_pin": "v4.0.3",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-install-hermes-cli",
+      "class": "vendor",
+      "upstream": "bin/omarchy-install-hermes-cli",
+      "stand_in": null,
+      "user_visible": false,
+      "since_pin": "v4.0.3",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-install-openclaw-cli",
+      "class": "vendor",
+      "upstream": "bin/omarchy-install-openclaw-cli",
+      "stand_in": null,
+      "user_visible": false,
+      "since_pin": "v4.0.3",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-launch-openclaw",
+      "class": "vendor",
+      "upstream": "bin/omarchy-launch-openclaw",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.3",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-openclaw-onboard",
+      "class": "vendor",
+      "upstream": "bin/omarchy-openclaw-onboard",
+      "stand_in": null,
+      "user_visible": false,
+      "since_pin": "v4.0.3",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-remove-ai-hermes",
+      "class": "vendor",
+      "upstream": "bin/omarchy-remove-ai-hermes",
+      "stand_in": null,
+      "user_visible": false,
+      "since_pin": "v4.0.3",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-remove-ai-openclaw",
+      "class": "vendor",
+      "upstream": "bin/omarchy-remove-ai-openclaw",
+      "stand_in": null,
+      "user_visible": false,
+      "since_pin": "v4.0.3",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-remove-ai-perplexity",
+      "class": "vendor",
+      "upstream": "bin/omarchy-remove-ai-perplexity",
+      "stand_in": null,
+      "user_visible": false,
+      "since_pin": "v4.0.3",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-remove-ai-t3-code",
+      "class": "vendor",
+      "upstream": "bin/omarchy-remove-ai-t3-code",
+      "stand_in": null,
+      "user_visible": false,
+      "since_pin": "v4.0.3",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-theme-set-hermes",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-set-hermes",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.3",
+      "phase": "v1"
+    },
+    {
+      "id": "omarchy-theme-set-t3code",
+      "class": "vendor",
+      "upstream": "bin/omarchy-theme-set-t3code",
+      "stand_in": null,
+      "user_visible": true,
+      "since_pin": "v4.0.3",
+      "phase": "v1"
     }
   ],
   "port_scripts": [
