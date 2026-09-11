@@ -27,6 +27,40 @@
       '';
     };
 
+    profile = lib.mkOption {
+      type = lib.types.enum [
+        "desktop"
+        "workstation"
+      ];
+      default = "desktop";
+      description = ''
+        Module profile. `desktop` (default) is the thin sit-down Omarchy
+        session: compositor, Quickshell, themes, bindings, portals, audio,
+        NetworkManager, Bluetooth, Fish, and parseable stubs — without Docker,
+        Steam, Obsidian, LibreOffice, Kdenlive, mise-as-system-dev, zram at
+        100% RAM, swappiness 150, or a global unfree whitelist.
+
+        `workstation` adds the upstream kitchen-sink extras (Docker, zram
+        swap, zram-era sysctls, LibreOffice, Kdenlive, mise, lazydocker).
+        Obsidian and other unfree apps require `omarchy.unfree.enable`.
+      '';
+    };
+
+    unfree = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = ''
+          Opt in to unfree packages on the desktop profile: Obsidian and a
+          scoped `allowUnfreePredicate` for menu-managed unfree entries.
+          Workstation profile still requires this for Obsidian; it does not
+          silently enable Steam (use the Install menu / `omarchy-packages.json`
+          features). Unfree remains first-class and easy — not FOSS-purist —
+          but is no longer a silent global default on `profile = "desktop"`.
+        '';
+      };
+    };
+
     # The vendored omarchy derivation ($out/share/omarchy). Injected as a
     # `mkDefault` by the flake's nixosModules.default wrapper so consumers
     # don't set it themselves; left null here so the pure module (without the
@@ -304,12 +338,10 @@
     # evaluation cannot auto-detect absolute paths like /etc/nixos. Must match
     # where omarchy-nix-add writes (one shared resolver:
     # OMARCHY_NIX_FLAKE as a flake dir or its flake.nix file, fail-closed on
-    # an invalid explicit value → ~/omarchy-nix → ~/Projects/omarchy-nix →
-    # /etc/nixos, first candidate providing nixosConfigurations."$(hostname)"
-    # wins; a candidate is skipped only when its nixosConfigurations
-    # evaluate cleanly but lack the host entry (library clones) — eval
-    # failures keep the candidate — and writes
-    # <flake_dir>/omarchy-packages.json).
+    # an invalid explicit value → /etc/nixos when it provides
+    # nixosConfigurations."$(hostname)" (skipped when its nixosConfigurations
+    # evaluate cleanly but lack the host entry — library clones; eval failures
+    # keep the candidate) — and writes <flake_dir>/omarchy-packages.json).
     managedPackagesFile = lib.mkOption {
       type = lib.types.nullOr lib.types.path;
       default = null;

@@ -33,4 +33,4 @@ Omahedron forks that work and adds release engineering: official tag pins, chann
 
 This working tree: MIT.
 
-When the fork is created, keep upstream MIT text and add a NOTICE that names both Omarchy and zicochaos/omarchy-nix.
+This tree is MIT. LICENSE names both Omarchy and zicochaos/omarchy-nix.

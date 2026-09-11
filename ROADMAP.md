@@ -2,34 +2,28 @@
 
 Phases are gates, not vibes. Maintainer moves a phase only when the exit checks are true.
 
-## Now — working tree 0.1 (this drop)
+## Now — competitive bar (ADR-0024)
 
-Exit:
+Exit for *calling ourselves the port to pick*:
 
-- [x] SPEC, DECISIONS, AGENTS, README
-- [x] COMPAT skeleton, CHANNELS, UPSTREAM adapted to tag pins
-- [x] schemas and checklists
-- [ ] Hedronite git remote created (human)
-- [ ] Directors given this tree as the constitution
+- [x] SPEC, DECISIONS, AGENTS, README (public)
+- [x] COMPAT + ledgers + CI fail-closed
+- [x] Pin v4.0.2 + Latitude metal + git tag `omahedron-4.0.2`
+- [x] [docs/COMPETE.md](docs/COMPETE.md) landed; AGENTS points at it
+- [ ] Locator purge (`$OMARCHY_NIX_FLAKE` + `/etc/nixos` only)
+- [ ] Thin `desktop` profile vs `workstation` / `unfree.enable`
+- [x] Rebase/overlay plan vs zicochaos `main` (Omarchy v4.0.3) — [docs/REBASE-PLAN.md](docs/REBASE-PLAN.md)
+- [x] Pin catch-up or dated deferral — v4.0.3 @ `0534987` (G3)
+- [x] Nix verbs page + locator that matches or beats nixarchy — [docs/NIX-VERBS.md](docs/NIX-VERBS.md)
+- [x] Hyprland/Mesa substituter proven in install.md — `checks.omarchy-hyprland-cache`
+- [ ] `schema/scorecard.json` checked in — [`schema/scorecard.json`](schema/scorecard.json) @ G6
+- [x] README rewrite; no “best” until COMPETE §4.5 — G7 @ feat/compete
 
-## Next — stand up the port (`omahedron-4.0.2`)
+Ordered queue and merge/tag gates: [docs/COMPETE.md](docs/COMPETE.md) §5 and §4.
 
-Owner mix: Nix/CI, vendor, Schema, SecOps, UX/metal.
+## Landed — stand up the port (`omahedron-4.0.2`)
 
-1. Fork zicochaos/omarchy-nix. Preserve license and credit.
-2. Pin `omarchy-src` to GitHub tag `v4.0.2`.
-3. Run [checklists/bump.md](checklists/bump.md) against that tag vs zicochaos’s last lock.
-4. Fill [schema/scripts.lock.json](schema/scripts.lock.json) from `bin/` + call sites.
-5. Fill [schema/packages.map.json](schema/packages.map.json) from `install/omarchy-*.packages`.
-6. Make `nix flake check` fail on unclassified binaries.
-7. Wrap update / install-remove to flake + rebuild (zicochaos already does most of this — verify against 4.0.2 menus).
-8. VM pre-gate.
-9. Latitude metal checklist, lite dogfood.
-10. Tag `omahedron-4.0.2`. Changelog: “parity with Omarchy v4.0.2; known gaps: …”.
-
-Exit: public module imports, Latitude session matches v4.0.2 desktop targets in SPEC, ledger complete for that tag.
-
-Current implementation: pinned port, native full-system build, Fish/desktop/UX VM pre-gate, and direct script/package ledger enforcement are in place. Next is the Latitude metal checklist and lite dogfood; the product tag remains gated on that evidence. The package ledger explicitly retains seven unaudited optional hardware mappings. Diagnostic stub prefixes now follow ADR-0009; caller-required silence and exit codes remain tested exceptions.
+Fork of zicochaos/omarchy-nix, `omarchy-src` at v4.0.2, ledgers, VM pre-gate, Latitude metal, git tag `omahedron-4.0.2` @ `08e2f1d`. No GitHub Release yet. Package ledger still retains seven unaudited optional hardware mappings.
 
 ## Next + 1 — harden the rebuild (`4.0.2.x` / first security follow)
 

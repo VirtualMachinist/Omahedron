@@ -169,6 +169,16 @@
       feature = "ollama";
       binaries = [ "ollama" ];
     };
+    # v4.0.3: OpenClaw is both an Install > AI app and a default-agent
+    # choice upstream (Arch installs it via its own pacman package + CLI
+    # installer). The nixpkgs package is MIT but currently flagged insecure
+    # (2026.5.7) — the permit is entry-scoped, like bitwarden's electron.
+    "install.ai.openclaw" = {
+      arch = "openclaw";
+      pkgs = [ "openclaw" ];
+      binaries = [ "openclaw" ];
+      insecureNames = [ "openclaw-2026.5.7" ];
+    };
     "install.ai.crush" = {
       arch = "crush-bin";
       pkgs = [ "crush" ];
@@ -196,6 +206,9 @@
       unfreeNames = [ "github-copilot-cli" ];
     };
     "install.ai.gemini" = {
+      # v4.0.3 upstream still selects Gemini via setup.default.agent.gemini
+      # and omarchy-default-agent gemini (mise on Arch); no Install > AI row
+      # upstream — we add one so catalog-consistency can rewire omarchy-nix-add.
       arch = "gemini-cli";
       pkgs = [ "gemini-cli" ];
       binaries = [ "gemini" ];

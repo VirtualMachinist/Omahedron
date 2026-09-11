@@ -7,13 +7,13 @@
 <h1 align="center">Omahedron</h1>
 
 <p align="center">
-  <strong>The Omarchy desktop, on NixOS.</strong><br>
-  Stable by schedule. Rollback by design. Same pixels, same keys.
+  <strong>Trailing-stable Omarchy vendor port for NixOS.</strong><br>
+  Rollback by design. Official tags, documented gaps.
 </p>
 
 <p align="center">
   <a href="https://github.com/VirtualMachinist/Omahedron/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/VirtualMachinist/Omahedron/ci.yml?branch=main&style=flat&colorA=222222&colorB=8FD14F&label=ci" alt="CI"></a>
-  <a href="https://github.com/basecamp/omarchy/releases/tag/v4.0.2"><img src="https://img.shields.io/badge/Omarchy-v4.0.2-8FD14F?style=flat&colorA=222222" alt="Omarchy v4.0.2"></a>
+  <a href="https://github.com/basecamp/omarchy/releases/tag/v4.0.3"><img src="https://img.shields.io/badge/Omarchy-v4.0.3-8FD14F?style=flat&colorA=222222" alt="Omarchy v4.0.3"></a>
   <a href="https://nixos.org"><img src="https://img.shields.io/badge/NixOS-26.05-5277C3?style=flat&colorA=222222&logo=nixos&logoColor=white" alt="NixOS 26.05"></a>
   <a href="https://github.com/hyprwm/Hyprland/releases/tag/v0.56.2"><img src="https://img.shields.io/badge/Hyprland-0.56.2-58C7F3?style=flat&colorA=222222" alt="Hyprland 0.56.2"></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/VirtualMachinist/Omahedron?style=flat&colorA=222222&colorB=8FD14F" alt="MIT license"></a>
@@ -28,6 +28,8 @@
   <a href="#how-it-works">How it works</a> ·
   <a href="docs/install.md">Install guide</a> ·
   <a href="docs/options.md">Options</a> ·
+  <a href="docs/COMPETE.md">Compete</a> ·
+  <a href="schema/scorecard.json">Scorecard</a> ·
   <a href="#contributing">Contributing</a>
 </p>
 
@@ -38,13 +40,17 @@
 
 ---
 
-Omahedron is the [Omarchy](https://omarchy.org) desktop running on NixOS. The same Hyprland session, the same Quickshell bar, launcher, menus and lock screen, the same twenty-two themes with live swap, the same keybindings, the same `omarchy-*` commands. All of it comes straight from the official Omarchy source tree, pinned to a tagged upstream release and shipped as a Nix flake.
+**Not [henrysipp/omarchy-nix](https://github.com/henrysipp/omarchy-nix).** That repo is an early reimplementation (~797★ on GitHub); the author moved back to Arch and it is not maintained as a vendor port. **Omahedron** is a maintained fork of [zicochaos/omarchy-nix](https://github.com/zicochaos/omarchy-nix): we ship Omarchy's own desktop tree from official release tags, with ledgers, stubs, and a metal gate — not a Nix-native rice like [T00fy/omanix](https://github.com/T00fy/omanix).
+
+Omahedron is the [Omarchy](https://omarchy.org) desktop running on NixOS: Hyprland session, Quickshell bar, launcher, menus, lock screen, twenty-two stock themes with live swap, keybindings, and `omarchy-*` commands — vendored from the pinned upstream tag into the Nix store.
 
 It exists for **Omarchs who want NixOS underneath**: declarative configuration, atomic upgrades, and rollback to any previous generation from the boot menu. If Arch's pace is the one thing keeping you off Omarchy, this is the way in. If you already run NixOS and want Omarchy's desktop without maintaining a rice, this is the way in too.
 
-Omahedron is not a competing distro and not a rewrite. It is Omarchy's own desktop tree, vendored into the Nix store and driven by NixOS. We are members of the Omarchy community on NixOS instead of Arch, and we send fixes upstream. DHH himself has [looked at Nix](https://x.com/dhh/status/1952768570003272105) and pointed people toward a NixOS port. Omahedron is what that idea looks like carried all the way through.
+Omahedron is not a competing distro and not a rewrite. Unofficial. Not Basecamp, not 37signals, not Omacom.
 
-**431** upstream commands classified · **329** shipped untouched · **206** upstream packages mapped · **18** CI checks · **3** VM test suites · **1** Quickshell process
+**Follow a pin.** Last product git tag: [`omahedron-4.0.2`](https://github.com/VirtualMachinist/Omahedron/releases/tag/omahedron-4.0.2) (Omarchy v4.0.2). On branch `feat/compete`, the flake pins Omarchy **v4.0.3** (`0534987`) — there is **no** `omahedron-4.0.3` flake tag until metal + maintainer GO. Do not say “best port” until [docs/COMPETE.md](docs/COMPETE.md) §4.5 and [`schema/scorecard.json`](schema/scorecard.json) allow it.
+
+**444** upstream commands classified in [`schema/scripts.lock.json`](schema/scripts.lock.json) at pin [`v4.0.3`](schema/pin.json) (341 vendor · 33 wrap · 70 stub · plus pacman policy row) · **206** upstream packages mapped · **22** CI checks · **3** VM test suites · **1** Quickshell process
 
 ## Quick start
 
@@ -52,11 +58,16 @@ Three steps on an existing NixOS install. The [install guide](docs/install.md) h
 
 **1. Add Omahedron to your flake.**
 
+Pin the last tagged release (Omarchy v4.0.2), or track `main` / `feat/compete` for the v4.0.3 bump (no `omahedron-4.0.3` tag yet):
+
 ```nix
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
-    omahedron.url = "github:VirtualMachinist/Omahedron";
+    # Followable product tag (Omarchy v4.0.2):
+    omahedron.url = "github:VirtualMachinist/Omahedron/omahedron-4.0.2";
+    # Or track branch head (currently Omarchy v4.0.3 on feat/compete):
+    # omahedron.url = "github:VirtualMachinist/Omahedron/feat/compete";
   };
 
   outputs = { nixpkgs, omahedron, ... }: {
@@ -157,7 +168,7 @@ Omahedron rebuilds the desktop layer. The operating-system layer belongs to NixO
 
 Omahedron trails Omarchy on purpose. Omachron is the name of that cadence.
 
-- **Every release claims a desktop.** The user-facing version is Omarchy's own: `desktop = Omarchy 4.0.2`, frozen on a date, recorded in the module and the changelog. Flake tags follow it as `omahedron-4.0.2`.
+- **Every release claims a desktop.** The user-facing version is Omarchy's own: `desktop = Omarchy 4.0.x`, frozen on a date, recorded in [`schema/pin.json`](schema/pin.json) and the changelog. Flake tags follow it as `omahedron-X.Y.Z` when metal and maintainer GO allow.
 - **Patch and security tags ship immediately.** When Omarchy publishes a `4.0.x`, a bump opens the same day with no soak. Security notes jump the queue.
 - **Minor and major releases wait for the train to stop.** A `4.1.0` is pinned once its follow-up patches have settled, not on release day.
 - **Every release names its gaps.** The changelog line is always `parity with Omarchy vX.Y.Z; known gaps: …`.
@@ -174,13 +185,13 @@ Policy detail, including the bump state machine, is in [docs/CHANNELS.md](docs/C
 
 | | |
 |---|---|
-| Desktop | Omarchy **v4.0.2**, released 2026-08-31 |
-| Upstream commit | `346e69e1` |
+| Omarchy pin (branch `feat/compete`) | **v4.0.3** @ `0534987` — see [`schema/pin.json`](schema/pin.json) |
+| Last product git tag | **`omahedron-4.0.2`** @ `08e2f1d` (Omarchy v4.0.2); no GitHub Release yet |
 | NixOS | 26.05, with a planned cutover to 26.11 |
 | Hyprland | 0.56.2 |
 | Baseline hardware | Dell Latitude 5420, 8 GB RAM, Intel iGPU |
 
-Omahedron 4.0.2 runs on bare metal today and has passed smoke testing on the baseline machine. The first tagged release, `omahedron-4.0.2`, lands once the full [hardware checklist](checklists/metal.md) is signed off. Until then, track `main`.
+Metal signed on **`omahedron-4.0.2`**. The v4.0.3 bump (security/patch train) is on `feat/compete` with eval-green CI; VM pre-gate and metal for v4.0.3 are still open. Competitive scorecard: [`schema/scorecard.json`](schema/scorecard.json). Queue: [docs/COMPETE.md](docs/COMPETE.md).
 
 ## How it works
 
@@ -188,7 +199,7 @@ One rule drives the whole design: **if the user can see it, it comes from Omarch
 
 - The pinned Omarchy tree is vendored into the store as `$OMARCHY_PATH`, the same variable upstream uses, and `$OMARCHY_PATH/bin` is prepended to the session `PATH`.
 - Upstream scripts that need an Arch-ism are patched in place with `substituteInPlace --replace-fail`, so a silent upstream change fails the build instead of shipping broken.
-- Every one of the 431 upstream commands is classified in a ledger as `vendor` (shipped untouched), `wrap` (same name, NixOS mechanism underneath), or `stub` (prints why it does not apply here, never calls pacman). CI fails when a new upstream command appears unclassified.
+- Every upstream command at the pinned tag is classified in [`schema/scripts.lock.json`](schema/scripts.lock.json) as `vendor` (shipped with path/shebang adaptation), `wrap` (same name, NixOS mechanism underneath), or `stub` (parseable banner; never calls pacman). CI fails when a new upstream command appears unclassified.
 - Home Manager seeds the user-editable files once, as real files, so the Omarchy Setup menu and `omarchy-refresh-config` keep working exactly as upstream expects.
 - Hyprland comes from its own pinned flake input with a matching Mesa, so the compositor is the version Omarchy's Lua config was written for regardless of what stable nixpkgs carries.
 
@@ -202,18 +213,18 @@ modules/nixos/            # session, greeter, audio, portals, firmware, cache
 modules/home-manager/     # user seeds, theme state, first-run
 pkgs/omarchy.nix          # vendored upstream tree, patched, into $OMARCHY_PATH
 pkgs/<name>.nix           # Omarchy-owned apps that nixpkgs does not carry
-schema/                   # script ledger, package map, JSON schemas
+schema/                   # pin, scorecard, script ledger, package map, JSON schemas
 checks/                   # ledger enforcement and stub behaviour tests
 tests/                    # NixOS VM suites: desktop, Fish, UX
 example/configuration.nix # the reference consumer config CI builds
-docs/                     # install, options, COMPAT, CHANNELS, UPSTREAM, brand
+docs/                     # install, options, COMPAT, CHANNELS, UPSTREAM, COMPETE, brand
 ```
 
 </details>
 
 ## Contributing
 
-Issues and pull requests are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md), which covers the validation workflow, then [AGENTS.md](AGENTS.md) and [DECISIONS.md](DECISIONS.md) for the rules the tree already follows. Two of them matter most: desktop pixels come from Omarchy, and any new upstream command gets classified in the ledger in the same change.
+Issues and pull requests are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md), which covers the validation workflow, then [AGENTS.md](AGENTS.md), [docs/COMPETE.md](docs/COMPETE.md), and [DECISIONS.md](DECISIONS.md). Two rules matter most: desktop pixels come from Omarchy, and any new upstream command gets classified in the ledger in the same change. Do not change module defaults, pins, or README claims without COMPETE.
 
 When something we fix turns out to be an Omarchy bug rather than a NixOS-ism, it goes upstream. Being a good citizen of the Omarchy community is part of the job, not a side quest.
 

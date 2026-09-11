@@ -1,0 +1,24 @@
+{
+  "official_tag": "v4.0.3",
+  "omahedron_tag": null,
+  "state": "bump-open",
+  "kind": "patch",
+  "omarchy_src_rev": "0534987009061cbe2dacdde4ad564092ab698d12",
+  "previous_pin": "v4.0.2",
+  "nixpkgs_pair": "nixos-26.05",
+  "opened_on": "2026-09-11",
+  "tagged_on": null,
+  "security": true,
+  "soak_applied": false,
+  "checks": {
+    "flake_check": true,
+    "ledger_complete": true,
+    "vm_pregate": false,
+    "latitude_metal": false
+  },
+  "gaps": [
+    "Metal + VM pre-gate pending (Castle eval-only for G3)",
+    "Menu disabled-guard shape on quattro not yet on stable tag — v4.0.3 tag still uses when: mise-dir guards"
+  ],
+  "notes": "ADR-0005 security/patch train: no soak. Overlays from REBASE-PLAN; G0 locator + G1 profiles preserved."
+}

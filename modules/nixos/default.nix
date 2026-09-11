@@ -159,12 +159,8 @@ let
     EOF
   '';
 
-  # Core desktop-session runtime set, derived from upstream's
-  # `install/omarchy-base.packages` (fetched read-only from the live
-  # upstream reference box). Full upstream package parity is now the policy —
-  # including the heavier apps (libreoffice, obs, dev toolchains) that upstream
-  # ships by default. Grouped by role so the rationale for each inclusion is
-  # local to its line.
+  # Core desktop-session runtime set (thin `desktop` profile). Workstation-only
+  # packages (Docker CLI, creative suite, mise) live in `workstationRuntimeDeps`.
   runtimeDeps =
     with pkgs;
     filterExcluded (
@@ -330,6 +326,23 @@ let
         # libvips (nixpkgs attr `vips`): omarchy-image-picker thumbnails
         # (v4.0.0; upstream package name libvips).
         vips
+        # qt6-imageformats (nixpkgs attr qt6.qtimageformats): webp decoding
+        # for the shell — v4.0.2 stores theme backgrounds as webp
+        # (migration 1787133200 installs the Arch package; we ship it).
+        qt6.qtimageformats
+        # qt6-multimedia (nixpkgs attr qt6.qtmultimedia): native video
+        # wallpaper playback — v4.0.3 (migration 1786609204 installs the
+        # Arch qt6-multimedia + qt6-multimedia-ffmpeg pair; nixpkgs builds
+        # qtmultimedia with the ffmpeg backend included).
+        qt6.qtmultimedia
+        # vi: a standard terminal editor (v4.0.2; migration 1788596255
+        # installs the Arch `vi` package). The nixpkgs 26.05 pin has no `vi`
+        # attr — nvi provides the same `vi` command.
+        nvi
+        # cups-pk-helper: system-config-printer routes printer administration
+        # through polkit (v4.0.2 CUPS hardening; upstream installs it in
+        # omarchy-base.packages).
+        cups-pk-helper
         # fwupdmgr for omarchy-update-firmware (service enabled in parity block).
         fwupd
 
@@ -359,7 +372,6 @@ let
         neovim
         btop
         lazygit
-        lazydocker
         yt-dlp
         # dua is the upstream disk-usage tool (dua-cli was renamed to dua).
         dua
@@ -381,9 +393,6 @@ let
 
         # --- Upstream parity: GUI apps ---
         obs-studio
-        libreoffice-fresh
-        kdePackages.kdenlive
-        obsidian
         pinta
         xournalpp
         localsend
@@ -415,7 +424,6 @@ let
         llvm
         ruby
         dotnet-runtime
-        mise
 
         # --- Upstream parity: automount ---
         udiskie
@@ -438,6 +446,15 @@ let
         qt6.qtwayland
       ]
     );
+
+  workstationRuntimeDeps =
+    with pkgs;
+    filterExcluded [
+      lazydocker
+      libreoffice-fresh
+      kdePackages.kdenlive
+      mise
+    ];
 
   # Custom hyprland-uwsm.desktop matching the oracle's session launch.
   # nixpkgs programs.uwsm.waylandCompositors generates
@@ -653,6 +670,8 @@ in
       {
         environment.systemPackages =
           runtimeDeps
+          ++ lib.optionals (cfg.profile == "workstation") workstationRuntimeDeps
+          ++ lib.optionals (cfg.unfree.enable) (filterExcluded [ pkgs.obsidian ])
           ++ (filterExcluded cfg.appPackages)
           ++ [
             xcursorDefaultAdwaita
@@ -676,10 +695,9 @@ in
         ++ lib.optional (cfg.package != null) cfg.package;
       }
 
-      # (B0) Unfree whitelist + scoped insecure permit for the default app set
-      # and menu-managed packages. The default set ships obsidian (upstream
-      # parity), which is unfree — whitelist exactly it so a consumer on a
-      # default nixpkgs config builds without touching nixpkgs.config. Menu
+      # (B0) Unfree whitelist + scoped insecure permit for menu-managed packages
+      # and (when opted in) Obsidian. Desktop default does not whitelist
+      # Obsidian globally — set omarchy.unfree.enable or profile = workstation.
       # installs extend the whitelist with catalog `unfreeNames` (literal
       # getName strings, including hidden deps like steam-unwrapped) and
       # `insecureNames` (e.g. openssl-1.1.1w for Sublime, electron for
@@ -699,7 +717,10 @@ in
       # is non-null even when NixOS built it.
       (lib.mkIf (!options.nixpkgs.pkgs.isDefined) {
         nixpkgs.config.allowUnfreePredicate = lib.mkDefault (
-          pkg: builtins.elem (lib.getName pkg) ([ "obsidian" ] ++ managedUnfreeNames)
+          pkg:
+          builtins.elem (lib.getName pkg) (
+            (lib.optionals cfg.unfree.enable [ "obsidian" ]) ++ managedUnfreeNames
+          )
         );
         # Scoped opt-in: only the insecure deps of packages the consumer
         # actually selected (Sublime → openssl-1.1.1w, Bitwarden → electron).
@@ -726,6 +747,12 @@ in
       # blocks (Task 5). Unknown names throw an eval error naming the file —
       # in the normal flow omarchy-nix-add validates before writing.
       #
+      # Names are nixpkgs attribute *paths*, not only top-level attrs:
+      # omarchy-nix-add accepts `nixpkgs#kdePackages.dolphin` (flake attr
+      # paths) and writes that string into the JSON. Resolve with
+      # attrByPath so a literal-dot pkgs.${n} lookup cannot reject a real
+      # nested package. Same split as catalog-consistency probes.
+      #
       # IMPORTANT: managedFeatures is config-dependent (it reads
       # cfg.managedPackagesFile). Referencing it at the mkMerge LIST level
       # would force it during the module system's property-pushing phase,
@@ -751,7 +778,14 @@ in
                   throw "${toString cfg.managedPackagesFile}: unknown feature '${builtins.head unknown}' (known: ${builtins.concatStringsSep ", " (builtins.attrNames managedFeatureDefs)})"
                 else
                   map (
-                    n: pkgs.${n} or (throw "${toString cfg.managedPackagesFile}: unknown nixpkgs attribute '${n}'")
+                    n:
+                    let
+                      path = lib.splitString "." n;
+                    in
+                    if lib.hasAttrByPath path pkgs then
+                      lib.getAttrFromPath path pkgs
+                    else
+                      throw "${toString cfg.managedPackagesFile}: unknown nixpkgs attribute '${n}'"
                   ) managedPkgs;
             }
           ]
@@ -788,12 +822,14 @@ in
         services.power-profiles-daemon.enable = lib.mkDefault true;
         services.printing = {
           enable = lib.mkDefault true;
-          # Upstream v4.0.2 migrations/1788009111.sh removes cups-browsed.
-          # Keep CUPS for configured printers, but disable automatic queue
-          # discovery. A consumer can explicitly opt back in via NixOS.
+          # cups-browsed: remote printer discovery. Upstream removed automatic
+          # printer discovery entirely in v4.0.2 (security hardening,
+          # migration 1788009111 drops cups-browsed); match that here. The
+          # seeded autostart print-applet.desktop still expects a running
+          # CUPS (kept). nixpkgs 26.05 exposes this as services.printing.browsed
+          # (not .cups-browsed).
           browsed.enable = lib.mkDefault false;
         };
-        virtualisation.docker.enable = lib.mkDefault true;
         # gnome-keyring: upstream ships it; the old "out of scope" note in
         # AGENTS.md is rescinded.
         services.gnome.gnome-keyring.enable = lib.mkDefault true;
@@ -847,25 +883,13 @@ in
           };
         };
 
-        # zram swap (upstream parity): default/systemd/zram-generator.conf.d/
-        # 90-omarchy.conf — full-RAM zram device, zstd (~3:1, so ~1/3 RAM in
-        # practice), swap-priority 100 (above the pri=0 disk swapfile from
-        # omarchy-hibernation-setup). NixOS's zramSwap drives the same
-        # zram-generator under the hood; memoryPercent 100 renders as
-        # `zram-size = 100 / 100 * ram`, equivalent to upstream's `ram`.
-        zramSwap.enable = lib.mkDefault true;
-        zramSwap.memoryPercent = lib.mkDefault 100;
-        zramSwap.algorithm = lib.mkDefault "zstd";
-        zramSwap.priority = lib.mkDefault 100;
-
-        # zswap off (upstream etc/tmpfiles.d/omarchy-zswap.conf): in front of
-        # swap-on-zram it only double-compresses pages and breaks zramctl
-        # accounting. w! = boot-only, so a manual flip sticks until reboot.
-        # Upstream's zram migration (drop archinstall's leftover
-        # /etc/systemd/zram-generator.conf) is a no-op on NixOS — no such file.
-        systemd.tmpfiles.rules = [
-          "w! /sys/module/zswap/parameters/enabled - - - - N"
-        ];
+        # Thin desktop: keep benign upstream etc/ defaults that are not the
+        # kitchen-sink fleet image (Docker, zram 100%, swappiness 150).
+        boot.kernel.sysctl = lib.mkIf (cfg.profile == "desktop") (
+          lib.mapAttrs (_: lib.mkDefault) {
+            "net.ipv4.tcp_mtu_probing" = 1;
+          }
+        );
 
         # Cross-arch binfmt: upstream installs
         # qemu-user-static-binfmt unconditionally; here it is opt-in via
@@ -908,22 +932,6 @@ in
         # config/sysctl.nix already ships the identical
         # fs.inotify.max_user_watches=524288 as mkDefault, and redefining
         # it here would collide (sysctl values must be unique).
-        #
-        # zram-era VM tuning (upstream etc/sysctl.d/99-omarchy-sysctl.conf):
-        # reclaim tuned for swap-on-zram (see zramSwap above), page-cache
-        # kept, bounded writeback bursts; tcp_mtu_probing fixes SSH stalls on
-        # flaky links. Migration 1784961000 applies the same file on Arch.
-        boot.kernel.sysctl = lib.mapAttrs (_: lib.mkDefault) {
-          "net.ipv4.tcp_mtu_probing" = 1;
-          "vm.swappiness" = 150;
-          "vm.vfs_cache_pressure" = 50;
-          "vm.page-cluster" = 0;
-          "vm.watermark_boost_factor" = 0;
-          "vm.watermark_scale_factor" = 125;
-          "vm.dirty_background_bytes" = 67108864;
-          "vm.dirty_bytes" = 268435456;
-          "vm.dirty_writeback_centisecs" = 1500;
-        };
 
         # NOT adapted: etc/systemd/resolved.conf.d/{10-disable-multicast,
         # 20-docker-dns}.conf — systemd-resolved is NOT enabled on NixOS
@@ -934,23 +942,6 @@ in
         # Consumers who flip networking.networkmanager.dns =
         # "systemd-resolved" can restore full upstream parity with
         # services.resolved.llmnr/extraConfig (see docs/UPSTREAM.md).
-
-        # Docker daemon (upstream etc/docker/daemon.json): bounded json-file
-        # logs (10 MiB × 5). Upstream's dns/bip pins are deliberately
-        # dropped — they exist for the resolved bridge integration above;
-        # docker's defaults already use 172.17.0.0/16 and pass the host
-        # resolver through to containers. log-driver goes through
-        # virtualisation.docker.logDriver (nixpkgs feeds it into
-        # daemon.settings with per-key mkDefault; a whole-attrset mkDefault
-        # on daemon.settings would lose to nixpkgs's plain definition).
-        virtualisation.docker.logDriver = lib.mkDefault "json-file";
-        virtualisation.docker.daemon.settings.log-opts = lib.mkDefault {
-          max-size = "10m";
-          max-file = "5";
-        };
-        # Docker must not hold up boot (upstream etc/systemd/system/
-        # docker.service.d/no-block-boot.conf).
-        systemd.services.docker.unitConfig.DefaultDependencies = lib.mkDefault false;
 
         # updatedb only on AC power (upstream etc/systemd/system/
         # plocate-updatedb.service.d/ac-only.conf): crawling the whole tree
@@ -997,16 +988,29 @@ in
           source = "${cfg.package}/share/omarchy/etc/gnupg/dirmngr.conf";
         };
 
-        # sudo parity (upstream etc/sudoers.d/omarchy-passwd-tries,
-        # omarchy-asdcontrol, omarchy-tzupdate): 10 password tries; NOPASSWD
-        # for asdcontrol (Apple Studio Display brightness from the bar),
-        # tzupdate and timedatectl set-timezone (menu Setup → Timezone).
-        # Profile paths (not store paths) so exclude_packages filtering
-        # still works — an uninstalled command makes the rule inert instead
-        # of a closure reference. Plain assignment, not mkDefault: nixpkgs
-        # defines its own default extraRules/extraConfig at normal priority,
-        # which would silently drop mkDefault content; same-priority
-        # definitions concatenate.
+        # Kitty base defaults (upstream etc/xdg/kitty/kitty.conf, v4.0.3):
+        # upstream moved the stock config (font, window, keybindings,
+        # listen_on) to the system XDG dir and reduced the user seed to a
+        # thin include/override file. kitty reads /etc/xdg via
+        # XDG_CONFIG_DIRS, so vendoring keeps upstream's layering — user
+        # overrides in ~/.config/kitty keep winning.
+        environment.etc."xdg/kitty/kitty.conf" = lib.mkIf (cfg.package != null) {
+          source = "${cfg.package}/share/omarchy/etc/xdg/kitty/kitty.conf";
+        };
+
+        # sudo parity (upstream etc/sudoers.d/omarchy-passwd-tries and
+        # omarchy-tzupdate): 10 password tries; NOPASSWD for tzupdate (port
+        # addition) and timedatectl set-timezone. v4.0.1 removed upstream's
+        # omarchy-asdcontrol grant (passwordless path to root): the Apple
+        # Studio Display brightness script now uses plain `sudo asdcontrol`
+        # and takes the prompt, same here. The timedatectl rule is
+        # upstream's v4.0.2 tightening: a ^-anchored regex accepting exactly
+        # one well-formed timezone argument. Profile paths (not store paths)
+        # so exclude_packages filtering still works — an uninstalled command
+        # makes the rule inert instead of a closure reference. Plain
+        # assignment, not mkDefault: nixpkgs defines its own default
+        # extraRules/extraConfig at normal priority, which would silently
+        # drop mkDefault content; same-priority definitions concatenate.
         security.sudo.extraConfig = ''
           Defaults passwd_tries=10
         '';
@@ -1015,21 +1019,49 @@ in
             groups = [ "wheel" ];
             commands = [
               {
-                command = "/run/current-system/sw/bin/asdcontrol";
-                options = [ "NOPASSWD" ];
-              }
-              {
                 command = "/run/current-system/sw/bin/tzupdate";
                 options = [ "NOPASSWD" ];
               }
               {
-                command = "/run/current-system/sw/bin/timedatectl set-timezone *";
+                command = "/run/current-system/sw/bin/timedatectl ^set-timezone [A-Za-z0-9_+][A-Za-z0-9_+.-]*(/[A-Za-z0-9_+][A-Za-z0-9_+.-]*)*$";
                 options = [ "NOPASSWD" ];
               }
             ];
           }
         ];
       }
+
+      # (B2w) Workstation profile: upstream kitchen-sink (Docker, zram 100%,
+      # swappiness 150, zram-era sysctls). Not on `profile = "desktop"`.
+      (lib.mkIf (cfg.profile == "workstation") {
+        virtualisation.docker.enable = lib.mkDefault true;
+        virtualisation.docker.logDriver = lib.mkDefault "json-file";
+        virtualisation.docker.daemon.settings.log-opts = lib.mkDefault {
+          max-size = "10m";
+          max-file = "5";
+        };
+        systemd.services.docker.unitConfig.DefaultDependencies = lib.mkDefault false;
+
+        zramSwap.enable = lib.mkDefault true;
+        zramSwap.memoryPercent = lib.mkDefault 100;
+        zramSwap.algorithm = lib.mkDefault "zstd";
+        zramSwap.priority = lib.mkDefault 100;
+        systemd.tmpfiles.rules = [
+          "w! /sys/module/zswap/parameters/enabled - - - - N"
+        ];
+
+        boot.kernel.sysctl = lib.mapAttrs (_: lib.mkDefault) {
+          "net.ipv4.tcp_mtu_probing" = 1;
+          "vm.swappiness" = 150;
+          "vm.vfs_cache_pressure" = 50;
+          "vm.page-cluster" = 0;
+          "vm.watermark_boost_factor" = 0;
+          "vm.watermark_scale_factor" = 125;
+          "vm.dirty_background_bytes" = 67108864;
+          "vm.dirty_bytes" = 268435456;
+          "vm.dirty_writeback_centisecs" = 1500;
+        };
+      })
 
       # User-manager NOFILE (upstream etc/systemd/user.conf.d/
       # 20-omarchy-nofile.conf). nixpkgs after 26.05 removed
@@ -1311,6 +1343,9 @@ in
           # + agent diagnosis). Upstream enables it from
           # install/user/first-run/enable-user-units.sh.
           omarchy-crash-watch.wantedBy = [ "graphical-session.target" ];
+          omarchy-tailscale-receive.wantedBy = lib.mkIf config.services.tailscale.enable [
+            "graphical-session.target"
+          ];
         };
       })
 

@@ -17,8 +17,8 @@
 #
 # In this repo the same wiring is exposed as the `example` flake output, so
 # `nix flake check` evaluates this config exactly the way an external
-# consumer's default nixpkgs would (in particular WITHOUT allowUnfree — the
-# omarchy module whitelists the one unfree default app, obsidian, itself).
+# consumer's default nixpkgs would (in particular WITHOUT allowUnfree — set
+# omarchy.unfree.enable = true when you want Obsidian and menu-managed unfree).
 #
 # Build and run as a VM (see docs/install.md, section "Virtual machine"):
 #

@@ -1,5 +1,5 @@
 {
-  description = "Omahedron: trailing-stable Omarchy desktop on NixOS (pinned to v4.0.2)";
+  description = "Omahedron: trailing-stable Omarchy desktop on NixOS (pinned to v4.0.3)";
 
   inputs = {
     # Stable nixpkgs (26.05) so consumers on a stable NixOS install do NOT get
@@ -10,11 +10,11 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
 
     # Upstream Omarchy is NOT a flake; we vendor the tagged tree as a
-    # derivation (see pkgs/omarchy.nix). First Omahedron pin: v4.0.2.
+    # derivation (see pkgs/omarchy.nix). First Omahedron pin: v4.0.2; G3: v4.0.3.
     # Update with:
     #   nix flake lock --update-input omarchy-src
     omarchy-src = {
-      url = "github:basecamp/omarchy/v4.0.2";
+      url = "github:basecamp/omarchy/v4.0.3";
       flake = false;
     };
 
@@ -55,10 +55,10 @@
       systems = [ "x86_64-linux" ];
       forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f system);
 
-      # Upstream tag v4.0.2 still ships version file contents "4.0.0.alpha"
-      # (commit 346e69e1). Override so package names / meta claim the desktop
+      # Upstream tag v4.0.3 still ships version file contents "4.0.0.alpha"
+      # (commit 0534987). Override so package names / meta claim the desktop
       # pin we actually consume — stop reading the stale alpha string.
-      omarchyVersion = "4.0.2";
+      omarchyVersion = "4.0.3";
 
       # External pkgs for packages/demo/tests. Global allowUnfree is
       # intentionally NOT set — it used to mask the real consumer path
@@ -766,6 +766,81 @@
               throw "omarchy.binfmtEmulatedSystems does not reach boot.binfmt.emulatedSystems"
             else
               pkgs.runCommand "omarchy-binfmt-eval" { } "touch $out";
+          # ADR-0024 / COMPETE §2.8: desktop profile stays thin; workstation +
+          # omarchy.unfree.enable cover the kitchen-sink and unfree opt-ins.
+          omarchy-profile-desktop =
+            let
+              lib = pkgs.lib;
+              mkOmEval =
+                extra:
+                nixpkgs.lib.nixosSystem {
+                  system = "x86_64-linux";
+                  modules = [
+                    self.nixosModules.default
+                    (
+                      {
+                        omarchy.enable = true;
+                        omarchy.managedPackagesFile = null;
+                        fileSystems."/".device = "/dev/null";
+                        fileSystems."/".fsType = "ext4";
+                        boot.loader.grub.enable = true;
+                        system.stateVersion = "26.05";
+                      }
+                      // extra
+                    )
+                  ];
+                };
+              desktopCfg = (mkOmEval { }).config;
+              workstationCfg =
+                (self.nixosConfigurations.demo.extendModules {
+                  modules = [
+                    {
+                      omarchy.profile = "workstation";
+                      omarchy.unfree.enable = true;
+                    }
+                  ];
+                }).config;
+              unfreeDesktopCfg =
+                (self.nixosConfigurations.example.extendModules {
+                  modules = [
+                    {
+                      omarchy.unfree.enable = true;
+                    }
+                  ];
+                }).config;
+              hasPkg = cfg: name: lib.any (p: lib.getName p == name) cfg.environment.systemPackages;
+            in
+            if desktopCfg.omarchy.profile != "desktop" then
+              throw "default profile must be desktop"
+            else if desktopCfg.virtualisation.docker.enable then
+              throw "desktop must not enable Docker"
+            else if desktopCfg.zramSwap.enable then
+              throw "desktop must not enable zramSwap"
+            else if
+              (desktopCfg.boot.kernel.sysctl ? "vm.swappiness")
+              && desktopCfg.boot.kernel.sysctl."vm.swappiness" == 150
+            then
+              throw "desktop must not set vm.swappiness=150"
+            else if hasPkg desktopCfg "obsidian" then
+              throw "desktop must not ship obsidian without unfree.enable"
+            else if hasPkg desktopCfg "libreoffice" then
+              throw "desktop must not ship LibreOffice"
+            else if hasPkg desktopCfg "mise" then
+              throw "desktop must not ship mise"
+            else if !workstationCfg.virtualisation.docker.enable then
+              throw "workstation must enable Docker"
+            else if !workstationCfg.zramSwap.enable then
+              throw "workstation must enable zramSwap"
+            else if workstationCfg.zramSwap.memoryPercent != 100 then
+              throw "workstation zram must be 100%"
+            else if workstationCfg.boot.kernel.sysctl."vm.swappiness" != 150 then
+              throw "workstation must set vm.swappiness=150"
+            else if !(hasPkg workstationCfg "libreoffice") then
+              throw "workstation must ship LibreOffice"
+            else if !(builtins.tryEval unfreeDesktopCfg.system.build.toplevel).success then
+              throw "unfree.enable must allow a desktop config with Obsidian to evaluate"
+            else
+              pkgs.runCommand "omarchy-profile-desktop-check" { } "touch $out";
           # Migration parity: the upstream /etc defaults that migrations
           # 1784568652 (NM-wait-online mask), 1784970000 (logind inhibit
           # delay) and 1784914435 (Wi-Fi powersave off) apply imperatively on
@@ -887,7 +962,7 @@
                 cmp -s "$TMPDIR/before" "$TMPDIR/after" \
                   || fail "case5: adapter is not idempotent"
 
-                # The v4.0.2 XCompose adapter keeps custom sequences and
+                # The v4.0.3 XCompose adapter keeps custom sequences and
                 # unrelated includes, and tolerates a failed live restart.
                 cat > "$STUB/omarchy-restart-xcompose" <<'RESTART'
                 #!/bin/sh
@@ -936,6 +1011,15 @@
           omarchy-etc-parity =
             let
               demoCfg = self.nixosConfigurations.demo.config;
+              workstationCfg =
+                (self.nixosConfigurations.demo.extendModules {
+                  modules = [
+                    {
+                      omarchy.profile = "workstation";
+                      omarchy.unfree.enable = true;
+                    }
+                  ];
+                }).config;
               discoveryCfg =
                 (self.nixosConfigurations.demo.extendModules {
                   modules = [ { services.printing.browsed.enable = true; } ];
@@ -952,6 +1036,7 @@
               ];
               badClasses = builtins.filter (c: !(builtins.elem c allowedClasses)) (builtins.attrValues manifest);
               sysctl = demoCfg.boot.kernel.sysctl;
+              workstationSysctl = workstationCfg.boot.kernel.sysctl;
               inherit (pkgs.lib) hasInfix;
               logindConf = demoCfg.environment.etc."systemd/logind.conf".text;
               userConf = demoCfg.environment.etc."systemd/user.conf".text;
@@ -961,14 +1046,20 @@
             in
             if badClasses != [ ] then
               throw "omarchy-etc-manifest.nix has unknown classes: ${toString badClasses}"
-            else if sysctl."vm.swappiness" != 150 then
-              throw "demo config missing vm.swappiness=150 (etc/sysctl.d/99-omarchy-sysctl.conf)"
-            else if sysctl."vm.page-cluster" != 0 then
-              throw "demo config missing vm.page-cluster=0 (etc/sysctl.d/99-omarchy-sysctl.conf)"
-            else if sysctl."vm.dirty_bytes" != 268435456 then
-              throw "demo config missing vm.dirty_bytes (etc/sysctl.d/99-omarchy-sysctl.conf)"
+            else if workstationSysctl."vm.swappiness" != 150 then
+              throw "workstation config missing vm.swappiness=150 (etc/sysctl.d/99-omarchy-sysctl.conf)"
+            else if workstationSysctl."vm.page-cluster" != 0 then
+              throw "workstation config missing vm.page-cluster=0 (etc/sysctl.d/99-omarchy-sysctl.conf)"
+            else if workstationSysctl."vm.dirty_bytes" != 268435456 then
+              throw "workstation config missing vm.dirty_bytes (etc/sysctl.d/99-omarchy-sysctl.conf)"
             else if sysctl."net.ipv4.tcp_mtu_probing" != 1 then
               throw "demo config missing net.ipv4.tcp_mtu_probing=1 (etc/sysctl.d/99-omarchy-sysctl.conf)"
+            else if sysctl ? "vm.swappiness" && sysctl."vm.swappiness" == 150 then
+              throw "desktop profile must not set vm.swappiness=150"
+            else if demoCfg.zramSwap.enable then
+              throw "desktop profile must not enable zramSwap"
+            else if demoCfg.virtualisation.docker.enable then
+              throw "desktop profile must not enable Docker"
             else if sysctl."fs.inotify.max_user_watches" != 524288 then
               throw "demo config lost fs.inotify.max_user_watches=524288 (nixpkgs sysctl.nix default changed)"
             else if !(hasInfix "HandlePowerKey=ignore" logindConf) then
@@ -979,19 +1070,21 @@
               throw "demo config missing DefaultLimitNOFILE (etc/systemd/system.conf.d/20-omarchy-nofile.conf)"
             else if !(hasInfix "DefaultLimitNOFILE=65536:524288" userConf) then
               throw "demo config user.conf missing DefaultLimitNOFILE (etc/systemd/user.conf.d/20-omarchy-nofile.conf)"
-            else if demoCfg.systemd.services.docker.unitConfig.DefaultDependencies != false then
-              throw "demo config missing docker DefaultDependencies=no (etc/systemd/system/docker.service.d/no-block-boot.conf)"
+            else if workstationCfg.systemd.services.docker.unitConfig.DefaultDependencies != false then
+              throw "workstation config missing docker DefaultDependencies=no (etc/systemd/system/docker.service.d/no-block-boot.conf)"
             else if demoCfg.systemd.services.update-locatedb.unitConfig.ConditionACPower != true then
               throw "demo config missing update-locatedb ConditionACPower=true (etc/systemd/system/plocate-updatedb.service.d/ac-only.conf)"
             else if demoCfg.systemd.services."user@".serviceConfig.TimeoutStopSec != "5s" then
               throw "demo config missing user@ TimeoutStopSec=5s (etc/systemd/system/user@.service.d/10-faster-shutdown.conf)"
-            else if demoCfg.virtualisation.docker.daemon.settings.log-driver != "json-file" then
-              throw "demo config missing docker log rotation (etc/docker/daemon.json)"
-            else if !(hasSudoCmd "/run/current-system/sw/bin/asdcontrol") then
-              throw "demo config missing NOPASSWD asdcontrol (etc/sudoers.d/omarchy-asdcontrol)"
+            else if workstationCfg.virtualisation.docker.daemon.settings.log-driver != "json-file" then
+              throw "workstation config missing docker log rotation (etc/docker/daemon.json)"
+            else if hasSudoCmd "/run/current-system/sw/bin/asdcontrol" then
+              throw "demo config must not grant NOPASSWD asdcontrol (removed upstream v4.0.1; etc/sudoers.d/omarchy-asdcontrol)"
             else if !(hasSudoCmd "/run/current-system/sw/bin/tzupdate") then
               throw "demo config missing NOPASSWD tzupdate (etc/sudoers.d/omarchy-tzupdate)"
-            else if !(hasSudoCmd "/run/current-system/sw/bin/timedatectl set-timezone *") then
+            else if
+              !(hasSudoCmd "/run/current-system/sw/bin/timedatectl ^set-timezone [A-Za-z0-9_+][A-Za-z0-9_+.-]*(/[A-Za-z0-9_+][A-Za-z0-9_+.-]*)*$")
+            then
               throw "demo config missing NOPASSWD timedatectl set-timezone (etc/sudoers.d/omarchy-tzupdate)"
             else if !(hasInfix "passwd_tries=10" demoCfg.security.sudo.extraConfig) then
               throw "demo config missing passwd_tries=10 (etc/sudoers.d/omarchy-passwd-tries)"
@@ -1534,6 +1627,7 @@
                 nativeBuildInputs = [
                   pkgs.jq
                   pkgs.util-linux
+                  pkgs.bubblewrap
                 ];
               }
               ''
@@ -1572,12 +1666,51 @@
                 fi
                 echo "no-flake handling OK"
 
-                # --- candidates probing (no explicit value) ---------------------
-                mkconsumer "$HOME/omarchy-nix"
-                omarchy-nix-add install.browser.firefox >/dev/null
-                [[ -f $HOME/omarchy-nix/omarchy-packages.json ]] || fail "candidate repo not used"
-                omarchy-pkg-present firefox || fail "pkg-present must observe the candidate JSON"
-                echo "candidates OK"
+                # --- scavenger home paths are NOT supported locators -----------
+                for scav in "$HOME/omarchy-nix" "$HOME/Projects/omarchy-nix" "$HOME/Omahedron"; do
+                  rm -rf "$scav"
+                  mkconsumer "$scav"
+                  if omarchy-nix-add install.browser.firefox >/dev/null 2>scav.err; then
+                    fail "scavenger path must not be used as locator: $scav"
+                  fi
+                  grep -qi 'OMARCHY_NIX_FLAKE' scav.err ||
+                    fail "scavenger fail must name OMARCHY_NIX_FLAKE: $scav ($(cat scav.err))"
+                  [[ ! -f $scav/omarchy-packages.json ]] ||
+                    fail "scavenger path was mutated: $scav"
+                done
+                echo "scavenger-reject OK"
+
+                # --- /etc/nixos fallback (hostname-matching consumer) ----------
+                # The resolver hardcodes /etc/nixos; do not mkdir the real path
+                # (Nix sandbox forbids it). Overlay a fake consumer with bwrap.
+                fake_etc_nixos=$TMPDIR/etc-nixos-consumer
+                rm -rf "$fake_etc_nixos"
+                mkconsumer "$fake_etc_nixos"
+                ${pkgs.bubblewrap}/bin/bwrap \
+                  --clearenv \
+                  --setenv HOME "$HOME" \
+                  --setenv TMPDIR "$TMPDIR" \
+                  --setenv XDG_STATE_HOME "$XDG_STATE_HOME" \
+                  --setenv XDG_CACHE_HOME "$XDG_CACHE_HOME" \
+                  --setenv OMARCHY_PATH "$OMARCHY_PATH" \
+                  --setenv OMARCHY_NIX_UPDATE_DRY_RUN 1 \
+                  --setenv OMARCHY_NIX_SKIP_FLAKE_UPDATE 1 \
+                  --setenv PATH "$PATH" \
+                  --ro-bind / / \
+                  --bind "$fake_etc_nixos" /etc/nixos \
+                  --dev-bind /dev /dev \
+                  --proc /proc \
+                  --unshare-user \
+                  --unshare-pid \
+                  --die-with-parent \
+                  -- bash -ec '
+                    unset OMARCHY_NIX_FLAKE
+                    omarchy-nix-add install.browser.firefox >/dev/null
+                    test -f /etc/nixos/omarchy-packages.json
+                  ' || fail "/etc/nixos fallback not used"
+                [[ -f $fake_etc_nixos/omarchy-packages.json ]] ||
+                  fail "/etc/nixos fallback did not write omarchy-packages.json"
+                echo "/etc/nixos fallback OK"
 
                 # --- dir form ---------------------------------------------------
                 mkrepo "$TMPDIR/repo-dir"
@@ -1621,12 +1754,14 @@
                 echo "whitespace OK"
 
                 # --- invalid explicit values FAIL CLOSED (never fall back) ------
-                # tripwire: the candidate repo JSON must stay untouched from here
+                # tripwire: an explicit consumer repo must stay untouched from here
+                mkconsumer "$TMPDIR/decoy"
+                OMARCHY_NIX_FLAKE=$TMPDIR/decoy omarchy-nix-add install.browser.firefox >/dev/null
                 if OMARCHY_NIX_FLAKE=$TMPDIR/does-not-exist omarchy-nix-add install.gaming.steam >/dev/null 2>err.txt; then
                   fail "missing explicit path must fail"
                 fi
                 grep -q "invalid OMARCHY_NIX_FLAKE" err.txt || fail "add: no structured diagnostics"
-                [[ $(jq '.features | length' "$HOME/omarchy-nix/omarchy-packages.json") == 0 ]] ||
+                [[ $(jq '.features | length' "$TMPDIR/decoy/omarchy-packages.json") == 0 ]] ||
                   fail "add fell back to another checkout!"
 
                 mkdir -p "$TMPDIR/repo-noflake"
@@ -1654,19 +1789,6 @@
                 fi
                 grep -q "invalid OMARCHY_NIX_FLAKE" pp.txt || fail "pkg-present: no diagnostics"
                 echo "fail-closed OK"
-
-                # --- library checkout earlier in the fallback order is skipped --
-                # A bare omarchy-nix clone (no host config) must not
-                # shadow the real consumer flake further down the list -----------
-                rm -rf "$HOME/omarchy-nix"
-                mkrepo "$HOME/omarchy-nix"               # library clone (no .consumer)
-                mkconsumer "$HOME/Projects/omarchy-nix"  # real consumer flake
-                omarchy-nix-add install.browser.firefox >/dev/null
-                [[ -f $HOME/Projects/omarchy-nix/omarchy-packages.json ]] ||
-                  fail "library checkout shadowed the consumer flake"
-                [[ ! -f $HOME/omarchy-nix/omarchy-packages.json ]] ||
-                  fail "library checkout was mutated"
-                echo "library-skip OK"
 
                 # --- root-owned flake dir (0555, the /etc/nixos shape) ----------
                 # (read path only; root-owned add/remove writes are covered by
@@ -1971,6 +2093,39 @@ c";
               fi
               touch $out
             '';
+
+          # G5: install.md first-build cache path must match module substituters.
+          omarchy-hyprland-cache =
+            let
+              cacheUrl = "https://hyprland.cachix.org";
+              cacheKey = "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=";
+            in
+            pkgs.runCommand "omarchy-hyprland-cache-check" { } ''
+              set -euo pipefail
+              fail() { echo "FAIL: $*" >&2; exit 1; }
+              grep -Fq '${cacheUrl}' ${./modules/nixos/default.nix} ||
+                fail "module missing Hyprland substituter URL"
+              grep -Fq '${cacheKey}' ${./modules/nixos/default.nix} ||
+                fail "module missing Hyprland public key"
+              grep -Fq '${cacheUrl}' ${./docs/install.md} ||
+                fail "install.md missing Hyprland substituter URL"
+              grep -Fq '${cacheKey}' ${./docs/install.md} ||
+                fail "install.md missing Hyprland public key"
+              grep -Fq 'extra-substituters' ${./docs/install.md} ||
+                fail "install.md must document first-build --option extra-substituters"
+              grep -Fq 'omarchy-hyprland-cache' ${./docs/install.md} ||
+                fail "install.md must reference checks.omarchy-hyprland-cache"
+              touch $out
+            '';
+
+          # G8: packaged stub bodies embed parseable omahedron: banners (COMPETE §3.6).
+          omarchy-stub-banners = pkgs.runCommand "omarchy-stub-banners-check" { } ''
+            ${pkgs.python3}/bin/python3 ${./checks/stub_banners.py} \
+              --ledger ${./schema/scripts.lock.json} \
+              --packaged ${self.packages.${system}.omarchy}/share/omarchy
+            touch $out
+          '';
+
           # Package contract for the vendored Fish profile:
           # every installed .fish file parses, the vendor dirs are populated
           # (including leading-dot functions), fzf.fish v10.3 is bundled, the
@@ -2153,9 +2308,9 @@ c";
                 extra:
                 nixpkgs.lib.nixosSystem {
                   # Same pinned pkgs instance the other module checks use —
-                  # carries the scoped unfree predicate the omarchy default
-                  # app set needs at eval (obsidian). `inherit system` instead
-                  # would re-import nixpkgs without it and fail on unfree.
+                  # carries the scoped unfree predicate when omarchy.unfree.enable
+                  # is set. `inherit system` instead would re-import nixpkgs
+                  # without it and fail on unfree menu installs.
                   inherit pkgs;
                   modules = [
                     self.nixosModules.default

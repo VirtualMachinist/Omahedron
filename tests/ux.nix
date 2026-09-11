@@ -59,6 +59,8 @@
       virtualisation.cores = 4;
 
       omarchy.enable = true;
+      omarchy.profile = "workstation";
+      omarchy.unfree.enable = true;
       omarchy.full_name = "Test User";
       omarchy.email_address = "test@omarchy-nix.invalid";
       # Opt the test node into fingerprint lock auth so (4h) can assert the

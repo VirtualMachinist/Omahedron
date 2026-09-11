@@ -11,7 +11,7 @@ Source: https://github.com/basecamp/omarchy (also omacom/omarchy)
 
 Facts at 2026-09-04:
 
-- Quattro = 4.x. v4.0.0 shipped 2026-08-14. Follow-ups v4.0.1, **v4.0.2** (latest stable).
+- Quattro = 4.x. v4.0.0 shipped 2026-08-14. Follow-ups v4.0.1, v4.0.2, **v4.0.3** (latest stable).
 - Stack: Arch + Hyprland (≥0.56, Lua) + one Quickshell process + ~383 `omarchy-*` bash scripts + TOML/sed theme engine.
 - `$OMARCHY_PATH` is the root (Arch: `/usr/share/omarchy`).
 - Packaging: pacman + pkgs.omarchy.org. Channels: stable, rc, edge, dev. New installs start on stable.
@@ -70,6 +70,10 @@ Schema records a bump file from [templates/bump-record.md](../templates/bump-rec
 11. Tag `omahedron-X.Y.Z`. Changelog names gaps.
 
 One upstream rev + glue fixes = one commit (or one PR stacked as that logical commit). Do not mix a theme rewrite with a pin.
+
+## Rebase / overlay (G2)
+
+Cherry-pick queue vs zicochaos `main` without dropping ledgers or rewriting the vendor derivation: [REBASE-PLAN.md](REBASE-PLAN.md). Execute at G3 pin bump.
 
 ## zicochaos delta to remember on the first pin
 

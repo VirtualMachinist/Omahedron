@@ -1,7 +1,7 @@
 {
   "$comment": "Hand-reviewed exact inventory of pinned install/*.packages. Availability describes the default module or a validated attribute, not full OS/package closure parity.",
-  "pin": "v4.0.2",
-  "upstream_rev": "346e69e1cec6c4e8924531874af6ba010a1bc99e",
+  "pin": "v4.0.3",
+  "upstream_rev": "0534987009061cbe2dacdde4ad564092ab698d12",
   "generated": false,
   "packages": [
     {
@@ -170,7 +170,7 @@
       ]
     },
     {
-      "upstream": "broadcom-wl",
+      "upstream": "broadcom-wl-dkms",
       "status": "exclude",
       "notes": "Arch out-of-tree driver packaging is not shipped; the host must select a compatible NixOS kernel/driver configuration.",
       "sources": [
@@ -769,8 +769,8 @@
       "upstream": "kdenlive",
       "status": "nixpkgs",
       "attr": "kdePackages.kdenlive",
-      "availability": "default",
-      "notes": "Arch name mapped to the Nixpkgs attribute in the default module package/font set.",
+      "availability": "workstation",
+      "notes": "Workstation profile only (omarchy.profile = \"workstation\"); not on thin desktop default.",
       "sources": [
         "install/omarchy-base.packages"
       ]
@@ -787,8 +787,8 @@
       "upstream": "lazydocker",
       "status": "nixpkgs",
       "attr": "lazydocker",
-      "availability": "default",
-      "notes": "Included in the default module package/font set.",
+      "availability": "workstation",
+      "notes": "Workstation profile only (omarchy.profile = \"workstation\"); not on thin desktop default.",
       "sources": [
         "install/omarchy-base.packages"
       ]
@@ -853,8 +853,8 @@
       "upstream": "libreoffice-fresh",
       "status": "nixpkgs",
       "attr": "libreoffice-fresh",
-      "availability": "default",
-      "notes": "Included in the default module package/font set.",
+      "availability": "workstation",
+      "notes": "Workstation profile only (omarchy.profile = \"workstation\"); not on thin desktop default.",
       "sources": [
         "install/omarchy-base.packages"
       ]
@@ -1101,8 +1101,8 @@
       "upstream": "mise-bin",
       "status": "nixpkgs",
       "attr": "mise",
-      "availability": "default",
-      "notes": "Arch name mapped to the Nixpkgs attribute in the default module package/font set.",
+      "availability": "workstation",
+      "notes": "Workstation profile only (omarchy.profile = \"workstation\"); Arch name mise-bin maps to nixpkgs mise.",
       "sources": [
         "install/omarchy-base.packages"
       ]
@@ -1297,8 +1297,8 @@
       "upstream": "obsidian",
       "status": "nixpkgs",
       "attr": "obsidian",
-      "availability": "default",
-      "notes": "Included in the default module package/font set.",
+      "availability": "unfree",
+      "notes": "Unfree; shipped only when omarchy.unfree.enable = true (not on thin desktop default).",
       "sources": [
         "install/omarchy-base.packages"
       ]

@@ -19,6 +19,25 @@ uwsm-managed Hyprland session, default SDDM, PipeWire/NetworkManager/Bluetooth
 daemons, Plymouth boot splash, and the SDDM login theme. Importing the module
 is side-effect-free until this is `true`.
 
+### `omarchy.profile` *(enum, default `"desktop"`)*
+
+`desktop` (default) is the thin sit-down Omarchy session without Docker,
+Steam, Obsidian, LibreOffice, Kdenlive, mise-as-system-dev, zram at 100% RAM,
+swappiness 150, or a global unfree whitelist.
+
+`workstation` adds the upstream kitchen-sink extras: Docker, full-RAM zram
+swap, zram-era sysctls, LibreOffice, Kdenlive, mise, and lazydocker.
+Unfree apps such as Obsidian still require `omarchy.unfree.enable`.
+
+### `omarchy.unfree.enable` *(bool, default `false`)*
+
+Opt in to unfree packages on the desktop profile (Obsidian and a scoped
+`allowUnfreePredicate` for menu-managed unfree entries). Workstation
+profile still requires this for Obsidian; it does not silently enable Steam
+(use the Install menu / `omarchy-packages.json` features). Unfree remains
+first-class and easy — not FOSS-purist — but is no longer a silent global
+default on `profile = "desktop"`.
+
 ### `omarchy.package` *(nullOr package, default `null`, injected by the flake)*
 
 The vendored omarchy derivation (`$out/share/omarchy`). Set automatically by
@@ -212,11 +231,10 @@ For git-based flakes the add/remove scripts register the JSON with
 `git add -N` so the flake snapshot includes it. Where the scripts write:
 one shared resolver, `$OMARCHY_NIX_FLAKE` (a flake directory **or** the
 path to its `flake.nix` file; an invalid explicit value fails closed,
-never falls back to another checkout) → `~/omarchy-nix` →
-`~/Projects/omarchy-nix` → `/etc/nixos` (first candidate providing
-`nixosConfigurations."$(hostname)"` wins; a candidate is skipped only
-when its `nixosConfigurations` evaluate cleanly without the host entry,
-i.e. library clones, while eval failures keep it). The JSON lands at
+never falls back to another checkout) → `/etc/nixos` when it provides
+`nixosConfigurations."$(hostname)"` (skipped when its
+`nixosConfigurations` evaluate cleanly without the host entry, i.e.
+library clones, while eval failures keep it). The JSON lands at
 `<flake_dir>/omarchy-packages.json` (see README /
 docs/install.md for the full resolver contract).
 

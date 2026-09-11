@@ -2,7 +2,7 @@
 
 Operating manual for maintainers and coding agents working in this repository.
 
-Read this entire file before writing code or docs. Do not reopen questions that are settled in [DECISIONS.md](DECISIONS.md) unless new facts contradict them. New facts go into a new ADR, they do not silently overwrite.
+Read this entire file before writing code or docs. Then read [docs/COMPETE.md](docs/COMPETE.md) before changing user-visible desktop behavior, module defaults, pins, or README claims. Do not reopen questions that are settled in [DECISIONS.md](DECISIONS.md) unless new facts contradict them. New facts go into a new ADR, they do not silently overwrite.
 
 ## What this repo is
 
@@ -21,7 +21,7 @@ Conflicts are reconciled by domain. Do not invent a “SPEC always wins” hamme
 |---|---|---|
 | Desktop behavior the user can see | Pinned `omarchy-src` | vendored tree + cite `bin/…`, `default/…`, `themes/…`, `shell/…` |
 | OS correctness (boot, store, privileges, two bootloaders) | NixOS | modules + COMPAT class `host` / `wrap` / `stub` / `na` |
-| Release identity (what we claim to ship) | Channels policy + lockfile | [docs/CHANNELS.md](docs/CHANNELS.md), `flake.lock` |
+| Release identity, module shape, competitive bar | Compete + channels + lockfile | [docs/COMPETE.md](docs/COMPETE.md), [docs/CHANNELS.md](docs/CHANNELS.md), `flake.lock` |
 | Script classification | Ledger | [schema/scripts.lock.json](schema/scripts.lock.json) |
 | Package classification | Map | [schema/packages.map.json](schema/packages.map.json) |
 | Everything else | An ADR | [DECISIONS.md](DECISIONS.md) + [templates/adr.md](templates/adr.md) |
@@ -106,22 +106,24 @@ Does not: claim Omacom support.
 
 ## Coding agents (Cursor, Cline, cloud composers, …)
 
-You inherit this file. You do not get a private constitution. If informal guidance and this file disagree, this file plus DECISIONS.md win and you stop to ask the Maintainer.
+You inherit this file and [docs/COMPETE.md](docs/COMPETE.md). You do not get a private constitution. If informal guidance and this file disagree, this file plus DECISIONS.md plus COMPETE win and you stop to ask the Maintainer.
 
 Before any patch:
 
-1. Name the domain (desktop / OS / release / ledger / other).
+1. Name the domain (desktop / OS / release / ledger / compete / other).
 2. Point at the artifact you will change.
 3. If classification is required, edit `schema/scripts.lock.json` or `schema/packages.map.json` in the same change.
+4. If the change touches defaults, pins, locators, or README claims, check COMPETE §4 gates first.
 
 ## Implementation gate
 
-Public remote is `github:VirtualMachinist/Omahedron`. Pin work already lands on `main` (Omarchy **v4.0.2**). Before any `omahedron-4.0.2` tag:
+Public remote is `github:VirtualMachinist/Omahedron`. Pin work is on `main` (Omarchy **v4.0.2**). Git tag `omahedron-4.0.2` exists; public “best port” / follow-this-tag claims still wait COMPETE §4.2–§4.5.
 
 1. Keep `omarchy-src` on the claimed pin; do not track `quattro` HEAD on user-facing stable.
 2. Run [checklists/bump.md](checklists/bump.md) on bump.
 3. Keep `schema/scripts.lock.json` aligned with that tag’s `bin/`.
-4. Metal on the Latitude before the product tag.
+4. Metal on the Latitude before a *new* product tag.
+5. Treat zicochaos/omarchy-nix as glue upstream: rebase or overlay; do not silently diverge `pkgs/omarchy.nix`.
 
 Do not start from henrysipp/omarchy-nix. Do not start from T00fy/omanix.
 
@@ -132,3 +134,6 @@ Do not start from henrysipp/omarchy-nix. Do not start from T00fy/omanix.
 - Did `--replace-fail` break, and was that fixed or dropped with a COMPAT note?
 - Was UX signed off on the Latitude, or only in a VM?
 - Does the changelog name gaps?
+- Does `omarchy.enable` with profile `desktop` stay thin (no Docker/Steam/unfree-global)?
+- Are scavenger paths (`~/omarchy-nix`) gone from locators?
+- Does README say “best” without a passing scorecard? (fail if yes)

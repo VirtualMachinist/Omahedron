@@ -22,6 +22,7 @@ STUB_MARKERS = (
     '# omarchy-nix: no pacman update probe.',
     '# omarchy-nix: snapper/limine snapshots are Arch-only.',
     '# follow the theme. Silent no-op:',
+    'omahedron: stub: nixos-declarative',
 )
 
 
@@ -95,6 +96,18 @@ def validate(repo, upstream, packaged, evidence):
     for name, ledger in [('scripts', scripts), ('packages', packages)]:
         require(ledger['pin'] == upstream_node['original'].get('ref'), f'{name}: pin differs from flake.lock')
         require(ledger['upstream_rev'] == upstream_node['locked']['rev'], f'{name}: revision differs from flake.lock')
+    pin_path = repo / 'schema/pin.json'
+    require(pin_path.is_file(), 'schema/pin.json missing')
+    pin = read_json(pin_path)
+    require(pin['omarchy_tag'] == scripts['pin'], 'pin.json omarchy_tag differs from scripts.lock')
+    require(pin['omarchy_rev'] == scripts['upstream_rev'], 'pin.json omarchy_rev differs from scripts.lock')
+    require(pin['omarchy_rev'] == upstream_node['locked']['rev'], 'pin.json omarchy_rev differs from flake.lock')
+    scorecard_path = repo / 'schema/scorecard.json'
+    require(scorecard_path.is_file(), 'schema/scorecard.json missing')
+    scorecard = read_json(scorecard_path)
+    our_pin = pin['omarchy_tag'].removeprefix('v')
+    require(scorecard.get('our_pin') == our_pin, 'scorecard our_pin differs from pin.json')
+    require(scorecard.get('our_rev') == pin['omarchy_rev'], 'scorecard our_rev differs from pin.json')
     require(evidence['pin'] == scripts['pin'] and evidence['upstream_rev'] == scripts['upstream_rev'],
             'evaluated input pin/revision differs from ledger')
 
@@ -180,8 +193,20 @@ def validate(repo, upstream, packaged, evidence):
             require(probe.get('attr') == row['attr'] and probe.get('status') == status,
                     f'{name}: package probe does not match ledger attribute/status')
             require(probe.get('valid') is True, f'{name}: {status} attr {row["attr"]} does not evaluate to a derivation')
-            if row['availability'] == 'default':
-                require(probe.get('default') is True, f'{name}: {row["attr"]} is absent from default module packages/fonts')
+            availability = row.get('availability', 'default')
+            if availability == 'default':
+                require(probe.get('default') is True,
+                        f'{name}: {row["attr"]} is absent from default module packages/fonts')
+            elif availability == 'workstation':
+                require(probe.get('default') is False,
+                        f'{name}: {row["attr"]} must not ship on desktop profile')
+                require(probe.get('workstation') is True,
+                        f'{name}: {row["attr"]} is absent from workstation profile packages')
+            elif availability == 'unfree':
+                require(probe.get('default') is False,
+                        f'{name}: {row["attr"]} must not ship without omarchy.unfree.enable')
+                require(probe.get('unfree_default') is True,
+                        f'{name}: {row["attr"]} is absent when omarchy.unfree.enable = true')
             if status == 'pkgs':
                 local_attrs.add(row['attr'])
                 require((repo / 'pkgs' / (row['attr'] + '.nix')).is_file(), f'{name}: local derivation source missing')
