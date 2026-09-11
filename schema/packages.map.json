@@ -293,7 +293,7 @@
       "options": [
         "virtualisation.docker.enable"
       ],
-      "notes": "Docker is enabled by default; NixOS supplies the engine and CLI plugins.",
+      "notes": "Workstation profile only (omarchy.profile = \"workstation\"); NixOS supplies the engine and CLI plugins.",
       "sources": [
         "install/omarchy-base.packages"
       ]
@@ -304,7 +304,7 @@
       "options": [
         "virtualisation.docker.enable"
       ],
-      "notes": "Docker is enabled by default; NixOS supplies the engine and CLI plugins.",
+      "notes": "Workstation profile only (omarchy.profile = \"workstation\"); NixOS supplies the engine and CLI plugins.",
       "sources": [
         "install/omarchy-base.packages"
       ]
@@ -315,7 +315,7 @@
       "options": [
         "virtualisation.docker.enable"
       ],
-      "notes": "Docker is enabled by default; NixOS supplies the engine and CLI plugins.",
+      "notes": "Workstation profile only (omarchy.profile = \"workstation\"); NixOS supplies the engine and CLI plugins.",
       "sources": [
         "install/omarchy-base.packages"
       ]
@@ -2058,7 +2058,7 @@
       "options": [
         "zramSwap.enable"
       ],
-      "notes": "NixOS generates full-RAM zstd zram configuration; enabled by default.",
+      "notes": "Workstation profile only (omarchy.profile = \"workstation\"); NixOS generates full-RAM zstd zram configuration.",
       "sources": [
         "install/omarchy-other.packages"
       ]
