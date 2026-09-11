@@ -8,8 +8,6 @@
   "branch_pin": "feat/compete",
   "readme_may_say_best": false,
   "disqualifiers": [
-    "thin_default loss vs zicochaos — desktop/workstation profile split still landing (COMPETE queue §5 item 2)",
-    "pin_freshness loss vs zicochaos — they track quattro HEAD; we trail on official tags only and have no omahedron-4.0.3 product tag yet",
     "tests loss vs zicochaos — UX VM suite on their main; v4.0.3 metal checklist not signed",
     "No followable public flake tag for Omarchy v4.0.3 — last product tag remains omahedron-4.0.2 until maintainer GO"
   ],
@@ -18,8 +16,8 @@
       "competitor": "zicochaos/omarchy-nix",
       "axes": {
         "pixel_parity": "tie",
-        "pin_freshness": "loss",
-        "thin_default": "loss",
+        "pin_freshness": "tie",
+        "thin_default": "win",
         "nix_verbs": "tie",
         "honesty_of_gaps": "win",
         "rebuild_time": "tie",
@@ -27,7 +25,7 @@
         "docs_first_hour": "tie"
       },
       "verdict": "loss",
-      "notes": "Same vendor-tree model and official v4.0.3 tag, but they track quattro HEAD between tags, ship a UX VM suite on main, and do not carry our ledger/tag/metal bar. We win on documented gaps and stub honesty; we lose on freshness beyond the tag, thin default, and test depth."
+      "notes": "Same vendor-tree model and official v4.0.3 tag. They track quattro HEAD between tags and ship a UX VM suite on main. G1 desktop profile is thin (no Docker/Steam/zram-100/global allowUnfree); they still kitchen-sink by default. We win thin default, documented gaps, and stub honesty; we tie on official pin freshness; we lose on interim HEAD tracking and test depth."
     },
     {
       "competitor": "nixarchy",
