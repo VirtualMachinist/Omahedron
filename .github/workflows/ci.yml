@@ -65,6 +65,7 @@ jobs:
             omarchy-shebangs
             omarchy-pam-eval
             omarchy-binfmt-eval
+            omarchy-profile-desktop
             omarchy-migration-parity
             omarchy-etc-parity
             omarchy-disabled-state

@@ -27,6 +27,40 @@
       '';
     };
 
+    profile = lib.mkOption {
+      type = lib.types.enum [
+        "desktop"
+        "workstation"
+      ];
+      default = "desktop";
+      description = ''
+        Module profile. `desktop` (default) is the thin sit-down Omarchy
+        session: compositor, Quickshell, themes, bindings, portals, audio,
+        NetworkManager, Bluetooth, Fish, and parseable stubs — without Docker,
+        Steam, Obsidian, LibreOffice, Kdenlive, mise-as-system-dev, zram at
+        100% RAM, swappiness 150, or a global unfree whitelist.
+
+        `workstation` adds the upstream kitchen-sink extras (Docker, zram
+        swap, zram-era sysctls, LibreOffice, Kdenlive, mise, lazydocker).
+        Obsidian and other unfree apps require `omarchy.unfree.enable`.
+      '';
+    };
+
+    unfree = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = ''
+          Opt in to unfree packages on the desktop profile: Obsidian and a
+          scoped `allowUnfreePredicate` for menu-managed unfree entries.
+          Workstation profile still requires this for Obsidian; it does not
+          silently enable Steam (use the Install menu / `omarchy-packages.json`
+          features). Unfree remains first-class and easy — not FOSS-purist —
+          but is no longer a silent global default on `profile = "desktop"`.
+        '';
+      };
+    };
+
     # The vendored omarchy derivation ($out/share/omarchy). Injected as a
     # `mkDefault` by the flake's nixosModules.default wrapper so consumers
     # don't set it themselves; left null here so the pure module (without the

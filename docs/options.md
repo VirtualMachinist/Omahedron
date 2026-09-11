@@ -19,6 +19,25 @@ uwsm-managed Hyprland session, default SDDM, PipeWire/NetworkManager/Bluetooth
 daemons, Plymouth boot splash, and the SDDM login theme. Importing the module
 is side-effect-free until this is `true`.
 
+### `omarchy.profile` *(enum, default `"desktop"`)*
+
+`desktop` (default) is the thin sit-down Omarchy session without Docker,
+Steam, Obsidian, LibreOffice, Kdenlive, mise-as-system-dev, zram at 100% RAM,
+swappiness 150, or a global unfree whitelist.
+
+`workstation` adds the upstream kitchen-sink extras: Docker, full-RAM zram
+swap, zram-era sysctls, LibreOffice, Kdenlive, mise, and lazydocker.
+Unfree apps such as Obsidian still require `omarchy.unfree.enable`.
+
+### `omarchy.unfree.enable` *(bool, default `false`)*
+
+Opt in to unfree packages on the desktop profile (Obsidian and a scoped
+`allowUnfreePredicate` for menu-managed unfree entries). Workstation
+profile still requires this for Obsidian; it does not silently enable Steam
+(use the Install menu / `omarchy-packages.json` features). Unfree remains
+first-class and easy — not FOSS-purist — but is no longer a silent global
+default on `profile = "desktop"`.
+
 ### `omarchy.package` *(nullOr package, default `null`, injected by the flake)*
 
 The vendored omarchy derivation (`$out/share/omarchy`). Set automatically by

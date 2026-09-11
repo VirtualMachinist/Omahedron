@@ -766,6 +766,83 @@
               throw "omarchy.binfmtEmulatedSystems does not reach boot.binfmt.emulatedSystems"
             else
               pkgs.runCommand "omarchy-binfmt-eval" { } "touch $out";
+          # ADR-0024 / COMPETE §2.8: desktop profile stays thin; workstation +
+          # omarchy.unfree.enable cover the kitchen-sink and unfree opt-ins.
+          omarchy-profile-desktop =
+            let
+              lib = pkgs.lib;
+              mkOmEval =
+                extra:
+                nixpkgs.lib.nixosSystem {
+                  system = "x86_64-linux";
+                  modules = [
+                    self.nixosModules.default
+                    (
+                      {
+                        omarchy.enable = true;
+                        omarchy.managedPackagesFile = null;
+                        fileSystems."/".device = "/dev/null";
+                        fileSystems."/".fsType = "ext4";
+                        boot.loader.grub.enable = true;
+                        system.stateVersion = "26.05";
+                      }
+                      // extra
+                    )
+                  ];
+                };
+              desktopCfg = (mkOmEval { }).config;
+              workstationCfg =
+                (self.nixosConfigurations.demo.extendModules {
+                  modules = [
+                    {
+                      omarchy.profile = "workstation";
+                      omarchy.unfree.enable = true;
+                    }
+                  ];
+                }).config;
+              unfreeDesktopCfg =
+                (self.nixosConfigurations.example.extendModules {
+                  modules = [
+                    {
+                      omarchy.unfree.enable = true;
+                    }
+                  ];
+                }).config;
+              hasPkg =
+                cfg: name:
+                lib.any (p: lib.getName p == name) cfg.environment.systemPackages;
+            in
+            if desktopCfg.omarchy.profile != "desktop" then
+              throw "default profile must be desktop"
+            else if desktopCfg.virtualisation.docker.enable then
+              throw "desktop must not enable Docker"
+            else if desktopCfg.zramSwap.enable then
+              throw "desktop must not enable zramSwap"
+            else if
+              (desktopCfg.boot.kernel.sysctl ? "vm.swappiness")
+              && desktopCfg.boot.kernel.sysctl."vm.swappiness" == 150
+            then
+              throw "desktop must not set vm.swappiness=150"
+            else if hasPkg desktopCfg "obsidian" then
+              throw "desktop must not ship obsidian without unfree.enable"
+            else if hasPkg desktopCfg "libreoffice" then
+              throw "desktop must not ship LibreOffice"
+            else if hasPkg desktopCfg "mise" then
+              throw "desktop must not ship mise"
+            else if !workstationCfg.virtualisation.docker.enable then
+              throw "workstation must enable Docker"
+            else if !workstationCfg.zramSwap.enable then
+              throw "workstation must enable zramSwap"
+            else if workstationCfg.zramSwap.memoryPercent != 100 then
+              throw "workstation zram must be 100%"
+            else if workstationCfg.boot.kernel.sysctl."vm.swappiness" != 150 then
+              throw "workstation must set vm.swappiness=150"
+            else if !(hasPkg workstationCfg "libreoffice") then
+              throw "workstation must ship LibreOffice"
+            else if !(builtins.tryEval unfreeDesktopCfg.system.build.toplevel).success then
+              throw "unfree.enable must allow a desktop config with Obsidian to evaluate"
+            else
+              pkgs.runCommand "omarchy-profile-desktop-check" { } "touch $out";
           # Migration parity: the upstream /etc defaults that migrations
           # 1784568652 (NM-wait-online mask), 1784970000 (logind inhibit
           # delay) and 1784914435 (Wi-Fi powersave off) apply imperatively on
@@ -936,6 +1013,15 @@
           omarchy-etc-parity =
             let
               demoCfg = self.nixosConfigurations.demo.config;
+              workstationCfg =
+                (self.nixosConfigurations.demo.extendModules {
+                  modules = [
+                    {
+                      omarchy.profile = "workstation";
+                      omarchy.unfree.enable = true;
+                    }
+                  ];
+                }).config;
               discoveryCfg =
                 (self.nixosConfigurations.demo.extendModules {
                   modules = [ { services.printing.browsed.enable = true; } ];
@@ -952,6 +1038,7 @@
               ];
               badClasses = builtins.filter (c: !(builtins.elem c allowedClasses)) (builtins.attrValues manifest);
               sysctl = demoCfg.boot.kernel.sysctl;
+              workstationSysctl = workstationCfg.boot.kernel.sysctl;
               inherit (pkgs.lib) hasInfix;
               logindConf = demoCfg.environment.etc."systemd/logind.conf".text;
               userConf = demoCfg.environment.etc."systemd/user.conf".text;
@@ -961,14 +1048,20 @@
             in
             if badClasses != [ ] then
               throw "omarchy-etc-manifest.nix has unknown classes: ${toString badClasses}"
-            else if sysctl."vm.swappiness" != 150 then
-              throw "demo config missing vm.swappiness=150 (etc/sysctl.d/99-omarchy-sysctl.conf)"
-            else if sysctl."vm.page-cluster" != 0 then
-              throw "demo config missing vm.page-cluster=0 (etc/sysctl.d/99-omarchy-sysctl.conf)"
-            else if sysctl."vm.dirty_bytes" != 268435456 then
-              throw "demo config missing vm.dirty_bytes (etc/sysctl.d/99-omarchy-sysctl.conf)"
+            else if workstationSysctl."vm.swappiness" != 150 then
+              throw "workstation config missing vm.swappiness=150 (etc/sysctl.d/99-omarchy-sysctl.conf)"
+            else if workstationSysctl."vm.page-cluster" != 0 then
+              throw "workstation config missing vm.page-cluster=0 (etc/sysctl.d/99-omarchy-sysctl.conf)"
+            else if workstationSysctl."vm.dirty_bytes" != 268435456 then
+              throw "workstation config missing vm.dirty_bytes (etc/sysctl.d/99-omarchy-sysctl.conf)"
             else if sysctl."net.ipv4.tcp_mtu_probing" != 1 then
               throw "demo config missing net.ipv4.tcp_mtu_probing=1 (etc/sysctl.d/99-omarchy-sysctl.conf)"
+            else if sysctl ? "vm.swappiness" && sysctl."vm.swappiness" == 150 then
+              throw "desktop profile must not set vm.swappiness=150"
+            else if demoCfg.zramSwap.enable then
+              throw "desktop profile must not enable zramSwap"
+            else if demoCfg.virtualisation.docker.enable then
+              throw "desktop profile must not enable Docker"
             else if sysctl."fs.inotify.max_user_watches" != 524288 then
               throw "demo config lost fs.inotify.max_user_watches=524288 (nixpkgs sysctl.nix default changed)"
             else if !(hasInfix "HandlePowerKey=ignore" logindConf) then
@@ -979,14 +1072,14 @@
               throw "demo config missing DefaultLimitNOFILE (etc/systemd/system.conf.d/20-omarchy-nofile.conf)"
             else if !(hasInfix "DefaultLimitNOFILE=65536:524288" userConf) then
               throw "demo config user.conf missing DefaultLimitNOFILE (etc/systemd/user.conf.d/20-omarchy-nofile.conf)"
-            else if demoCfg.systemd.services.docker.unitConfig.DefaultDependencies != false then
-              throw "demo config missing docker DefaultDependencies=no (etc/systemd/system/docker.service.d/no-block-boot.conf)"
+            else if workstationCfg.systemd.services.docker.unitConfig.DefaultDependencies != false then
+              throw "workstation config missing docker DefaultDependencies=no (etc/systemd/system/docker.service.d/no-block-boot.conf)"
             else if demoCfg.systemd.services.update-locatedb.unitConfig.ConditionACPower != true then
               throw "demo config missing update-locatedb ConditionACPower=true (etc/systemd/system/plocate-updatedb.service.d/ac-only.conf)"
             else if demoCfg.systemd.services."user@".serviceConfig.TimeoutStopSec != "5s" then
               throw "demo config missing user@ TimeoutStopSec=5s (etc/systemd/system/user@.service.d/10-faster-shutdown.conf)"
-            else if demoCfg.virtualisation.docker.daemon.settings.log-driver != "json-file" then
-              throw "demo config missing docker log rotation (etc/docker/daemon.json)"
+            else if workstationCfg.virtualisation.docker.daemon.settings.log-driver != "json-file" then
+              throw "workstation config missing docker log rotation (etc/docker/daemon.json)"
             else if !(hasSudoCmd "/run/current-system/sw/bin/asdcontrol") then
               throw "demo config missing NOPASSWD asdcontrol (etc/sudoers.d/omarchy-asdcontrol)"
             else if !(hasSudoCmd "/run/current-system/sw/bin/tzupdate") then
@@ -2156,9 +2249,9 @@ c";
                 extra:
                 nixpkgs.lib.nixosSystem {
                   # Same pinned pkgs instance the other module checks use —
-                  # carries the scoped unfree predicate the omarchy default
-                  # app set needs at eval (obsidian). `inherit system` instead
-                  # would re-import nixpkgs without it and fail on unfree.
+                  # carries the scoped unfree predicate when omarchy.unfree.enable
+                  # is set. `inherit system` instead would re-import nixpkgs
+                  # without it and fail on unfree menu installs.
                   inherit pkgs;
                   modules = [
                     self.nixosModules.default

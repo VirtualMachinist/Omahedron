@@ -159,12 +159,8 @@ let
     EOF
   '';
 
-  # Core desktop-session runtime set, derived from upstream's
-  # `install/omarchy-base.packages` (fetched read-only from the live
-  # upstream reference box). Full upstream package parity is now the policy —
-  # including the heavier apps (libreoffice, obs, dev toolchains) that upstream
-  # ships by default. Grouped by role so the rationale for each inclusion is
-  # local to its line.
+  # Core desktop-session runtime set (thin `desktop` profile). Workstation-only
+  # packages (Docker CLI, creative suite, mise) live in `workstationRuntimeDeps`.
   runtimeDeps =
     with pkgs;
     filterExcluded (
@@ -359,7 +355,6 @@ let
         neovim
         btop
         lazygit
-        lazydocker
         yt-dlp
         # dua is the upstream disk-usage tool (dua-cli was renamed to dua).
         dua
@@ -381,9 +376,6 @@ let
 
         # --- Upstream parity: GUI apps ---
         obs-studio
-        libreoffice-fresh
-        kdePackages.kdenlive
-        obsidian
         pinta
         xournalpp
         localsend
@@ -415,7 +407,6 @@ let
         llvm
         ruby
         dotnet-runtime
-        mise
 
         # --- Upstream parity: automount ---
         udiskie
@@ -438,6 +429,15 @@ let
         qt6.qtwayland
       ]
     );
+
+  workstationRuntimeDeps =
+    with pkgs;
+    filterExcluded [
+      lazydocker
+      libreoffice-fresh
+      kdePackages.kdenlive
+      mise
+    ];
 
   # Custom hyprland-uwsm.desktop matching the oracle's session launch.
   # nixpkgs programs.uwsm.waylandCompositors generates
@@ -653,6 +653,10 @@ in
       {
         environment.systemPackages =
           runtimeDeps
+          ++ lib.optionals (cfg.profile == "workstation") workstationRuntimeDeps
+          ++ lib.optionals (cfg.unfree.enable) (
+            filterExcluded [ pkgs.obsidian ]
+          )
           ++ (filterExcluded cfg.appPackages)
           ++ [
             xcursorDefaultAdwaita
@@ -676,10 +680,9 @@ in
         ++ lib.optional (cfg.package != null) cfg.package;
       }
 
-      # (B0) Unfree whitelist + scoped insecure permit for the default app set
-      # and menu-managed packages. The default set ships obsidian (upstream
-      # parity), which is unfree — whitelist exactly it so a consumer on a
-      # default nixpkgs config builds without touching nixpkgs.config. Menu
+      # (B0) Unfree whitelist + scoped insecure permit for menu-managed packages
+      # and (when opted in) Obsidian. Desktop default does not whitelist
+      # Obsidian globally — set omarchy.unfree.enable or profile = workstation.
       # installs extend the whitelist with catalog `unfreeNames` (literal
       # getName strings, including hidden deps like steam-unwrapped) and
       # `insecureNames` (e.g. openssl-1.1.1w for Sublime, electron for
@@ -699,7 +702,11 @@ in
       # is non-null even when NixOS built it.
       (lib.mkIf (!options.nixpkgs.pkgs.isDefined) {
         nixpkgs.config.allowUnfreePredicate = lib.mkDefault (
-          pkg: builtins.elem (lib.getName pkg) ([ "obsidian" ] ++ managedUnfreeNames)
+          pkg:
+          builtins.elem (lib.getName pkg) (
+            (lib.optionals cfg.unfree.enable [ "obsidian" ])
+            ++ managedUnfreeNames
+          )
         );
         # Scoped opt-in: only the insecure deps of packages the consumer
         # actually selected (Sublime → openssl-1.1.1w, Bitwarden → electron).
@@ -793,7 +800,6 @@ in
           # discovery. A consumer can explicitly opt back in via NixOS.
           browsed.enable = lib.mkDefault false;
         };
-        virtualisation.docker.enable = lib.mkDefault true;
         # gnome-keyring: upstream ships it; the old "out of scope" note in
         # AGENTS.md is rescinded.
         services.gnome.gnome-keyring.enable = lib.mkDefault true;
@@ -847,25 +853,13 @@ in
           };
         };
 
-        # zram swap (upstream parity): default/systemd/zram-generator.conf.d/
-        # 90-omarchy.conf — full-RAM zram device, zstd (~3:1, so ~1/3 RAM in
-        # practice), swap-priority 100 (above the pri=0 disk swapfile from
-        # omarchy-hibernation-setup). NixOS's zramSwap drives the same
-        # zram-generator under the hood; memoryPercent 100 renders as
-        # `zram-size = 100 / 100 * ram`, equivalent to upstream's `ram`.
-        zramSwap.enable = lib.mkDefault true;
-        zramSwap.memoryPercent = lib.mkDefault 100;
-        zramSwap.algorithm = lib.mkDefault "zstd";
-        zramSwap.priority = lib.mkDefault 100;
-
-        # zswap off (upstream etc/tmpfiles.d/omarchy-zswap.conf): in front of
-        # swap-on-zram it only double-compresses pages and breaks zramctl
-        # accounting. w! = boot-only, so a manual flip sticks until reboot.
-        # Upstream's zram migration (drop archinstall's leftover
-        # /etc/systemd/zram-generator.conf) is a no-op on NixOS — no such file.
-        systemd.tmpfiles.rules = [
-          "w! /sys/module/zswap/parameters/enabled - - - - N"
-        ];
+        # Thin desktop: keep benign upstream etc/ defaults that are not the
+        # kitchen-sink fleet image (Docker, zram 100%, swappiness 150).
+        boot.kernel.sysctl = lib.mkIf (cfg.profile == "desktop") (
+          lib.mapAttrs (_: lib.mkDefault) {
+            "net.ipv4.tcp_mtu_probing" = 1;
+          }
+        );
 
         # Cross-arch binfmt: upstream installs
         # qemu-user-static-binfmt unconditionally; here it is opt-in via
@@ -908,22 +902,6 @@ in
         # config/sysctl.nix already ships the identical
         # fs.inotify.max_user_watches=524288 as mkDefault, and redefining
         # it here would collide (sysctl values must be unique).
-        #
-        # zram-era VM tuning (upstream etc/sysctl.d/99-omarchy-sysctl.conf):
-        # reclaim tuned for swap-on-zram (see zramSwap above), page-cache
-        # kept, bounded writeback bursts; tcp_mtu_probing fixes SSH stalls on
-        # flaky links. Migration 1784961000 applies the same file on Arch.
-        boot.kernel.sysctl = lib.mapAttrs (_: lib.mkDefault) {
-          "net.ipv4.tcp_mtu_probing" = 1;
-          "vm.swappiness" = 150;
-          "vm.vfs_cache_pressure" = 50;
-          "vm.page-cluster" = 0;
-          "vm.watermark_boost_factor" = 0;
-          "vm.watermark_scale_factor" = 125;
-          "vm.dirty_background_bytes" = 67108864;
-          "vm.dirty_bytes" = 268435456;
-          "vm.dirty_writeback_centisecs" = 1500;
-        };
 
         # NOT adapted: etc/systemd/resolved.conf.d/{10-disable-multicast,
         # 20-docker-dns}.conf — systemd-resolved is NOT enabled on NixOS
@@ -934,23 +912,6 @@ in
         # Consumers who flip networking.networkmanager.dns =
         # "systemd-resolved" can restore full upstream parity with
         # services.resolved.llmnr/extraConfig (see docs/UPSTREAM.md).
-
-        # Docker daemon (upstream etc/docker/daemon.json): bounded json-file
-        # logs (10 MiB × 5). Upstream's dns/bip pins are deliberately
-        # dropped — they exist for the resolved bridge integration above;
-        # docker's defaults already use 172.17.0.0/16 and pass the host
-        # resolver through to containers. log-driver goes through
-        # virtualisation.docker.logDriver (nixpkgs feeds it into
-        # daemon.settings with per-key mkDefault; a whole-attrset mkDefault
-        # on daemon.settings would lose to nixpkgs's plain definition).
-        virtualisation.docker.logDriver = lib.mkDefault "json-file";
-        virtualisation.docker.daemon.settings.log-opts = lib.mkDefault {
-          max-size = "10m";
-          max-file = "5";
-        };
-        # Docker must not hold up boot (upstream etc/systemd/system/
-        # docker.service.d/no-block-boot.conf).
-        systemd.services.docker.unitConfig.DefaultDependencies = lib.mkDefault false;
 
         # updatedb only on AC power (upstream etc/systemd/system/
         # plocate-updatedb.service.d/ac-only.conf): crawling the whole tree
@@ -1030,6 +991,38 @@ in
           }
         ];
       }
+
+      # (B2w) Workstation profile: upstream kitchen-sink (Docker, zram 100%,
+      # swappiness 150, zram-era sysctls). Not on `profile = "desktop"`.
+      (lib.mkIf (cfg.profile == "workstation") {
+        virtualisation.docker.enable = lib.mkDefault true;
+        virtualisation.docker.logDriver = lib.mkDefault "json-file";
+        virtualisation.docker.daemon.settings.log-opts = lib.mkDefault {
+          max-size = "10m";
+          max-file = "5";
+        };
+        systemd.services.docker.unitConfig.DefaultDependencies = lib.mkDefault false;
+
+        zramSwap.enable = lib.mkDefault true;
+        zramSwap.memoryPercent = lib.mkDefault 100;
+        zramSwap.algorithm = lib.mkDefault "zstd";
+        zramSwap.priority = lib.mkDefault 100;
+        systemd.tmpfiles.rules = [
+          "w! /sys/module/zswap/parameters/enabled - - - - N"
+        ];
+
+        boot.kernel.sysctl = lib.mapAttrs (_: lib.mkDefault) {
+          "net.ipv4.tcp_mtu_probing" = 1;
+          "vm.swappiness" = 150;
+          "vm.vfs_cache_pressure" = 50;
+          "vm.page-cluster" = 0;
+          "vm.watermark_boost_factor" = 0;
+          "vm.watermark_scale_factor" = 125;
+          "vm.dirty_background_bytes" = 67108864;
+          "vm.dirty_bytes" = 268435456;
+          "vm.dirty_writeback_centisecs" = 1500;
+        };
+      })
 
       # User-manager NOFILE (upstream etc/systemd/user.conf.d/
       # 20-omarchy-nofile.conf). nixpkgs after 26.05 removed

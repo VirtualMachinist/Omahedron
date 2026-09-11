@@ -212,7 +212,12 @@ Anything you would rather manage by hand goes in your configuration as usual. To
 omarchy.exclude_packages = [ "obsidian" "signal-desktop" ];
 ```
 
-Unfree packages are allowed by default for the apps Omarchy selects, because most of them are unfree and an install loop that dies on a license prompt is not the desktop anyone asked for. Override `nixpkgs.config.allowUnfreePredicate` if you want a free-only machine.
+Unfree packages are not enabled globally on the default `desktop` profile.
+Set `omarchy.unfree.enable = true` when you want Obsidian and menu-managed
+unfree installs without flipping the whole system to `allowUnfree = true`.
+The `workstation` profile adds Docker, zram, and the creative/dev suite but
+still requires `omarchy.unfree.enable` for Obsidian. Override
+`nixpkgs.config.allowUnfreePredicate` if you want a free-only machine.
 
 ## Rolling back
 
