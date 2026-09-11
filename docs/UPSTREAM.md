@@ -71,6 +71,10 @@ Schema records a bump file from [templates/bump-record.md](../templates/bump-rec
 
 One upstream rev + glue fixes = one commit (or one PR stacked as that logical commit). Do not mix a theme rewrite with a pin.
 
+## Rebase / overlay (G2)
+
+Cherry-pick queue vs zicochaos `main` without dropping ledgers or rewriting the vendor derivation: [REBASE-PLAN.md](REBASE-PLAN.md). Execute at G3 pin bump.
+
 ## zicochaos delta to remember on the first pin
 
 Their public tree tracked `quattro`, vendored `version` still `4.0.0.alpha`, last public snapshots 2026-08-18. Official v4.0.1 and v4.0.2 security work landed after that. The first Omahedron bump is not “lock update.” It is “catch the security tags and stop following HEAD.”

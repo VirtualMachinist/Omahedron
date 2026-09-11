@@ -12,7 +12,7 @@ Exit for *calling ourselves the port to pick*:
 - [x] [docs/COMPETE.md](docs/COMPETE.md) landed; AGENTS points at it
 - [ ] Locator purge (`$OMARCHY_NIX_FLAKE` + `/etc/nixos` only)
 - [ ] Thin `desktop` profile vs `workstation` / `unfree.enable`
-- [ ] Rebase/overlay plan vs zicochaos `main` (Omarchy v4.0.3)
+- [x] Rebase/overlay plan vs zicochaos `main` (Omarchy v4.0.3) — [docs/REBASE-PLAN.md](docs/REBASE-PLAN.md)
 - [ ] Pin catch-up or dated deferral
 - [ ] Nix verbs page + locator that matches or beats nixarchy
 - [ ] Hyprland/Mesa substituter proven in install.md
