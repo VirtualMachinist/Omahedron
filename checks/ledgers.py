@@ -22,6 +22,7 @@ STUB_MARKERS = (
     '# omarchy-nix: no pacman update probe.',
     '# omarchy-nix: snapper/limine snapshots are Arch-only.',
     '# follow the theme. Silent no-op:',
+    'omahedron: stub: nixos-declarative',
 )
 
 
@@ -192,8 +193,20 @@ def validate(repo, upstream, packaged, evidence):
             require(probe.get('attr') == row['attr'] and probe.get('status') == status,
                     f'{name}: package probe does not match ledger attribute/status')
             require(probe.get('valid') is True, f'{name}: {status} attr {row["attr"]} does not evaluate to a derivation')
-            if row['availability'] == 'default':
-                require(probe.get('default') is True, f'{name}: {row["attr"]} is absent from default module packages/fonts')
+            availability = row.get('availability', 'default')
+            if availability == 'default':
+                require(probe.get('default') is True,
+                        f'{name}: {row["attr"]} is absent from default module packages/fonts')
+            elif availability == 'workstation':
+                require(probe.get('default') is False,
+                        f'{name}: {row["attr"]} must not ship on desktop profile')
+                require(probe.get('workstation') is True,
+                        f'{name}: {row["attr"]} is absent from workstation profile packages')
+            elif availability == 'unfree':
+                require(probe.get('default') is False,
+                        f'{name}: {row["attr"]} must not ship without omarchy.unfree.enable')
+                require(probe.get('unfree_default') is True,
+                        f'{name}: {row["attr"]} is absent when omarchy.unfree.enable = true')
             if status == 'pkgs':
                 local_attrs.add(row['attr'])
                 require((repo / 'pkgs' / (row['attr'] + '.nix')).is_file(), f'{name}: local derivation source missing')

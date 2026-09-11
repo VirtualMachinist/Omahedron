@@ -22,32 +22,74 @@ let
       }
     ];
   };
+  workstationHost = nixpkgs.lib.nixosSystem {
+    inherit system;
+    modules = [
+      self.nixosModules.default
+      {
+        omarchy.enable = true;
+        omarchy.profile = "workstation";
+        omarchy.unfree.enable = true;
+        system.stateVersion = "26.05";
+      }
+    ];
+  };
+  unfreeHost = nixpkgs.lib.nixosSystem {
+    inherit system;
+    modules = [
+      self.nixosModules.default
+      {
+        omarchy.enable = true;
+        omarchy.unfree.enable = true;
+        system.stateVersion = "26.05";
+      }
+    ];
+  };
   packageName = pkg: builtins.unsafeDiscardStringContext (lib.getName pkg);
   defaultNames = map packageName (
     host.config.environment.systemPackages
     ++ host.config.fonts.packages
     ++ host.config.boot.plymouth.themePackages
   );
-  probe = row: {
-    name = row.upstream;
-    value = {
-      inherit (row) attr status;
-    }
-    // (
-      let
-        packages = if row.status == "pkgs" then self.packages.${system} else host.pkgs;
-        package = lib.attrByPath (lib.splitString "." row.attr) null packages;
-        result = builtins.tryEval (
-          assert lib.isDerivation package;
-          builtins.seq package.drvPath {
-            valid = true;
-            default = builtins.elem (packageName package) defaultNames;
-          }
-        );
-      in
-      if result.success then result.value else { valid = false; }
-    );
-  };
+  workstationNames = map packageName (
+    workstationHost.config.environment.systemPackages
+    ++ workstationHost.config.fonts.packages
+    ++ workstationHost.config.boot.plymouth.themePackages
+  );
+  unfreeNames = map packageName (
+    unfreeHost.config.environment.systemPackages
+    ++ unfreeHost.config.fonts.packages
+    ++ unfreeHost.config.boot.plymouth.themePackages
+  );
+  probe =
+    row:
+    let
+      availability = row.availability or "default";
+      packages =
+        if row.status == "pkgs" then
+          self.packages.${system}
+        else if availability == "unfree" then
+          unfreeHost.pkgs
+        else
+          host.pkgs;
+      package = lib.attrByPath (lib.splitString "." row.attr) null packages;
+      result = builtins.tryEval (
+        assert lib.isDerivation package;
+        builtins.seq package.drvPath {
+          valid = true;
+          default = builtins.elem (packageName package) defaultNames;
+          workstation = builtins.elem (packageName package) workstationNames;
+          unfree_default = builtins.elem (packageName package) unfreeNames;
+        }
+      );
+    in
+    {
+      name = row.upstream;
+      value = {
+        inherit (row) attr status;
+      }
+      // (if result.success then result.value else { valid = false; });
+    };
   options = lib.unique (lib.concatMap (row: row.options or [ ]) rows);
   lock = builtins.fromJSON (builtins.readFile ../flake.lock);
   lockedInput = lock.nodes.${lock.nodes.root.inputs.omarchy-src};
