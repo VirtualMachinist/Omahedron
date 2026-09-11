@@ -206,6 +206,9 @@
       unfreeNames = [ "github-copilot-cli" ];
     };
     "install.ai.gemini" = {
+      # v4.0.3 upstream still selects Gemini via setup.default.agent.gemini
+      # and omarchy-default-agent gemini (mise on Arch); no Install > AI row
+      # upstream — we add one so catalog-consistency can rewire omarchy-nix-add.
       arch = "gemini-cli";
       pkgs = [ "gemini-cli" ];
       binaries = [ "gemini" ];

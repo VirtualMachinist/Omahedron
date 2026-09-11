@@ -77,6 +77,7 @@ let
     "install.ai.codex": {"icon":"󱚤","label":"Codex","when":"! omarchy-pkg-present codex-cli","action":"omarchy-launch-floating-terminal-with-presentation 'omarchy-nix-add install.ai.codex'"},
     "install.ai.copilot": {"icon":"󱚤","label":"GitHub Copilot","when":"! omarchy-pkg-present github-copilot-cli","action":"omarchy-launch-floating-terminal-with-presentation 'omarchy-nix-add install.ai.copilot'"},
     "install.ai.crush": {"icon":"󱚤","label":"Crush","when":"! omarchy-pkg-present crush-bin","action":"omarchy-launch-floating-terminal-with-presentation 'omarchy-nix-add install.ai.crush'"},
+    "install.ai.gemini": {"icon":"󱚤","label":"Gemini","when":"! omarchy-pkg-present gemini-cli","action":"omarchy-launch-floating-terminal-with-presentation 'omarchy-nix-add install.ai.gemini'"},
     "install.ai.grok": {"icon":"󱚤","label":"Grok","when":"! omarchy-pkg-present grok-cli","action":"omarchy-launch-floating-terminal-with-presentation 'omarchy-nix-add install.ai.grok'"},
     "install.ai.opencode": {"icon":"󱚤","label":"OpenCode","when":"! omarchy-pkg-present opencode","action":"omarchy-launch-floating-terminal-with-presentation 'omarchy-nix-add install.ai.opencode'"},
     "install.ai.pi": {"icon":"󱚤","label":"Pi","when":"! omarchy-pkg-present pi-coding-agent","action":"omarchy-launch-floating-terminal-with-presentation 'omarchy-nix-add install.ai.pi'"},
@@ -1495,6 +1496,7 @@ stdenv.mkDerivation (finalAttrs: {
           install.ai.codex \
           install.ai.copilot \
           install.ai.crush \
+          install.ai.gemini \
           install.ai.grok \
           install.ai.opencode \
           install.ai.pi
