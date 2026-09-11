@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "omahedron.pin",
+  "omahedron_version": "4.0.3",
+  "omarchy_tag": "v4.0.3",
+  "omarchy_rev": "0534987009061cbe2dacdde4ad564092ab698d12",
+  "hyprland_tag": "v0.56.2",
+  "nixpkgs_branch": "nixos-26.05",
+  "home_manager_branch": "release-26.05",
+  "channel": "stable",
+  "state": "check-green",
+  "security_fast_path": true,
+  "flake_lock_agrees": true,
+  "gaps_doc": "docs/COMPAT.md"
+}

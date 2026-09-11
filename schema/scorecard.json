@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "omahedron.scorecard",
+  "as_of": "2026-09-11",
+  "our_pin": "4.0.3",
+  "our_rev": "0534987009061cbe2dacdde4ad564092ab698d12",
+  "product_git_tag": "omahedron-4.0.2",
+  "branch_pin": "feat/compete",
+  "readme_may_say_best": false,
+  "disqualifiers": [
+    "thin_default loss vs zicochaos — desktop/workstation profile split still landing (COMPETE queue §5 item 2)",
+    "pin_freshness loss vs zicochaos — they track quattro HEAD; we trail on official tags only and have no omahedron-4.0.3 product tag yet",
+    "tests loss vs zicochaos — UX VM suite on their main; v4.0.3 metal checklist not signed",
+    "No followable public flake tag for Omarchy v4.0.3 — last product tag remains omahedron-4.0.2 until maintainer GO"
+  ],
+  "rows": [
+    {
+      "competitor": "zicochaos/omarchy-nix",
+      "axes": {
+        "pixel_parity": "tie",
+        "pin_freshness": "loss",
+        "thin_default": "loss",
+        "nix_verbs": "tie",
+        "honesty_of_gaps": "win",
+        "rebuild_time": "tie",
+        "tests": "loss",
+        "docs_first_hour": "tie"
+      },
+      "verdict": "loss",
+      "notes": "Same vendor-tree model and official v4.0.3 tag, but they track quattro HEAD between tags, ship a UX VM suite on main, and do not carry our ledger/tag/metal bar. We win on documented gaps and stub honesty; we lose on freshness beyond the tag, thin default, and test depth."
+    },
+    {
+      "competitor": "nixarchy",
+      "axes": {
+        "pixel_parity": "tie",
+        "pin_freshness": "tie",
+        "thin_default": "tie",
+        "nix_verbs": "tie",
+        "honesty_of_gaps": "win",
+        "rebuild_time": "tie",
+        "tests": "tie",
+        "docs_first_hour": "win"
+      },
+      "verdict": "tie",
+      "notes": "Both vendor Omarchy 4.x with Nix-facing verbs. They brand a separate CLI; we keep omarchy-* pixels with omarchy-nix-* underneath and one NIX-VERBS page. Tie on verbs after G4; win on henrysipp disambiguation and COMPAT discipline."
+    },
+    {
+      "competitor": "T00fy/omanix",
+      "axes": {
+        "pixel_parity": "loss",
+        "pin_freshness": "win",
+        "thin_default": "win",
+        "nix_verbs": "win",
+        "honesty_of_gaps": "win",
+        "rebuild_time": "tie",
+        "tests": "win",
+        "docs_first_hour": "win"
+      },
+      "verdict": "win",
+      "notes": "Different product: Nix-native rice without live theme swap. We lose pixel_parity by choice (vendor port vs reimplementation). We win on trailing official tags, ledgers, Nix verbs, and metal/CI bar for people who want Arch Omarchy pixels."
+    },
+    {
+      "competitor": "henrysipp/omarchy-nix",
+      "axes": {
+        "pixel_parity": "loss",
+        "pin_freshness": "win",
+        "thin_default": "n/a",
+        "nix_verbs": "win",
+        "honesty_of_gaps": "win",
+        "rebuild_time": "n/a",
+        "tests": "win",
+        "docs_first_hour": "win"
+      },
+      "verdict": "win",
+      "notes": "Early reimplementation; author returned to Arch; repo is mindshare, not maintenance. We lose pixel_parity and GitHub search rank. We win on maintained vendor pin, ledgers, Nix verbs, and README that answers 'is this henrysipp?' on the first screen."
+    },
+    {
+      "competitor": "omanixy",
+      "axes": {
+        "pixel_parity": "loss",
+        "pin_freshness": "n/a",
+        "thin_default": "tie",
+        "nix_verbs": "n/a",
+        "honesty_of_gaps": "tie",
+        "rebuild_time": "n/a",
+        "tests": "n/a",
+        "docs_first_hour": "n/a"
+      },
+      "verdict": "n/a",
+      "notes": "Thin presentation/OS boundary layer, not a full Omarchy vendor port. Not a direct substitute for sit-down Omarchy parity; compare on integration philosophy only."
+    }
+  ]
+}

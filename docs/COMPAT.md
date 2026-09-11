@@ -2,7 +2,7 @@
 
 Human ledger of every stub and NixOS-ism. Machine source of truth is [schema/scripts.lock.json](../schema/scripts.lock.json) and [schema/packages.map.json](../schema/packages.map.json). If prose and JSON disagree, JSON wins and this file must be updated in the same commit.
 
-Status at pin v4.0.2: CI directly enforces both JSON ledgers through `checks.omarchy-ledgers`. The script inventory covers **431 upstream commands** (329 vendor, 32 wrap, 70 stub), the `pacman` N/A policy row, and five port helpers. The package map covers **206 names from both upstream install lists**, plus six explicit entries outside those lists. Manifest data files are no longer presented as packages.
+Status at pin **v4.0.3** (`0534987`): CI directly enforces both JSON ledgers through `checks.omarchy-ledgers`, plus `schema/pin.json` and `schema/scorecard.json`. The script inventory covers **444 upstream commands** (341 vendor, 33 wrap, 70 stub), the `pacman` N/A policy row, and five port helpers. The package map covers **206 names from both upstream install lists**, plus six explicit entries outside those lists. Manifest data files are no longer presented as packages.
 
 ## How to read a row
 

@@ -16,8 +16,8 @@ Exit for *calling ourselves the port to pick*:
 - [x] Pin catch-up or dated deferral — v4.0.3 @ `0534987` (G3)
 - [x] Nix verbs page + locator that matches or beats nixarchy — [docs/NIX-VERBS.md](docs/NIX-VERBS.md)
 - [x] Hyprland/Mesa substituter proven in install.md — `checks.omarchy-hyprland-cache`
-- [ ] `schema/scorecard.json` checked in
-- [ ] README rewrite; no “best” until COMPETE §4.5
+- [ ] `schema/scorecard.json` checked in — [`schema/scorecard.json`](schema/scorecard.json) @ G6
+- [x] README rewrite; no “best” until COMPETE §4.5 — G7 @ feat/compete
 
 Ordered queue and merge/tag gates: [docs/COMPETE.md](docs/COMPETE.md) §5 and §4.
 

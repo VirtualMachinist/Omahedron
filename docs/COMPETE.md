@@ -8,7 +8,7 @@ Read this before changing user-visible desktop behavior, module defaults, pins, 
 >
 > - Git tag `omahedron-4.0.2` exists (annotated; Latitude metal-cleared). There is no GitHub Release.
 > - Public README still tells people to track `main` until metal sign-off.
-> - `schema/scorecard.json` is not in tree yet.
+> - `schema/pin.json` and `schema/scorecard.json` are checked in on `feat/compete` (G6).
 > - Kitchen-sink defaults (Docker, Steam, zram 100%, swappiness 150) and scavenger flake paths (`~/omarchy-nix`, `~/Projects/omarchy-nix`) are still live on `omarchy.enable`.
 >
 > Landscape §1 is the 2026-09 competitive snapshot. Live git wins for inventory. This file wins for the *bar* (what “best” means, module shape, release identity). Do not call this the best port until §4.5 allows.
