@@ -65,7 +65,6 @@ jobs:
             omarchy-shebangs
             omarchy-pam-eval
             omarchy-binfmt-eval
-            omarchy-profile-desktop
             omarchy-migration-parity
             omarchy-etc-parity
             omarchy-disabled-state
@@ -74,8 +73,6 @@ jobs:
             omarchy-flake-resolver
             omarchy-option-validation
             omarchy-options-documented
-            omarchy-hyprland-cache
-            omarchy-stub-banners
             omarchy-fish-package
             omarchy-fish-parity
             omarchy-fish-module
