@@ -827,6 +827,10 @@
               throw "desktop must not ship LibreOffice"
             else if hasPkg desktopCfg "mise" then
               throw "desktop must not ship mise"
+            else if desktopCfg.programs.steam.enable then
+              throw "desktop must not enable Steam"
+            else if desktopCfg.nixpkgs.config.allowUnfree or false then
+              throw "desktop must not set global allowUnfree"
             else if !workstationCfg.virtualisation.docker.enable then
               throw "workstation must enable Docker"
             else if !workstationCfg.zramSwap.enable then
