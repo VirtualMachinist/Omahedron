@@ -28,6 +28,7 @@
   <a href="#how-it-works">How it works</a> ·
   <a href="docs/install.md">Install guide</a> ·
   <a href="docs/options.md">Options</a> ·
+  <a href="docs/COMPETE.md">Compete</a> ·
   <a href="#contributing">Contributing</a>
 </p>
 
@@ -44,7 +45,11 @@ It exists for **Omarchs who want NixOS underneath**: declarative configuration, 
 
 Omahedron is not a competing distro and not a rewrite. It is Omarchy's own desktop tree, vendored into the Nix store and driven by NixOS. We are members of the Omarchy community on NixOS instead of Arch, and we send fixes upstream. DHH himself has [looked at Nix](https://x.com/dhh/status/1952768570003272105) and pointed people toward a NixOS port. Omahedron is what that idea looks like carried all the way through.
 
-**431** upstream commands classified · **329** shipped untouched · **206** upstream packages mapped · **18** CI checks · **3** VM test suites · **1** Quickshell process
+This is **not** [henrysipp/omarchy-nix](https://github.com/henrysipp/omarchy-nix) (an early reimplementation; the author moved back to Arch). It is also not a Nix-native rice like [T00fy/omanix](https://github.com/T00fy/omanix). Glue starts from [zicochaos/omarchy-nix](https://github.com/zicochaos/omarchy-nix); we pin official Omarchy tags instead of tracking `quattro` HEAD.
+
+Unofficial NixOS vendor port of Omarchy v4.0.2, forked from zicochaos/omarchy-nix. Git tag `omahedron-4.0.2` exists; do not pick this over zicochaos if you want current Quattro HEAD, and do not read “best port” into this README until [docs/COMPETE.md](docs/COMPETE.md) §4.5 allows.
+
+**431** upstream commands classified in [`schema/scripts.lock.json`](schema/scripts.lock.json) at pin v4.0.2 · **329** shipped untouched · **206** upstream packages mapped · **18** CI checks · **3** VM test suites · **1** Quickshell process
 
 ## Quick start
 
@@ -180,7 +185,7 @@ Policy detail, including the bump state machine, is in [docs/CHANNELS.md](docs/C
 | Hyprland | 0.56.2 |
 | Baseline hardware | Dell Latitude 5420, 8 GB RAM, Intel iGPU |
 
-Omahedron 4.0.2 runs on bare metal today and has passed smoke testing on the baseline machine. The first tagged release, `omahedron-4.0.2`, lands once the full [hardware checklist](checklists/metal.md) is signed off. Until then, track `main`.
+Omahedron 4.0.2 runs on bare metal today. Git tag `omahedron-4.0.2` points at `08e2f1d`. There is no GitHub Release yet; consumers who want a moving target can still follow `main`. Competitive work (thin desktop default, locator purge, catch-up to Omarchy v4.0.3) is in [docs/COMPETE.md](docs/COMPETE.md).
 
 ## How it works
 
@@ -206,14 +211,14 @@ schema/                   # script ledger, package map, JSON schemas
 checks/                   # ledger enforcement and stub behaviour tests
 tests/                    # NixOS VM suites: desktop, Fish, UX
 example/configuration.nix # the reference consumer config CI builds
-docs/                     # install, options, COMPAT, CHANNELS, UPSTREAM, brand
+docs/                     # install, options, COMPAT, CHANNELS, UPSTREAM, COMPETE, brand
 ```
 
 </details>
 
 ## Contributing
 
-Issues and pull requests are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md), which covers the validation workflow, then [AGENTS.md](AGENTS.md) and [DECISIONS.md](DECISIONS.md) for the rules the tree already follows. Two of them matter most: desktop pixels come from Omarchy, and any new upstream command gets classified in the ledger in the same change.
+Issues and pull requests are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md), which covers the validation workflow, then [AGENTS.md](AGENTS.md), [docs/COMPETE.md](docs/COMPETE.md), and [DECISIONS.md](DECISIONS.md). Two rules matter most: desktop pixels come from Omarchy, and any new upstream command gets classified in the ledger in the same change. Do not change module defaults, pins, or README claims without COMPETE.
 
 When something we fix turns out to be an Omarchy bug rather than a NixOS-ism, it goes upstream. Being a good citizen of the Omarchy community is part of the job, not a side quest.
 

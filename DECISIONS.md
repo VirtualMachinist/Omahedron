@@ -284,3 +284,30 @@ Clarifies the earlier interview question: “who is this human” is declarative
 **Why.** quickshell 0.3.0 has no NameOwnerChanged recovery (basecamp/omarchy#7324); race paints NOT CONNECTED while the link is up.
 
 **Consequences.** Landed on `main` (PR #7). First-boot NM/Quickshell race mitigated by unit ordering. Do not vendor-patch QML in `pkgs/` for this; track upstream omacom/omarchy#9923 separately.
+
+---
+
+## ADR-0024 — Competitive bar; thin desktop default
+
+- Status: accepted
+- Date: 2026-09-11
+- Deciders: human maintainer
+
+**Decision.** [docs/COMPETE.md](docs/COMPETE.md) is the competitive bar and agent scoreboard. Agents must read it before changing user-visible desktop behavior, module defaults, pins, or README claims.
+
+Thin desktop is now a competitive requirement, not a taste preference:
+
+- `omarchy.enable = true` defaults to `omarchy.profile = "desktop"`.
+- Desktop must not enable Docker, Steam, Obsidian, Kdenlive, LibreOffice, mise-as-system-dev, zram at 100% of RAM, or global `allowUnfree = true`.
+- Workstation extras live on `omarchy.profile = "workstation"`. Unfree apps live behind `omarchy.unfree.enable` (default false).
+- Flake locator is `$OMARCHY_NIX_FLAKE`, then `/etc/nixos` if it contains `nixosConfigurations.<hostname>`. Scavenger paths (`~/omarchy-nix`, `~/Projects/omarchy-nix`) are not supported discovery.
+- Treat zicochaos/omarchy-nix as glue upstream (rebase or overlay). Do not silently diverge `pkgs/omarchy.nix`.
+- README may not say “best port” until COMPETE §4.5 + `schema/scorecard.json` allow.
+
+**Why.** Tag pins, ledgers, and brand are not enough to beat zicochaos (fresher), nixarchy (Nix verbs), omanix (thin/pure), or henrysipp (search mindshare). Kitchen-sink `mkDefault`s copy a fleet image into every consumer.
+
+**Consequences.** SPEC.md is revised in the same change. Module/profile implementation is follow-on work (COMPETE §5); this ADR freezes the bar so that work cannot be argued away. Do not claim “best” on the current pin.
+
+**Supersedes in part:** ADR-0021’s *module default* that global `allowUnfree` is on. Unfree remains first-class and easy (`omarchy.unfree.enable = true` / workstation). We are not FOSS-purist; we are thin-by-default. Do not re-litigate unfree as mesh purity.
+
+**Does not supersede:** ADR-0003 (zicochaos base), ADR-0005 (channels / no-soak security), ADR-0008 (vendor rule), ADR-0011 (Fish default), ADR-0013 (metal gate).
