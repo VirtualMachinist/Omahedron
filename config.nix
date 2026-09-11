@@ -304,12 +304,10 @@
     # evaluation cannot auto-detect absolute paths like /etc/nixos. Must match
     # where omarchy-nix-add writes (one shared resolver:
     # OMARCHY_NIX_FLAKE as a flake dir or its flake.nix file, fail-closed on
-    # an invalid explicit value → ~/omarchy-nix → ~/Projects/omarchy-nix →
-    # /etc/nixos, first candidate providing nixosConfigurations."$(hostname)"
-    # wins; a candidate is skipped only when its nixosConfigurations
-    # evaluate cleanly but lack the host entry (library clones) — eval
-    # failures keep the candidate — and writes
-    # <flake_dir>/omarchy-packages.json).
+    # an invalid explicit value → /etc/nixos when it provides
+    # nixosConfigurations."$(hostname)" (skipped when its nixosConfigurations
+    # evaluate cleanly but lack the host entry — library clones; eval failures
+    # keep the candidate) — and writes <flake_dir>/omarchy-packages.json).
     managedPackagesFile = lib.mkOption {
       type = lib.types.nullOr lib.types.path;
       default = null;

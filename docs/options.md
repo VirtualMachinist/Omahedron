@@ -212,11 +212,10 @@ For git-based flakes the add/remove scripts register the JSON with
 `git add -N` so the flake snapshot includes it. Where the scripts write:
 one shared resolver, `$OMARCHY_NIX_FLAKE` (a flake directory **or** the
 path to its `flake.nix` file; an invalid explicit value fails closed,
-never falls back to another checkout) → `~/omarchy-nix` →
-`~/Projects/omarchy-nix` → `/etc/nixos` (first candidate providing
-`nixosConfigurations."$(hostname)"` wins; a candidate is skipped only
-when its `nixosConfigurations` evaluate cleanly without the host entry,
-i.e. library clones, while eval failures keep it). The JSON lands at
+never falls back to another checkout) → `/etc/nixos` when it provides
+`nixosConfigurations."$(hostname)"` (skipped when its
+`nixosConfigurations` evaluate cleanly without the host entry, i.e.
+library clones, while eval failures keep it). The JSON lands at
 `<flake_dir>/omarchy-packages.json` (see README /
 docs/install.md for the full resolver contract).
 

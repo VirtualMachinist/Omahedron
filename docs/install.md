@@ -181,11 +181,9 @@ Omarchy's **Update** menu entry, and the `omarchy-update` command, do on NixOS w
 For that to work the scripts need to find your flake. They check, in order:
 
 1. `$OMARCHY_NIX_FLAKE`, if set (a flake directory or the path to its `flake.nix`)
-2. `~/omarchy-nix/`
-3. `~/Projects/omarchy-nix/`
-4. `/etc/nixos/`
+2. `/etc/nixos/`, if its `nixosConfigurations` contains an entry for your hostname
 
-The first candidate whose `nixosConfigurations` contains an entry for your hostname wins. If your flake lives at `/etc/nixos` with a matching hostname, nothing to configure. If it lives elsewhere, set the variable once:
+If your flake lives at `/etc/nixos` with a matching hostname, nothing to configure. If it lives elsewhere, set the variable once:
 
 ```nix
 environment.sessionVariables.OMARCHY_NIX_FLAKE = "/home/ada/nixos-config";

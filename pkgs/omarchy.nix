@@ -1036,10 +1036,7 @@ stdenv.mkDerivation (finalAttrs: {
     NixOS: no consumer flake found for omarchy-update.
 
     Set OMARCHY_NIX_FLAKE to your config flake directory (or its flake.nix
-    file), or place a flake providing nixosConfigurations for this host at:
-      ~/omarchy-nix/
-      ~/Projects/omarchy-nix/
-      /etc/nixos/
+    file), or ensure /etc/nixos provides nixosConfigurations for this host.
 
     Packages and the system are declarative on NixOS — manage them in your flake
     and run nixos-rebuild switch there. Skipping package refresh.
@@ -1637,8 +1634,9 @@ stdenv.mkDerivation (finalAttrs: {
     # the path to the flake.nix file itself. An explicit-but-invalid value
     # FAILS CLOSED (rc 2 + diagnostics on stderr) — never silently falls
     # back to another checkout, which could mutate or rebuild the wrong
-    # flake. Without an explicit value the conventional candidates are
-    # probed (rc 1 when none has flake.nix). The returned directory is
+    # flake. Without an explicit value /etc/nixos is probed when it contains
+    # flake.nix and nixosConfigurations for this host (rc 1 when absent). The
+    # returned directory is
     # canonical (symlinks/`.`/trailing slashes resolved via pwd -P) so
     # every consumer sees the same JSON location.
     omarchy_flake_diag() {
@@ -1653,8 +1651,8 @@ stdenv.mkDerivation (finalAttrs: {
     # A fallback candidate is skipped only when it is PROVABLY a foreign
     # flake: its nixosConfigurations evaluate fine but have no entry for
     # this host (the rebuild target used downstream) — i.e. a library
-    # checkout like a bare ~/Projects/omarchy-nix clone of omarchy-nix
-    # itself, which ships demo/example host configs but not the consumer's.
+    # checkout that ships demo/example host configs but not the
+    # consumer's.
     # Any eval failure (stub/broken flake, offline input
     # fetch, no nixosConfigurations output at all) means "unknown" and the
     # candidate STAYS: a consumer flake whose eval is temporarily broken
@@ -1690,7 +1688,7 @@ stdenv.mkDerivation (finalAttrs: {
       # uname -n (coreutils) == kernel nodename == hostname; works even in
       # minimal environments without the hostname binary.
       host=$(uname -n)
-      for c in "$HOME/omarchy-nix" "$HOME/Projects/omarchy-nix" /etc/nixos; do
+      for c in /etc/nixos; do
         if [[ -f $c/flake.nix ]] && ! flake_is_foreign_library "$c" "$host"; then
           canon=$(cd -- "$c" 2>/dev/null && pwd -P) || continue
           printf '%s\n' "$canon"
@@ -1717,7 +1715,7 @@ stdenv.mkDerivation (finalAttrs: {
       if ((rc == 2)); then
         die "Invalid OMARCHY_NIX_FLAKE (see above) — fix or unset it. Nothing was changed."
       elif ((rc != 0)); then
-        die "No consumer flake with nixosConfigurations.\"$(uname -n)\" found under ~/omarchy-nix, ~/Projects/omarchy-nix or /etc/nixos. Set OMARCHY_NIX_FLAKE to your config flake directory (or its flake.nix file). Nothing was changed."
+        die "No consumer flake with nixosConfigurations.\"$(uname -n)\" found under /etc/nixos. Set OMARCHY_NIX_FLAKE to your config flake directory (or its flake.nix file). Nothing was changed."
       fi
       printf '%s\n' "$d"
     }

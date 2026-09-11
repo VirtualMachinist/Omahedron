@@ -1572,12 +1572,26 @@
                 fi
                 echo "no-flake handling OK"
 
-                # --- candidates probing (no explicit value) ---------------------
-                mkconsumer "$HOME/omarchy-nix"
+                # --- scavenger home paths are NOT supported locators -----------
+                for scav in "$HOME/omarchy-nix" "$HOME/Projects/omarchy-nix" "$HOME/Omahedron"; do
+                  rm -rf "$scav"
+                  mkconsumer "$scav"
+                  if omarchy-nix-add install.browser.firefox >/dev/null 2>scav.err; then
+                    fail "scavenger path must not be used as locator: $scav"
+                  fi
+                  grep -qi 'OMARCHY_NIX_FLAKE' scav.err ||
+                    fail "scavenger fail must name OMARCHY_NIX_FLAKE: $scav ($(cat scav.err))"
+                  [[ ! -f $scav/omarchy-packages.json ]] ||
+                    fail "scavenger path was mutated: $scav"
+                done
+                echo "scavenger-reject OK"
+
+                # --- /etc/nixos fallback (hostname-matching consumer) ----------
+                mkdir -p /etc/nixos
+                mkconsumer /etc/nixos
                 omarchy-nix-add install.browser.firefox >/dev/null
-                [[ -f $HOME/omarchy-nix/omarchy-packages.json ]] || fail "candidate repo not used"
-                omarchy-pkg-present firefox || fail "pkg-present must observe the candidate JSON"
-                echo "candidates OK"
+                [[ -f /etc/nixos/omarchy-packages.json ]] || fail "/etc/nixos fallback not used"
+                echo "/etc/nixos fallback OK"
 
                 # --- dir form ---------------------------------------------------
                 mkrepo "$TMPDIR/repo-dir"
@@ -1621,12 +1635,14 @@
                 echo "whitespace OK"
 
                 # --- invalid explicit values FAIL CLOSED (never fall back) ------
-                # tripwire: the candidate repo JSON must stay untouched from here
+                # tripwire: an explicit consumer repo must stay untouched from here
+                mkconsumer "$TMPDIR/decoy"
+                OMARCHY_NIX_FLAKE=$TMPDIR/decoy omarchy-nix-add install.browser.firefox >/dev/null
                 if OMARCHY_NIX_FLAKE=$TMPDIR/does-not-exist omarchy-nix-add install.gaming.steam >/dev/null 2>err.txt; then
                   fail "missing explicit path must fail"
                 fi
                 grep -q "invalid OMARCHY_NIX_FLAKE" err.txt || fail "add: no structured diagnostics"
-                [[ $(jq '.features | length' "$HOME/omarchy-nix/omarchy-packages.json") == 0 ]] ||
+                [[ $(jq '.features | length' "$TMPDIR/decoy/omarchy-packages.json") == 0 ]] ||
                   fail "add fell back to another checkout!"
 
                 mkdir -p "$TMPDIR/repo-noflake"
@@ -1654,19 +1670,6 @@
                 fi
                 grep -q "invalid OMARCHY_NIX_FLAKE" pp.txt || fail "pkg-present: no diagnostics"
                 echo "fail-closed OK"
-
-                # --- library checkout earlier in the fallback order is skipped --
-                # A bare omarchy-nix clone (no host config) must not
-                # shadow the real consumer flake further down the list -----------
-                rm -rf "$HOME/omarchy-nix"
-                mkrepo "$HOME/omarchy-nix"               # library clone (no .consumer)
-                mkconsumer "$HOME/Projects/omarchy-nix"  # real consumer flake
-                omarchy-nix-add install.browser.firefox >/dev/null
-                [[ -f $HOME/Projects/omarchy-nix/omarchy-packages.json ]] ||
-                  fail "library checkout shadowed the consumer flake"
-                [[ ! -f $HOME/omarchy-nix/omarchy-packages.json ]] ||
-                  fail "library checkout was mutated"
-                echo "library-skip OK"
 
                 # --- root-owned flake dir (0555, the /etc/nixos shape) ----------
                 # (read path only; root-owned add/remove writes are covered by

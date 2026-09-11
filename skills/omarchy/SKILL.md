@@ -105,15 +105,13 @@ the search → add chain) share ONE resolver. Resolution order:
 1. `$OMARCHY_NIX_FLAKE`, accepted in two equivalent forms: a directory
    containing `flake.nix`, or the path to the `flake.nix` file itself
    (named exactly `flake.nix`),
-2. `~/omarchy-nix`,
-3. `~/Projects/omarchy-nix`,
-4. `/etc/nixos`.
+2. `/etc/nixos`, when it provides `nixosConfigurations."$(hostname)"`.
 
-In the fallback order (2-4) the first candidate that provides
-`nixosConfigurations."$(hostname)"` wins. A candidate is skipped only
-when its `nixosConfigurations` evaluate cleanly but have no entry for
-this host (bare omarchy-nix library clones, e.g. pulled for updates).
-An evaluation failure keeps the candidate instead of silently skipping it.
+The `/etc/nixos` candidate is skipped only when its
+`nixosConfigurations` evaluate cleanly but have no entry for this host
+(library clones). An evaluation failure keeps the candidate instead of
+silently skipping it. Home-directory scavenger paths (`~/omarchy-nix`,
+`~/Projects/omarchy-nix`, `~/Omahedron`) are not supported locators.
 
 The resolved directory is canonicalized (symlinks, `.`, trailing slashes).
 An explicit `OMARCHY_NIX_FLAKE` that is invalid (missing, not a flake
