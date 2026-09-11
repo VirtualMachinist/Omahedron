@@ -8,6 +8,7 @@ This is the long form of the README's quick start. It covers a fresh machine, an
 - [First build: use the Hyprland cache](#first-build-use-the-hyprland-cache)
 - [First login](#first-login)
 - [Updating](#updating)
+- [Nix verbs (search / add / remove / apply / update)](#nix-verbs-search--add--remove--apply--update)
 - [Installing and removing packages](#installing-and-removing-packages)
 - [Rolling back](#rolling-back)
 - [Common options](#common-options)
@@ -138,7 +139,9 @@ The reference configuration this repository builds in CI is [example/configurati
 
 ## First build: use the Hyprland cache
 
-Omahedron pins Hyprland from its own flake input rather than taking whatever stable nixpkgs carries. The module registers `hyprland.cachix.org` as a substituter so nobody compiles a compositor, but on a machine that has never run the module, that setting only takes effect after the switch completes. Pass the cache on the command line the first time:
+Omahedron pins Hyprland from its own flake input rather than taking whatever stable nixpkgs carries. **The normal first-build path is the Hyprland/Mesa binary cache** — not a local compile of the compositor and its dependency closure.
+
+The module registers `https://hyprland.cachix.org` (public key `hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=`) as a substituter on every rebuild after the first successful switch. On a machine that has never run the module, that registration only exists in the *next* evaluation, so pass the same cache on the command line **the first time**:
 
 ```sh
 sudo nixos-rebuild switch --flake /etc/nixos#mybox \
@@ -152,7 +155,7 @@ Every later rebuild is just:
 sudo nixos-rebuild switch --flake /etc/nixos#mybox
 ```
 
-If you skip the options, the build still succeeds. It compiles Hyprland, Mesa and friends locally, which takes a long time and can exhaust memory on a small machine.
+If you skip the `--option` flags, the build can still succeed, but it falls back to compiling Hyprland, Mesa, and friends from source — a multi-hour path that can exhaust memory on the baseline 8 GB machine. Treat that as a fallback, not the documented first-build path. CI checks that this section and the module agree on the substituter URL and public key (`checks.omarchy-hyprland-cache`).
 
 ## First login
 
@@ -193,9 +196,13 @@ An explicit but invalid `OMARCHY_NIX_FLAKE` fails loudly rather than falling bac
 
 Because the Omahedron input is pinned in your `flake.lock`, a flake update also picks up Omahedron's own bumps, including the next Omarchy tag when it lands on the branch you follow. See [CHANNELS.md](CHANNELS.md) for how those bumps are scheduled.
 
+## Nix verbs (search / add / remove / apply / update)
+
+The five Nix-facing operations — search, add, remove, apply, and update — are documented on one page: **[NIX-VERBS.md](NIX-VERBS.md)**. Menu labels stay `omarchy-*`; port helpers (`omarchy-nix-search`, `omarchy-nix-add`, `omarchy-nix-remove`, `omarchy-update-system-pkgs`) sit underneath. All of them share the G0 flake locator (`$OMARCHY_NIX_FLAKE`, then `/etc/nixos`).
+
 ## Installing and removing packages
 
-The **Install** and **Remove** menus, and the `omarchy-install-*` commands behind them, do not run pacman. They run `omarchy-nix-add` and `omarchy-nix-remove`, which:
+The **Install** and **Remove** menus, and the `omarchy-install-*` commands behind them, do not run pacman. They run `omarchy-nix-add` and `omarchy-nix-remove` (see [NIX-VERBS.md](NIX-VERBS.md)), which:
 
 1. Resolve your flake the same way `omarchy-update` does.
 2. Add or remove the package in `<flake>/omarchy-packages.json`, with a lock held for the whole transaction and a hash-checked rollback if the rebuild fails.
@@ -298,7 +305,7 @@ The Hyprland cache was not known to the daemon yet. Interrupt and re-run with th
 Theme and monitor options are seeds. Run `omarchy-theme-set <name>`, or remove `~/.local/state/omarchy/current/theme` and switch again.
 
 **An `omarchy-*` command prints `omahedron: stub:`**
-That command depends on something Arch-specific such as pacman or the Limine boot chain. The message names the NixOS mechanism to use instead. The full list, with reasons, is in [COMPAT.md](COMPAT.md).
+That command depends on something Arch-specific such as pacman or the Limine boot chain. The first line matches the agent banner contract in [AGENTS-SURFACE.md](AGENTS-SURFACE.md); the full list, with reasons, is in [COMPAT.md](COMPAT.md).
 
 ## Turning it off
 

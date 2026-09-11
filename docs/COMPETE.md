@@ -185,7 +185,7 @@ Agents are first-class consumers of the port, not just of Lapis.
 - Ledger classes are the only allowed explanations for “this omarchy command does nothing.”
 - Prefer search/tooling over grepping the vendored tree.
 - Do not rewrite HAL/frontmatter or user hypr Lua by guesswork.
-- If Lapis is installed, notes stay files; Omahedron does not become a second vault.
+- If Lapis is installed, notes stay files; Omahedron does not become a second vault. See [AGENTS-SURFACE.md](AGENTS-SURFACE.md).
 
 ## 3. Schema
 

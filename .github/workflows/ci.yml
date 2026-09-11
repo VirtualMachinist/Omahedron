@@ -74,6 +74,8 @@ jobs:
             omarchy-flake-resolver
             omarchy-option-validation
             omarchy-options-documented
+            omarchy-hyprland-cache
+            omarchy-stub-banners
             omarchy-fish-package
             omarchy-fish-parity
             omarchy-fish-module

@@ -2067,6 +2067,40 @@ c";
               fi
               touch $out
             '';
+
+          # G5: install.md first-build cache path must match module substituters.
+          omarchy-hyprland-cache =
+            let
+              cacheUrl = "https://hyprland.cachix.org";
+              cacheKey = "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=";
+            in
+            pkgs.runCommand "omarchy-hyprland-cache-check" { } ''
+              set -euo pipefail
+              fail() { echo "FAIL: $*" >&2; exit 1; }
+              grep -Fq '${cacheUrl}' ${./modules/nixos/default.nix} ||
+                fail "module missing Hyprland substituter URL"
+              grep -Fq '${cacheKey}' ${./modules/nixos/default.nix} ||
+                fail "module missing Hyprland public key"
+              grep -Fq '${cacheUrl}' ${./docs/install.md} ||
+                fail "install.md missing Hyprland substituter URL"
+              grep -Fq '${cacheKey}' ${./docs/install.md} ||
+                fail "install.md missing Hyprland public key"
+              grep -Fq 'extra-substituters' ${./docs/install.md} ||
+                fail "install.md must document first-build --option extra-substituters"
+              grep -Fq 'omarchy-hyprland-cache' ${./docs/install.md} ||
+                fail "install.md must reference checks.omarchy-hyprland-cache"
+              touch $out
+            '';
+
+          # G8: packaged stub bodies embed parseable omahedron: banners (COMPETE §3.6).
+          omarchy-stub-banners =
+            pkgs.runCommand "omarchy-stub-banners-check" { } ''
+              ${pkgs.python3}/bin/python3 ${./checks/stub_banners.py} \
+                --ledger ${./schema/scripts.lock.json} \
+                --packaged ${self.packages.${system}.omarchy}/share/omarchy
+              touch $out
+            '';
+
           # Package contract for the vendored Fish profile:
           # every installed .fish file parses, the vendor dirs are populated
           # (including leading-dot functions), fzf.fish v10.3 is bundled, the
