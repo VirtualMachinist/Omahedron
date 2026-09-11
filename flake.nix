@@ -1080,11 +1080,11 @@
               throw "demo config missing user@ TimeoutStopSec=5s (etc/systemd/system/user@.service.d/10-faster-shutdown.conf)"
             else if workstationCfg.virtualisation.docker.daemon.settings.log-driver != "json-file" then
               throw "workstation config missing docker log rotation (etc/docker/daemon.json)"
-            else if !(hasSudoCmd "/run/current-system/sw/bin/asdcontrol") then
-              throw "demo config missing NOPASSWD asdcontrol (etc/sudoers.d/omarchy-asdcontrol)"
+            else if hasSudoCmd "/run/current-system/sw/bin/asdcontrol" then
+              throw "demo config must not grant NOPASSWD asdcontrol (removed upstream v4.0.1; etc/sudoers.d/omarchy-asdcontrol)"
             else if !(hasSudoCmd "/run/current-system/sw/bin/tzupdate") then
               throw "demo config missing NOPASSWD tzupdate (etc/sudoers.d/omarchy-tzupdate)"
-            else if !(hasSudoCmd "/run/current-system/sw/bin/timedatectl set-timezone *") then
+            else if !(hasSudoCmd "/run/current-system/sw/bin/timedatectl ^set-timezone [A-Za-z0-9_+][A-Za-z0-9_+.-]*(/[A-Za-z0-9_+][A-Za-z0-9_+.-]*)*$") then
               throw "demo config missing NOPASSWD timedatectl set-timezone (etc/sudoers.d/omarchy-tzupdate)"
             else if !(hasInfix "passwd_tries=10" demoCfg.security.sudo.extraConfig) then
               throw "demo config missing passwd_tries=10 (etc/sudoers.d/omarchy-passwd-tries)"
