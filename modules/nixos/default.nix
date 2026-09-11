@@ -671,9 +671,7 @@ in
         environment.systemPackages =
           runtimeDeps
           ++ lib.optionals (cfg.profile == "workstation") workstationRuntimeDeps
-          ++ lib.optionals (cfg.unfree.enable) (
-            filterExcluded [ pkgs.obsidian ]
-          )
+          ++ lib.optionals (cfg.unfree.enable) (filterExcluded [ pkgs.obsidian ])
           ++ (filterExcluded cfg.appPackages)
           ++ [
             xcursorDefaultAdwaita
@@ -721,8 +719,7 @@ in
         nixpkgs.config.allowUnfreePredicate = lib.mkDefault (
           pkg:
           builtins.elem (lib.getName pkg) (
-            (lib.optionals cfg.unfree.enable [ "obsidian" ])
-            ++ managedUnfreeNames
+            (lib.optionals cfg.unfree.enable [ "obsidian" ]) ++ managedUnfreeNames
           )
         );
         # Scoped opt-in: only the insecure deps of packages the consumer

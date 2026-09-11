@@ -808,9 +808,7 @@
                     }
                   ];
                 }).config;
-              hasPkg =
-                cfg: name:
-                lib.any (p: lib.getName p == name) cfg.environment.systemPackages;
+              hasPkg = cfg: name: lib.any (p: lib.getName p == name) cfg.environment.systemPackages;
             in
             if desktopCfg.omarchy.profile != "desktop" then
               throw "default profile must be desktop"
@@ -1084,7 +1082,9 @@
               throw "demo config must not grant NOPASSWD asdcontrol (removed upstream v4.0.1; etc/sudoers.d/omarchy-asdcontrol)"
             else if !(hasSudoCmd "/run/current-system/sw/bin/tzupdate") then
               throw "demo config missing NOPASSWD tzupdate (etc/sudoers.d/omarchy-tzupdate)"
-            else if !(hasSudoCmd "/run/current-system/sw/bin/timedatectl ^set-timezone [A-Za-z0-9_+][A-Za-z0-9_+.-]*(/[A-Za-z0-9_+][A-Za-z0-9_+.-]*)*$") then
+            else if
+              !(hasSudoCmd "/run/current-system/sw/bin/timedatectl ^set-timezone [A-Za-z0-9_+][A-Za-z0-9_+.-]*(/[A-Za-z0-9_+][A-Za-z0-9_+.-]*)*$")
+            then
               throw "demo config missing NOPASSWD timedatectl set-timezone (etc/sudoers.d/omarchy-tzupdate)"
             else if !(hasInfix "passwd_tries=10" demoCfg.security.sudo.extraConfig) then
               throw "demo config missing passwd_tries=10 (etc/sudoers.d/omarchy-passwd-tries)"
@@ -2093,13 +2093,12 @@ c";
             '';
 
           # G8: packaged stub bodies embed parseable omahedron: banners (COMPETE §3.6).
-          omarchy-stub-banners =
-            pkgs.runCommand "omarchy-stub-banners-check" { } ''
-              ${pkgs.python3}/bin/python3 ${./checks/stub_banners.py} \
-                --ledger ${./schema/scripts.lock.json} \
-                --packaged ${self.packages.${system}.omarchy}/share/omarchy
-              touch $out
-            '';
+          omarchy-stub-banners = pkgs.runCommand "omarchy-stub-banners-check" { } ''
+            ${pkgs.python3}/bin/python3 ${./checks/stub_banners.py} \
+              --ledger ${./schema/scripts.lock.json} \
+              --packaged ${self.packages.${system}.omarchy}/share/omarchy
+            touch $out
+          '';
 
           # Package contract for the vendored Fish profile:
           # every installed .fish file parses, the vendor dirs are populated
