@@ -8,7 +8,7 @@
   "nixpkgs_branch": "nixos-26.05",
   "home_manager_branch": "release-26.05",
   "channel": "stable",
-  "state": "check-green",
+  "state": "bump-open",
   "security_fast_path": true,
   "flake_lock_agrees": true,
   "gaps_doc": "docs/COMPAT.md"
