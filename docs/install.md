@@ -36,3 +36,277 @@ Omahedron does not ship an ISO **on this tag**. ADR-0025 puts an Omahedron insta
 2. Reboot into the new system. Make sure networking works.
 3. Convert `/etc/nixos` to a flake if it is not one already. The snippets in the next section are a complete `flake.nix` and `configuration.nix` you can drop in beside the generated `hardware-configuration.nix`.
 4. Continue with [Existing NixOS install](#existing-nixos-install).
+
+## Existing NixOS install
+
+Omahedron is a NixOS module plus a Home Manager module. You import both, set `omarchy.enable = true`, and rebuild.
+
+### `flake.nix`
+
+```nix
+{
+  description = "my NixOS box running Omahedron";
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
+    omahedron.url = "github:VirtualMachinist/Omahedron";
+
+    # Optional. On nixos-26.05 this deduplicates nixpkgs so you download
+    # one copy instead of two. If you run a different nixpkgs branch, leave
+    # it out: Omahedron's packages then build against the nixpkgs they were
+    # tested with.
+    # omahedron.inputs.nixpkgs.follows = "nixpkgs";
+  };
+
+  outputs = { nixpkgs, omahedron, ... }: {
+    nixosConfigurations.mybox = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      modules = [
+        ./hardware-configuration.nix
+        ./configuration.nix
+        omahedron.nixosModules.default
+        omahedron.inputs.home-manager.nixosModules.home-manager
+        { home-manager.sharedModules = [ omahedron.homeManagerModules.default ]; }
+      ];
+    };
+  };
+}
+```
+
+Home Manager is reused from Omahedron's own pinned input so you do not need a second one. If your flake already has Home Manager wired in, keep yours and just add `omahedron.homeManagerModules.default` to `home-manager.sharedModules`.
+
+To pin a specific release instead of tracking `main`, put the tag in the URL:
+
+```nix
+omahedron.url = "github:VirtualMachinist/Omahedron/omahedron-4.0.2";
+```
+
+### `configuration.nix`
+
+```nix
+{ pkgs, ... }:
+{
+  # The Omarchy update and install menus look up
+  # nixosConfigurations."$(hostname)" in your flake, so this must match the
+  # attribute name in flake.nix.
+  networking.hostName = "mybox";
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  # One line enables the whole system layer: vendored Omarchy on PATH,
+  # OMARCHY_PATH, the Hyprland session under uwsm, SDDM with the Omarchy
+  # theme, Plymouth, PipeWire, NetworkManager, Bluetooth, and the Hyprland
+  # binary cache.
+  omarchy.enable = true;
+
+  # Identity, seeded into git and the shell on first login. No prompt.
+  omarchy.full_name = "Ada Lovelace";
+  omarchy.email_address = "ada@example.com";
+  omarchy.timezone = "Europe/London";
+
+  # Desktop defaults. All have sensible defaults; override what you want.
+  omarchy.theme = "tokyo-night";   # any of the 22 stock themes, or your own
+  omarchy.terminal = "ghostty";    # foot, ghostty, alacritty, or kitty
+  omarchy.scale = 1;               # 2 for HiDPI
+
+  # Menu-managed packages. The Install and Remove menus write this file
+  # inside your flake; the guard keeps evaluation working before the first
+  # install creates it.
+  omarchy.managedPackagesFile =
+    if builtins.pathExists ./omarchy-packages.json then ./omarchy-packages.json else null;
+
+  users.users.ada = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" "video" "input" "networkmanager" ];
+    initialHashedPassword = "…";   # generate with: mkpasswd -m sha-512
+  };
+
+  # The Home Manager module is already shared with all users from flake.nix.
+  # This block carries only the per-user settings.
+  home-manager.users.ada = {
+    home.username = "ada";
+    home.homeDirectory = "/home/ada";
+    home.stateVersion = "26.05";
+    omarchy.enable = true;
+  };
+
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+  system.stateVersion = "26.05";
+}
+```
+
+The reference configuration this repository builds in CI is [example/configuration.nix](../example/configuration.nix). Every `omarchy.*` option is documented in [options.md](options.md).
+
+## First build: use the Hyprland cache
+
+Omahedron pins Hyprland from its own flake input rather than taking whatever stable nixpkgs carries. **The normal first-build path is the Hyprland/Mesa binary cache** — not a local compile of the compositor and its dependency closure.
+
+The module registers `https://hyprland.cachix.org` (public key `hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=`) as a substituter on every rebuild after the first successful switch. On a machine that has never run the module, that registration only exists in the *next* evaluation, so pass the same cache on the command line **the first time**:
+
+```sh
+sudo nixos-rebuild switch --flake /etc/nixos#mybox \\
+  --option extra-substituters https://hyprland.cachix.org \\
+  --option extra-trusted-public-keys hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=
+```
+
+Every later rebuild is just:
+
+```sh
+sudo nixos-rebuild switch --flake /etc/nixos#mybox
+```
+
+If you skip the `--option` flags, the build can still succeed, but it falls back to compiling Hyprland, Mesa, and friends from source — a multi-hour path that can exhaust memory on the baseline 8 GB machine. Treat that as a fallback, not the documented first-build path. CI checks that this section and the module agree on the substituter URL and public key (`checks.omarchy-hyprland-cache`).
+
+## First login
+
+Reboot, or restart the display manager. SDDM comes up with the Omarchy theme. Log in and Hyprland starts under uwsm with the Omarchy Lua configuration.
+
+On the first login Home Manager seeds your editable files as real files, not store symlinks, so the Setup menu, `omarchy-refresh-config` and `omarchy-theme-set` work exactly the way upstream expects:
+
+- `~/.config/hypr/hyprland.lua`, the entry point that dispatches into `$OMARCHY_PATH`, plus the user override stubs it loads
+- `~/.config/hypr/monitors.lua`, from `omarchy.monitors` and `omarchy.scale`
+- `~/.config/omarchy/`, your user-side Omarchy config
+- `~/.local/state/omarchy/current/theme`, pointing at `omarchy.theme`
+
+The theme and monitor options are seeds. They are applied once, when those files do not exist yet. After that the files are yours, and changing the Nix option is a no-op until you remove the file. This is deliberate: it is how Omarchy's own runtime tooling keeps working.
+
+Then press <kbd>Super</kbd>+<kbd>Enter</kbd> for a terminal and <kbd>Super</kbd>+<kbd>Space</kbd> for the launcher. Keybindings are Omarchy's; the [Omarchy manual](https://omarchy.org/manual) applies.
+
+Two NixOS-side defaults worth knowing on day one:
+
+- **SSH is on, keys only.** The module enables sshd with password and keyboard-interactive authentication off. Add `openssh.authorizedKeys.keys` to your user for remote access, or opt into passwords explicitly with `services.openssh.settings.PasswordAuthentication = true`.
+- **Fish is the default interactive shell**, as upstream. Bash remains the script runtime. Set `omarchy.fish.enable = false` to keep your existing default shell, or set `users.users.<name>.shell` per user.
+
+## Updating
+
+Omarchy's **Update** menu entry, and the `omarchy-update` command, do on NixOS what they do on Arch: refresh the desktop and the system. Underneath, they run `nix flake update` on your configuration flake and then `nixos-rebuild switch`.
+
+For that to work the scripts need to find your flake. They check, in order:
+
+1. `$OMARCHY_NIX_FLAKE`, if set (a flake directory or the path to its `flake.nix`)
+2. `/etc/nixos/`, if its `nixosConfigurations` contains an entry for your hostname
+
+If your flake lives at `/etc/nixos` with a matching hostname, nothing to configure. If it lives elsewhere, set the variable once:
+
+```nix
+environment.sessionVariables.OMARCHY_NIX_FLAKE = "/home/ada/nixos-config";
+```
+
+An explicit but invalid `OMARCHY_NIX_FLAKE` fails loudly rather than falling back to another checkout.
+
+Because the Omahedron input is pinned in your `flake.lock`, a flake update also picks up Omahedron's own bumps, including the next Omarchy tag when it lands on the branch you follow. See [CHANNELS.md](CHANNELS.md) for how those bumps are scheduled.
+
+## Nix verbs (search / add / remove / apply / update)
+
+The five Nix-facing operations — search, add, remove, apply, and update — are documented on one page: **[NIX-VERBS.md](NIX-VERBS.md)**. Menu labels stay `omarchy-*`; port helpers (`omarchy-nix-search`, `omarchy-nix-add`, `omarchy-nix-remove`, `omarchy-update-system-pkgs`) sit underneath. All of them share the G0 flake locator (`$OMARCHY_NIX_FLAKE`, then `/etc/nixos`).
+
+## Installing and removing packages
+
+The **Install** and **Remove** menus, and the `omarchy-install-*` commands behind them, do not run pacman. They run `omarchy-nix-add` and `omarchy-nix-remove` (see [NIX-VERBS.md](NIX-VERBS.md)), which:
+
+1. Resolve your flake the same way `omarchy-update` does.
+2. Add or remove the package in `<flake>/omarchy-packages.json`, with a lock held for the whole transaction and a hash-checked rollback if the rebuild fails.
+3. Register the file with `git add -N` when the flake is a git checkout, so the flake snapshot includes it.
+4. Run `nixos-rebuild switch`.
+
+Your `omarchy.managedPackagesFile` option folds that JSON into `environment.systemPackages` at evaluation time. That is why the option is set with a `pathExists` guard: the file does not exist until the first menu install, and a non-null path that does not exist fails evaluation on purpose so menu installs never silently vanish.
+
+Upstream features that are more than a package (Steam, Tailscale, 1Password, Ollama and the like) map to the matching NixOS feature block in the same JSON.
+
+Anything you would rather manage by hand goes in your configuration as usual. To drop one of Omahedron's default apps without forking the module:
+
+```nix
+omarchy.exclude_packages = [ "obsidian" "signal-desktop" ];
+```
+
+Unfree packages are not enabled globally on the default `desktop` profile.
+Set `omarchy.unfree.enable = true` when you want Obsidian and menu-managed
+unfree installs without flipping the whole system to `allowUnfree = true`.
+The `workstation` profile adds Docker, zram, and the creative/dev suite but
+still requires `omarchy.unfree.enable` for Obsidian. Override
+`nixpkgs.config.allowUnfreePredicate` if you want a free-only machine.
+
+## Rolling back
+
+This is the reason many people are here. Every `nixos-rebuild switch` creates a new generation, and every generation is a boot menu entry.
+
+- At boot, pick an older generation from the systemd-boot menu.
+- From a running system, `sudo nixos-rebuild switch --rollback` returns to the previous generation.
+- To pin an older Omahedron, put its tag in `omahedron.url` and rebuild.
+
+Home Manager state under `$HOME` is not part of a generation. Your edited config files stay as they are across rollbacks, which is what you want.
+
+## Common options
+
+The full reference is [options.md](options.md). These are the ones that come up most.
+
+**Encrypted disk, one password.** On a LUKS install you already typed a passphrase at boot. Skip the second prompt at SDDM:
+
+```nix
+omarchy.autologin.user = "ada";
+```
+
+**Monitors.** Hyprland directives, in the same shape upstream uses, seeded into `monitors.lua` on first login:
+
+```nix
+omarchy.monitors = [ "DP-1, 2560x1440@120, 0x0, 1" ];
+omarchy.scale = 2;   # HiDPI
+```
+
+**Fingerprint unlock** for the lock screen, where the hardware has a reader:
+
+```nix
+omarchy.fingerprint.enable = true;
+# then, per user: fprintd-enroll
+```
+
+**Keep Bash** as the default shell:
+
+```nix
+omarchy.fish.enable = false;
+```
+
+**Cross-architecture Docker builds**, which upstream enables unconditionally and Omahedron makes opt-in:
+
+```nix
+omarchy.binfmtEmulatedSystems = [ "aarch64-linux" ];
+```
+
+**Plymouth and the SDDM theme** can each be turned off with `omarchy.plymouth.enable` and `omarchy.sddm.theme`.
+
+## Virtual machine
+
+You can build the reference configuration as a QEMU VM straight from this repository:
+
+```sh
+nix build .#nixosConfigurations.example.config.system.build.vm
+QEMU_OPTS="-device virtio-gpu-pci" ./result/bin/run-nixos-vm
+```
+
+Log in as `omarchy` with password `omarchy`. Use `virtio-gpu-pci`; a software framebuffer will not draw the Quickshell shell correctly and tells you nothing about the desktop.
+
+A VM is a pre-gate for development, not verification. Omahedron's own release gate is bare metal on the baseline machine. See [METAL.md](METAL.md) if you are curious why.
+
+## Troubleshooting
+
+**`omarchy-nix supports x86_64-linux only`**
+The module is being evaluated for another architecture. Omahedron is x86_64 only.
+
+**`omarchy.managedPackagesFile points at a missing file`**
+The option is set to a path that does not exist. Use the `pathExists` guard shown above, or set it to `null` until the first menu install.
+
+**Update or Install menu says no consumer flake was found**
+The scripts could not find a flake whose `nixosConfigurations` has an entry named after this machine. Check that `networking.hostName` matches the attribute in `flake.nix`, or set `OMARCHY_NIX_FLAKE`.
+
+**The first build is compiling Hyprland**
+The Hyprland cache was not known to the daemon yet. Interrupt and re-run with the `--option` flags from [First build](#first-build-use-the-hyprland-cache).
+
+**I changed `omarchy.theme` and nothing happened**
+Theme and monitor options are seeds. Run `omarchy-theme-set <name>`, or remove `~/.local/state/omarchy/current/theme` and switch again.
+
+**An `omarchy-*` command prints `omahedron: stub:`**
+That command depends on something Arch-specific such as pacman or the Limine boot chain. The first line matches the agent banner contract in [AGENTS-SURFACE.md](AGENTS-SURFACE.md); the full list, with reasons, is in [COMPAT.md](COMPAT.md).
+
+## Turning it off
+
+Set `omarchy.enable = false` in both the system and the Home Manager block and rebuild. Importing the module with it disabled has no side effects; CI checks that. Files seeded under `$HOME` are left in place for you to remove.
