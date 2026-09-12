@@ -27,7 +27,7 @@ These are the brief’s permanent gaps. They stay listed even after the inventor
 | channel-switcher-arch | na | official channel TUI as Arch implements it | change flake input | stub if a menu reaches it |
 | official-kernel-pkg | na | linux-ptl / Omarchy Kernel `.pkg.tar.zst` | `boot.kernelPackages` | later optional derivation |
 | limine-snapper-uki | na | Limine, Snapper, mkinitcpio UKI | systemd-boot + generations | |
-| iso-apply | na | ISO, `omarchy-apply-system`, `omarchy-apply-hardware` | NixOS hardware modules | |
+| iso-apply | na | Arch ISO chroot (`omarchy-apply-system`, `omarchy-apply-hardware`) | NixOS hardware modules; setup/ISO wraps later | Arch chroot stays na. Omahedron installer is in product (ADR-0025); reclassify when setup/ISO wraps exist. |
 | mutable-usr | na | `/usr/share/omarchy`, `omarchy-dev-link` | store `$OMARCHY_PATH` | |
 | omacom-support | na | Foundation patronage features that assume Arch | none | do not claim |
 | plugins-arch-root | na | marketplace entries that pacman-install or write `/etc` as root | stub UI if present | ADR-0010 |
