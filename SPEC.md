@@ -1,6 +1,6 @@
 # SPEC.md
 
-Product specification for Omahedron. Version of this document: **0.2**, revised by ADR-0024 (2026-09-11). Competitive bar: [docs/COMPETE.md](docs/COMPETE.md).
+Product specification for Omahedron. Version of this document: **0.3**, revised by ADR-0025 (2026-09-11). Competitive bar: [docs/COMPETE.md](docs/COMPETE.md).
 
 Change this file only with an ADR. If this file and COMPETE disagree on module defaults (kitchen sink vs thin desktop), COMPETE wins until a newer ADR revises both.
 
@@ -64,6 +64,8 @@ These stay in the product. They do not block `omahedron-4.0.2`.
 - Voxtype
 - Fingerprint where the machine has a reader
 - `omarchy-windows-vm` as wrap-or-stub once classified against v4.0.2 call sites
+- Installer A: `omarchy setup` on an existing NixOS (humans do not open Nix)
+- Installer B: Omahedron ISO (NixOS-shaped; systemd-boot + generations). Aim, not a current-tag gate.
 
 ## Out of scope (permanent unless an ADR says otherwise)
 
@@ -72,7 +74,7 @@ These stay in the product. They do not block `omahedron-4.0.2`.
 - Eating Omarchy’s pacman repo on the NixOS host
 - Limine / Snapper / mkinitcpio UKI parity
 - Official Omarchy Kernel / linux-ptl as Arch packages on the host
-- ISO installer, `omarchy-apply-system`, `omarchy-apply-hardware` chroot
+- Official Omarchy ISO; Arch `omarchy-apply-system` / `omarchy-apply-hardware` *chroot* (NixOS wraps of those command names are in scope — ADR-0025)
 - Mutable `/usr/share/omarchy`, `omarchy-dev-link` as Arch implements it
 - Omacom support or Foundation patronage features that assume Arch
 - Plugin marketplace entries that install Arch packages or write `/etc` as root
@@ -89,7 +91,7 @@ These stay in the product. They do not block `omahedron-4.0.2`.
 | “Just install pacman on NixOS” | No. Two package managers on `/boot` is how you brick the box. Distrobox/nspawn is fine for userspace Arch tools, not the host kernel. |
 | “Package linux_omarchy before 4.0.2 ships” | No. Kernel is a later track. Default is `boot.kernelPackages` from nixpkgs. |
 | “Nix-native rice with Omarchy colors” | That is henrysipp / T00fy. Different product. |
-| “1:1 including installer” | No. Desktop only. |
+| “1:1 including installer” | No Arch ISO / Limine / Snapper / UKI. Omahedron installer is NixOS-shaped (ADR-0025): setup on existing NixOS first, then our ISO. |
 | “Call VM screenshots verified” | No. Latitude metal is the ship gate. |
 | “`omarchy.enable` should match Arch’s full workstation image” | No. Desktop is thin. Workstation/unfree are profiles. |
 | “Keep `~/omarchy-nix` as a flake locator” | No. That is zicochaos fork residue. |

@@ -53,6 +53,15 @@ Only after two successful stable desktop bumps.
 - Never install a `.pkg.tar.zst` kernel on NixOS
 - Separate pin from desktop HEAD
 
+## Later — installer (ADR-0025)
+
+- [ ] Installer A: `omarchy setup` on existing NixOS (human never opens Nix)
+- [ ] Buff `omarchy` verbs: identity, profile, unfree, terminal persist, pin, pkg, rollback
+- [ ] On-box `/etc/omahedron/AGENTS.md` (agents edit Nix)
+- [ ] Installer B: Omahedron ISO (systemd-boot, generations, metal on Latitude)
+
+Not the official Omarchy ISO. Not Limine/Snapper/UKI.
+
 ## Later — nixpkgs 26.11 cutover
 
 Trigger: 26.11 released and Hyprland ≥0.56 plus Quickshell are sane on that pair. New ADR. Do not silently follow unstable.
@@ -60,7 +69,7 @@ Trigger: 26.11 released and Hyprland ≥0.56 plus Quickshell are sane on that pa
 ## Never (unless an ADR supersedes)
 
 - Host pacman
-- Official ISO / Limine / Snapper / UKI parity
+- Official Omarchy ISO / Limine / Snapper / UKI parity (Omahedron ISO is the Later track above, ADR-0025)
 - Claiming Omacom support
 - Tracking `quattro` on user `stable`
 - Rewriting Quickshell in Nix
