@@ -311,3 +311,36 @@ Thin desktop is now a competitive requirement, not a taste preference:
 **Supersedes in part:** ADR-0021’s *module default* that global `allowUnfree` is on. Unfree remains first-class and easy (`omarchy.unfree.enable = true` / workstation). We are not FOSS-purist; we are thin-by-default. Do not re-litigate unfree as mesh purity.
 
 **Does not supersede:** ADR-0003 (zicochaos base), ADR-0005 (channels / no-soak security), ADR-0008 (vendor rule), ADR-0011 (Fish default), ADR-0013 (metal gate).
+
+---
+
+## ADR-0025 — Omahedron installer in scope; `omarchy` is the human OS
+
+- Status: accepted
+- Date: 2026-09-11
+- Deciders: human maintainer
+
+**Decision.** An Omahedron installer is **in product**. The claim that an ISO installer is permanently out of scope is **deprecated**.
+
+Two installers, both required:
+
+- **A** (ships first): `omarchy setup` on an existing NixOS. Stock NixOS ISO (or any NixOS) is the disk stage. Setup writes the consumer flake onto the G0 locator (default `/etc/nixos`), copies `hardware-configuration.nix`, applies with the Hyprland/Mesa cache. Humans do not open a `.nix` file.
+- **B** (the aim): an **Omahedron ISO**. Boot our stick, disk + LUKS + user, land on SDDM. NixOS-shaped: UEFI, systemd-boot, generations, `nixos-install` of an Omahedron flake. Honest about minutes; cache mandatory.
+
+User-facing OS for humans is the vendored **`omarchy`** command center (`omarchy --help`, groups, `omarchy commands --json`). Buff those verbs; turn reached Arch stubs into NixOS wraps (`pkg` → `omarchy-nix-add`, rollback → generations, channel/pin → flake input, apply-system → rebuild). Do not invent a second CLI brand.
+
+**Agents edit Nix.** Humans are not required to look at Nix. An on-box `AGENTS.md` must not collapse those. NixOS is easy mode for agents; hiding the flake from them is a bug.
+
+**Why.** The remaining UX hole is day zero and a handful of `omarchy.*` knobs that never grew a verb. Omarchy users who wanted NixOS still start in `docs/install.md`. A second brand and a Nickel control plane were a wrong means. Arch ISO / Limine / Snapper / pacman were refused because they are the *wrong installer*, not because Omahedron must never be installable without writing Nix.
+
+**Consequences.**
+
+- [SPEC.md](SPEC.md) is revised in the same change: ISO installer leaves the permanent out-of-scope list. Arch `omarchy-apply-system` / `omarchy-apply-hardware` *chroot* stay out; NixOS wraps of those *names* are in scope.
+- Limine / Snapper / mkinitcpio UKI / host pacman / official Omarchy ISO / linux-ptl as Arch packages stay out. ADR-0002 (not 1:1 OS/kernel/installer *parity*) still holds.
+- [docs/COMPETE.md](docs/COMPETE.md) §2.5 “ISO / installer competing with official NixOS install” was a **compete v1 budget** refuse, not a permanent product ban. Do not reopen G0–G8. Installer A does not compete with the NixOS ISO; it starts after it. Installer B is a later metal gate of its own.
+- README must not claim an ISO ships until B exists. It must not say an Omahedron ISO is forbidden.
+- Next free ADR: **0026**.
+
+**Supersedes in part:** SPEC “Out of scope (permanent)” bullet *ISO installer, `omarchy-apply-system`, `omarchy-apply-hardware` chroot* — the ISO and the *names* of those commands as NixOS wraps. The Arch chroot implementation remains out.
+
+**Does not supersede:** ADR-0002 (Rocky/Alma; no 1:1 installer parity with official Omarchy), ADR-0007 (kernel track), ADR-0008 (vendor rule), ADR-0009 (script classes), ADR-0024 (thin desktop, G0 locator, compete bar).
