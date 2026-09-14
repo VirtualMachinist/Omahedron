@@ -76,6 +76,18 @@
       '';
     };
 
+    # Installer A (omarchy setup). Injected by the flake wrapper; null keeps
+    # the pure module buildable without the flake.
+    setupPackage = lib.mkOption {
+      type = lib.types.nullOr lib.types.package;
+      default = null;
+      description = ''
+        The omarchy-nix-setup derivation (Installer A: writes the consumer
+        flake on the G0 locator). Set automatically by the flake's
+        `nixosModules.default`; puts `omarchy-nix-setup` on PATH.
+      '';
+    };
+
     # Plymouth boot-splash theme package. Injected by the flake wrapper;
     # null here keeps the pure module buildable without the flake.
     plymouthPackage = lib.mkOption {

@@ -1,0 +1,259 @@
+{
+  "$schema": "./verb-help.schema.json",
+  "version": 1,
+  "installPath": "default/verbs/help.json",
+  "groupDescriptions": {
+    "setup": "Install Omahedron and change system options in your flake (omarchy.*); each verb rebuilds. You never open a .nix file.",
+    "default": "Session defaults. Terminal changes apply immediately and persist omarchy.terminal in your flake.",
+    "channel": "Omahedron release pin: move the omahedron flake input to a tag, then rebuild.",
+    "pin": "Pin or show the Omahedron flake input (same as channel on NixOS).",
+    "pkg": "Declarative packages: omarchy pkg add|drop|install|remove write omarchy-packages.json and rebuild — not pacman; pkg aur * are stubs.",
+    "update": "Flake update + rebuild. Prints pin/channel state (omarchy update pins) before asking to proceed.",
+    "version": "Version and channel information from the shipped Omahedron pin."
+  },
+  "shared": {
+    "applyNote": "Writes the consumer flake on the G0 locator and runs nixos-rebuild switch. Agents may edit the same options by hand.",
+    "errors": {
+      "noConsumerFlake": "No consumer flake found. Set OMARCHY_NIX_FLAKE or install under /etc/nixos with a matching nixosConfigurations entry.",
+      "rebuildFailed": "nixos-rebuild switch failed. Your flake was not changed, or was rolled back. Check the log and try again.",
+      "invalidProfile": "Profile must be desktop or workstation.",
+      "invalidUnfree": "Use: omarchy setup unfree on | off",
+      "invalidFingerprint": "Use: omarchy setup fingerprint on | off",
+      "invalidAutologin": "Use: omarchy setup autologin <username> | off",
+      "invalidTerminal": "Terminal must be foot, ghostty, alacritty, or kitty.",
+      "ianaTimezone": "Timezone must be a valid IANA name (e.g. America/Chicago). Not city nicknames like USA/Dallas.",
+      "unfreePkgAddDesktop": "That package needs unfree software. On the desktop profile, run: omarchy setup unfree on — then try omarchy pkg add again.",
+      "pacmanStub": "NixOS: packages are declarative. Use omarchy pkg add or omarchy pkg drop (or the Install / Remove menus), not pacman or AUR.",
+      "aurStub": "There is no AUR on NixOS. Use omarchy pkg add with a catalog ID or nixpkgs attribute, or edit omarchy-packages.json in your flake."
+    }
+  },
+  "verbs": {
+    "setup.name": {
+      "route": ["setup", "name"],
+      "mapsTo": "omarchy.full_name",
+      "summary": "Set your full name in the flake (git and shell identity)",
+      "description": "Updates omarchy.full_name in the consumer configuration and rebuilds. Seeds git and the shell on next login.",
+      "usage": "omarchy setup name <full-name>",
+      "examples": ["omarchy setup name \"Ada Lovelace\""]
+    },
+    "setup.email": {
+      "route": ["setup", "email"],
+      "mapsTo": "omarchy.email_address",
+      "summary": "Set your email in the flake (git identity)",
+      "description": "Updates omarchy.email_address in the consumer configuration and rebuilds.",
+      "usage": "omarchy setup email <address>",
+      "examples": ["omarchy setup email ada@example.com"]
+    },
+    "setup.timezone": {
+      "route": ["setup", "timezone"],
+      "mapsTo": "omarchy.timezone",
+      "summary": "Set the system timezone (IANA only)",
+      "description": "Updates omarchy.timezone and rebuilds. Use IANA names such as Europe/London or America/Chicago.",
+      "usage": "omarchy setup timezone <iana>",
+      "examples": ["omarchy setup timezone America/Chicago"]
+    },
+    "setup.profile": {
+      "route": ["setup", "profile"],
+      "mapsTo": "omarchy.profile",
+      "summary": "Switch desktop or workstation profile",
+      "description": "desktop is the thin Omarchy session (default). workstation adds Docker, zram, and creative/dev extras. Rebuilds after the change.",
+      "usage": "omarchy setup profile desktop | workstation",
+      "examples": [
+        "omarchy setup profile desktop",
+        "omarchy setup profile workstation"
+      ],
+      "choices": {
+        "desktop": "Thin Omarchy session (recommended)",
+        "workstation": "Adds Docker, zram, LibreOffice, Kdenlive, mise, and related extras"
+      }
+    },
+    "setup.unfree": {
+      "route": ["setup", "unfree"],
+      "mapsTo": "omarchy.unfree.enable",
+      "summary": "Allow unfree packages on the desktop profile",
+      "description": "Turns omarchy.unfree.enable on or off and rebuilds. Required before omarchy pkg add can install Obsidian and other unfree catalog entries on desktop.",
+      "usage": "omarchy setup unfree on | off",
+      "examples": [
+        "omarchy setup unfree on",
+        "omarchy setup unfree off"
+      ],
+      "onSuccess": {
+        "on": "Unfree packages are enabled. You can install Obsidian and other unfree menu entries with omarchy pkg add.",
+        "off": "Unfree packages are disabled. omarchy pkg add will refuse unfree catalog entries until you run omarchy setup unfree on."
+      }
+    },
+    "setup.fingerprint": {
+      "route": ["setup", "fingerprint"],
+      "mapsTo": "omarchy.fingerprint.enable",
+      "summary": "Enable or disable fingerprint unlock for the lock screen",
+      "description": "Sets omarchy.fingerprint.enable and rebuilds. When enabled, enroll each finger once with fprintd-enroll after the rebuild completes.",
+      "usage": "omarchy setup fingerprint on | off",
+      "examples": [
+        "omarchy setup fingerprint on",
+        "omarchy setup fingerprint off"
+      ],
+      "onSuccess": {
+        "on": "Fingerprint unlock is enabled. Run fprintd-enroll as your user to register a finger.",
+        "off": "Fingerprint unlock is disabled. The lock screen uses your password only."
+      }
+    },
+    "setup.autologin": {
+      "route": ["setup", "autologin"],
+      "mapsTo": "omarchy.autologin.user",
+      "summary": "Skip SDDM and land on the desktop (or turn autologin off)",
+      "description": "Sets omarchy.autologin.user and rebuilds. Useful on LUKS installs where you already typed the disk password at boot. Use off to require the login screen again.",
+      "usage": "omarchy setup autologin <username> | off",
+      "examples": [
+        "omarchy setup autologin ada",
+        "omarchy setup autologin off"
+      ],
+      "onSuccess": {
+        "user": "SDDM will log in as that user automatically after reboot.",
+        "off": "SDDM will show the login screen again."
+      }
+    },
+    "default.terminal": {
+      "route": ["default", "terminal"],
+      "script": "omarchy-default-terminal",
+      "mapsTo": "omarchy.terminal",
+      "summary": "Set the default terminal (live switch and persisted in the flake)",
+      "description": "Changes the session default terminal immediately and writes omarchy.terminal in the consumer flake, then rebuilds so the choice survives the next generation. Choices: foot, ghostty, alacritty, kitty.",
+      "usage": "omarchy default terminal [foot|ghostty|alacritty|kitty]",
+      "examples": [
+        "omarchy default terminal",
+        "omarchy default terminal ghostty"
+      ],
+      "choices": ["foot", "ghostty", "alacritty", "kitty"],
+      "header": "Default terminal (Super+Enter)"
+    },
+    "pin": {
+      "route": ["pin"],
+      "mapsTo": "inputs.omahedron",
+      "summary": "Pin or show the Omahedron flake input tag",
+      "description": "With no argument, prints the current omahedron input pin. With a tag (e.g. omahedron-4.0.2), updates the consumer flake.lock input and rebuilds. Not a pacman channel.",
+      "usage": "omarchy pin [omahedron-X.Y.Z]",
+      "examples": [
+        "omarchy pin",
+        "omarchy pin omahedron-4.0.2"
+      ]
+    },
+    "channel.set": {
+      "route": ["channel", "set"],
+      "script": "omarchy-channel-set",
+      "mapsTo": "inputs.omahedron",
+      "summary": "Pin the omahedron flake input to a release tag",
+      "description": "Same as omarchy pin <tag>: moves the omahedron flake input in your consumer flake and rebuilds. Arch channel names do not apply on NixOS.",
+      "usage": "omarchy channel set <omahedron-X.Y.Z>",
+      "examples": ["omarchy channel set omahedron-4.0.2"]
+    },
+    "pkg.add": {
+      "route": ["pkg", "add"],
+      "script": "omarchy-pkg-add",
+      "mapsTo": "<flake>/omarchy-packages.json",
+      "summary": "Add packages to omarchy-packages.json and rebuild (not pacman)",
+      "description": "Routes at omarchy-nix-add. Accepts catalog IDs (install.browser.firefox), the Arch package names the Install menus use, or raw nixpkgs attributes (firefox, ripgrep). Writes omarchy-packages.json in your consumer flake and rebuilds. Never pacman. Unfree catalog entries on desktop need omarchy setup unfree on first.",
+      "usage": "omarchy pkg add <name...>",
+      "examples": [
+        "omarchy pkg add install.browser.firefox",
+        "omarchy pkg add firefox ripgrep"
+      ],
+      "onSuccess": {
+        "default": "Installed. Undo the system with omarchy rollback or the boot menu; files under $HOME are unchanged."
+      }
+    },
+    "pkg.drop": {
+      "route": ["pkg", "drop"],
+      "script": "omarchy-pkg-drop",
+      "mapsTo": "<flake>/omarchy-packages.json",
+      "summary": "Remove packages from omarchy-packages.json and rebuild (not pacman)",
+      "description": "Routes at omarchy-nix-remove. Removes catalog IDs, menu Arch names, or nixpkgs attributes from omarchy-packages.json and rebuilds.",
+      "usage": "omarchy pkg drop <name...>",
+      "examples": [
+        "omarchy pkg drop install.browser.firefox",
+        "omarchy pkg drop firefox"
+      ],
+      "onSuccess": {
+        "default": "Removed from the declarative package list and rebuilt."
+      }
+    },
+    "pkg.install": {
+      "route": ["pkg", "install"],
+      "script": "omarchy-pkg-install",
+      "mapsTo": "<flake>/omarchy-packages.json",
+      "summary": "Search nixpkgs interactively and add picks (not pacman)",
+      "description": "Routes at omarchy-nix-search: fzf over a cached nixpkgs index, then one locked omarchy-nix-add transaction and rebuild. Same declarative omarchy-packages.json path as omarchy pkg add.",
+      "usage": "omarchy pkg install",
+      "examples": ["omarchy pkg install"]
+    },
+    "pkg.remove": {
+      "route": ["pkg", "remove"],
+      "script": "omarchy-pkg-remove",
+      "mapsTo": "<flake>/omarchy-packages.json",
+      "summary": "Remove installed packages (interactive when no names given)",
+      "description": "Routes at omarchy-nix-remove. With names, removes them in one transaction and rebuilds. With no arguments, opens an interactive multi-select over omarchy-packages.json.",
+      "usage": "omarchy pkg remove [name...]",
+      "examples": [
+        "omarchy pkg remove install.browser.firefox",
+        "omarchy pkg remove"
+      ]
+    },
+    "rollback": {
+      "route": ["rollback"],
+      "script": "omarchy-rollback",
+      "mapsTo": "nixos-rebuild switch --rollback",
+      "summary": "Switch to the previous NixOS generation (not Snapper; $HOME unchanged)",
+      "description": "Runs nixos-rebuild switch --rollback on your consumer flake — the previous system generation only. Not Snapper, not pacman undo. Does not roll back files under $HOME (~/.config, themes, Hyprland overrides stay as they are). Use --list to print generations; pick an older one from the systemd-boot menu at boot (the brick path).",
+      "usage": "omarchy rollback [--list]",
+      "examples": [
+        "omarchy rollback",
+        "omarchy rollback --list"
+      ],
+      "homeWarning": "Rollback does not roll back $HOME. Your edited config files stay as they are across generations.",
+      "onSuccess": {
+        "default": "Now on the previous generation."
+      }
+    },
+    "update.pins": {
+      "route": ["update", "pins"],
+      "script": "omarchy-update-pins",
+      "summary": "Print Omahedron pin, omarchy-src tag, newest stable, and channel state",
+      "description": "Machine-readable lines: pin (flake.lock omahedron ref/rev or unlocked), omarchy-src (shipped pin manifest), newest-stable (GitHub latest tag or unknown (offline)), channel (shipped pin with security-fast-path yes|no). omarchy update prints this block before it asks to proceed.",
+      "usage": "omarchy update pins",
+      "examples": ["omarchy update pins"],
+      "printContract": {
+        "lines": {
+          "pin": "pin: {value}",
+          "omarchySrc": "omarchy-src: {tag} ({rev7})",
+          "newestStable": "newest-stable: {value}",
+          "channel": "channel: {value} state={state} security-fast-path={yes|no}"
+        }
+      }
+    },
+    "version.channel": {
+      "route": ["version", "channel"],
+      "script": "omarchy-version-channel",
+      "summary": "Print the release channel and state from the shipped pin",
+      "description": "Shows the Omachron channel (stable, rc, edge) and state from schema/pin.json shipped with Omahedron — not an Arch pacman channel.",
+      "usage": "omarchy version channel",
+      "examples": ["omarchy version channel"]
+    },
+    "update": {
+      "route": ["update"],
+      "script": "omarchy-update",
+      "summary": "Flake update and rebuild; prints pins before asking to proceed",
+      "description": "Prints omarchy update pins (Omahedron pin, omarchy-src tag, newest stable Omarchy, channel state), asks to proceed, then runs nix flake update on your consumer flake and nixos-rebuild switch. Not pacman -Syu. If the update misbehaves, omarchy rollback returns the previous generation; $HOME is unchanged.",
+      "usage": "omarchy update",
+      "examples": ["omarchy update"],
+      "printContract": {
+        "intro": "Before rebuilding, omarchy update prints:",
+        "lines": {
+          "pin": "pin: {value}",
+          "omarchySrc": "omarchy-src: {tag} ({rev7})",
+          "newestStable": "newest-stable: {value}",
+          "channel": "channel: {value} state={state} security-fast-path={yes|no}"
+        },
+        "footer": "Rollback is a boot generation, not Snapper. Files under $HOME are not rolled back."
+      }
+    }
+  }
+}

@@ -76,12 +76,46 @@ jobs:
             omarchy-fish-package
             omarchy-fish-parity
             omarchy-fish-module
+            omarchy-setup-writer
+            omarchy-setup-eval
+            omarchy-verbs
+            omarchy-pkg-rollback-update
+            omarchy-onbox-agents
           )
           for c in "${checks[@]}"; do
             echo "::group::check $c"
             nix build -L ".#checks.x86_64-linux.$c"
             echo "::endgroup::"
           done
+
+      # oma-cli G2 (ADR-0025 installer A), outside the sandbox: the real
+      # `omarchy setup` write path copies /etc/nixos/hardware-configuration.nix
+      # (never regenerates it) onto an explicit G0 locator, and the flake it
+      # writes evaluates with the pinned inputs (instantiate only, no build).
+      - name: omarchy setup writer + generated flake eval
+        run: |
+          set -euo pipefail
+          nix build -L --out-link result-setup .#packages.x86_64-linux.omarchy-nix-setup
+          sudo mkdir -p /etc/nixos
+          sudo install -m644 modules/setup/fixtures/hardware-configuration.nix /etc/nixos/hardware-configuration.nix
+          pre=$(sha256sum /etc/nixos/hardware-configuration.nix | cut -d' ' -f1)
+          target="$RUNNER_TEMP/omahedron-setup"
+          mkdir -p "$target"
+          cat >"$RUNNER_TEMP/answers.json" <<'JSON'
+          {"full_name":"Ada Lovelace","username":"ada","password":"omarchy","hostname":"setuptest",
+           "timezone":"Europe/London","theme":"tokyo-night","terminal":"ghostty","profile":"desktop",
+           "scale":1,"fingerprint":false,"autologin":false,"email":"ada@example.com"}
+          JSON
+          OMARCHY_NIX_FLAKE="$target" OMARCHY_SETUP_ANSWERS="$RUNNER_TEMP/answers.json" \
+            OMARCHY_SETUP_DRY_RUN=1 TZDIR=/usr/share/zoneinfo \
+            ./result-setup/bin/omarchy-nix-setup -y | tee "$RUNNER_TEMP/setup.out"
+          post=$(sha256sum "$target/hardware-configuration.nix" | cut -d' ' -f1)
+          test "$pre" = "$post"
+          grep -F "hardware-configuration.nix sha256 $pre (copied, not regenerated)" "$RUNNER_TEMP/setup.out"
+          grep -F -- '--option extra-substituters https://hyprland.cachix.org' "$RUNNER_TEMP/setup.out"
+          nix eval --raw --no-write-lock-file --override-input omahedron "path:$PWD" \
+            "path:$target#nixosConfigurations.setuptest.config.system.build.toplevel.drvPath"
+          echo
 
   checks-system:
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.validation != 'light' }}

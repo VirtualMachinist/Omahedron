@@ -19,6 +19,8 @@ The vendor-into-store architecture and a large part of the first module design c
 
 Omahedron forks that work and adds release engineering: official tag pins, channel state machine, machine-readable COMPAT, security-first bumps, Latitude metal gate.
 
+Since 2026-09-12 (ADR-0026) Omahedron owns that glue. zicochaos/omarchy-nix is historical provenance: credited here and in LICENSE, not tracked as a live upstream. Useful hunks may still be taken as attributed cherry-picks.
+
 ## Second reading
 
 [fzakaria/nix-home](https://github.com/fzakaria/nix-home) `omarchy` branch uses the same vendor rule inside a personal flake. Useful as commentary. Not the base.

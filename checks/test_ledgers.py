@@ -85,8 +85,19 @@ class LedgerTests(unittest.TestCase):
         self.fails('omarchy: packaged executable mode disagrees')
 
     def test_vendor_body_drift(self):
-        (self.packaged / 'bin/omarchy').write_text('#!/bin/bash\necho different router\n')
-        self.fails('omarchy: vendor body changed')
+        # A vendor-class script whose packaged body diverges from upstream
+        # must be classified. (The `omarchy` router itself is class wrap since
+        # oma-cli G1 — its help copy is patched — so it is no longer a valid
+        # vendor fixture; use a script the derivation does not touch.)
+        (self.packaged / 'bin/omarchy-theme-list').write_text('#!/bin/bash\necho different body\n')
+        self.fails('omarchy-theme-list: vendor body changed')
+
+    def test_wrap_router_body_may_differ(self):
+        # oma-cli G1: the command center is a wrap (help text patched); a
+        # body that differs from upstream is expected and must not be
+        # reported as vendor drift.
+        self.assertEqual(self.row('omarchy')['class'], 'wrap')
+        self.assertFalse(any('omarchy: vendor body changed' in error for error in self.errors()))
 
     def test_stub_reclassified_as_wrap(self):
         self.row('omarchy-dns')['class'] = 'wrap'

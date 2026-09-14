@@ -13,8 +13,10 @@ Manage end-user customization of the real Omarchy Quattro desktop packaged by
 omarchy-nix. Keep Omarchy's runtime UX and commands, but use NixOS-native
 package and system management.
 
-Do not use this skill while developing the omarchy-nix or upstream Omarchy
-source tree. Read that repository's `AGENTS.md` instead.
+On an enabled host, read `/etc/omahedron/AGENTS.md` first (`omarchy debug`
+prints the path; source: `modules/onbox/AGENTS.md` in the port repo). Do not
+use this skill while developing the omarchy-nix or upstream Omarchy source
+tree — follow that repository's `AGENTS.md` instead.
 
 ## Establish the Runtime
 
@@ -57,7 +59,9 @@ reset command that replaces user configuration. Do not run a system switch,
 reboot, shutdown, or destructive reset unless the request authorizes it.
 
 Do not use `pacman`, `yay`, AUR helpers, Arch package names, or Arch repository
-instructions. They are not package-management interfaces on NixOS.
+instructions. They are not package-management interfaces on NixOS. The human
+package interface is `omarchy pkg add|drop` (NixOS wraps underneath — not
+pacman).
 
 Arch system mutators in `$OMARCHY_PATH/bin` are quarantined
 (`omarchy-runtime-manifest.nix`): scripts classified `declarative-note` print
@@ -82,8 +86,8 @@ enter a password there, such as a command launched by an agent or a
 graphical background process; Omarchy shows a graphical authorization
 prompt. Do not replace `sudo` with `pkexec` merely because a command
 changes system state, and do not wrap commands that already manage their
-own elevation (`omarchy update` and `omarchy-nix-add/remove` invoke sudo
-themselves for the rebuild).
+own elevation (`omarchy update`, `omarchy pkg add|drop`, and
+`omarchy-nix-add/remove` invoke sudo themselves for the rebuild).
 
 ## System Architecture
 
@@ -123,6 +127,73 @@ Set `OMARCHY_NIX_FLAKE` when the configuration lives elsewhere. Treat the
 consumer flake as user/system configuration, not as the omarchy-nix source
 repository.
 
+## Human vs agent
+
+On-box contract: `/etc/omahedron/AGENTS.md` (see **Human vs agent** there).
+
+| Who | Interface | Does |
+| --- | --- | --- |
+| **Human** | `omarchy setup`, `omarchy pkg add\|drop`, menus, `omarchy update` | Drives the desktop without opening `flake.nix` |
+| **Agent** | Consumer flake, `omarchy.*`, `omarchy-packages.json`, `$OMARCHY_PATH` | Edits Nix; troubleshoots generations and stubs |
+
+`omarchy setup` is the install destination: it writes the consumer flake onto
+the G0 locator (default `/etc/nixos`), copies `hardware-configuration.nix`
+(never regenerates it), asks the Ada questions (name, username, password,
+hostname, IANA timezone, theme, terminal, profile, scale, fingerprint,
+autologin — prompt copy in `setup-prompts.json` beside this skill), and
+rebuilds with the Hyprland/Mesa cache on first apply. The human never opens
+a `.nix` file. `omarchy pkg add|drop` is the package destination: it routes
+at `omarchy-nix-add` / `omarchy-nix-remove`, updates
+`<flake>/omarchy-packages.json`, and rebuilds — not pacman.
+
+Some legacy `omarchy-pkg-pacman-*` entrypoints and narrow Arch-only setup
+subcommands may still be declarative-note stubs. Prefer the configuration verbs
+below or the named `omarchy.*` option the stub prints.
+
+## Configuration verbs (NixOS)
+
+Help copy for these routes lives in `verb-help.json` beside this skill
+(`$OMARCHY_PATH/default/verbs/help.json`). Each verb writes `omarchy.*` (or the
+omahedron flake input for pin/channel) in the consumer flake and rebuilds. The
+human never opens a `.nix` file.
+
+| Intent | Command | Option |
+| --- | --- | --- |
+| Full name | `omarchy setup name <name>` | `omarchy.full_name` |
+| Email | `omarchy setup email <addr>` | `omarchy.email_address` |
+| Timezone | `omarchy setup timezone <iana>` | `omarchy.timezone` |
+| Profile | `omarchy setup profile desktop\|workstation` | `omarchy.profile` |
+| Unfree | `omarchy setup unfree on\|off` | `omarchy.unfree.enable` |
+| Terminal | `omarchy default terminal [name]` | `omarchy.terminal` (live + persisted) |
+| Fingerprint | `omarchy setup fingerprint on\|off` | `omarchy.fingerprint.enable`; then `fprintd-enroll` |
+| Autologin | `omarchy setup autologin <user>\|off` | `omarchy.autologin.user` |
+| Pin | `omarchy pin [omahedron-X.Y.Z]` | `inputs.omahedron` tag |
+| Channel | `omarchy channel set <tag>` | same as pin |
+
+On the desktop profile, `omarchy pkg add` for an unfree catalog entry fails
+with guidance to run `omarchy setup unfree on` first.
+
+## Package and system verbs (NixOS)
+
+| Intent | Command | Notes |
+| --- | --- | --- |
+| Add software | `omarchy pkg add <name…>` | Catalog ID, menu Arch name, or nixpkgs attr → `omarchy-packages.json` + rebuild |
+| Remove software | `omarchy pkg drop <name…>` | Routes at `omarchy-nix-remove` |
+| Search and add | `omarchy pkg install` | Interactive nixpkgs picker (`omarchy-nix-search`) |
+| Remove (menu path) | `omarchy pkg remove [name…]` | Interactive multi-select when no names |
+| Update | `omarchy update` | Prints pins first, then flake update + rebuild |
+| Pin snapshot | `omarchy update pins` | Omahedron pin, `omarchy-src` tag, newest stable, channel |
+| Channel | `omarchy version channel` | Channel + state from the shipped pin |
+| Rollback | `omarchy rollback [--list]` | **Previous** generation only — **not** Snapper; **does not** roll back `$HOME` |
+
+`omarchy pkg aur *` and legacy `omarchy-pkg-pacman-*` / `omarchy-pkg-aur-*`
+stay **stubs** on NixOS (no AUR, no pacman happy path). Use `omarchy pkg
+add|drop|install|remove` or the Install / Remove menus.
+
+After a bad update, `omarchy rollback` returns the previous system generation;
+your `~/.config` files stay as you left them. Older generations: `omarchy
+rollback --list` or the systemd-boot menu at boot.
+
 ## Command Discovery
 
 Prefer the stable `omarchy <group> <action>` interface:
@@ -150,32 +221,34 @@ Common runtime groups:
 | `launch` | Launch apps (user-safe) | `omarchy launch browser` |
 | `capture` | Screenshots and recording | `omarchy capture --help` |
 | `reminder` | Desktop reminders | `omarchy reminder --help` |
-| `install` | Optional software; see the NixOS note below | `omarchy install webapp` |
-| `setup` | Setup wizards; mostly declarative stubs on NixOS | `omarchy setup security fingerprint` |
+| `install` | Install menus; catalog entries route through `pkg` | `omarchy install webapp` |
+| `pkg` | Add or remove packages (NixOS, not pacman) | `omarchy pkg add install.browser.firefox` |
+| `setup` | Install or reconfigure Omahedron (wizard + identity/profile verbs) | `omarchy setup` |
 | `update` | Update flake inputs and rebuild | `omarchy update` |
 
 Command discovery lists commands, not applicability: some discovered
 commands are `declarative-note` stubs that print the owning NixOS option
 and change nothing (see Ownership and Safety), and menu entries with no
-NixOS implementation are hidden. Before building a workflow around a
-discovered `omarchy install ...` or `omarchy setup ...` command, run it
-once and check whether it prints a declarative note instead of acting.
-The `pkg` group is not a package-management interface on NixOS (all
-`omarchy-pkg-*` are stubs); use the NixOS package commands below.
+NixOS implementation are hidden. Legacy `omarchy-pkg-pacman-*` and some
+narrow `omarchy setup …` subcommands may still be stubs — use the
+top-level `omarchy setup` and `omarchy pkg add|drop` verbs, or the named
+`omarchy.*` option.
 
-Use the NixOS-specific package commands instead of `omarchy pkg`:
+Humans add and remove packages with `omarchy pkg`:
 
 ```bash
-omarchy-nix-search
-omarchy-nix-add <catalog-id-or-nixpkgs-attribute>
-omarchy-nix-remove [catalog-id-or-nixpkgs-attribute]
+omarchy pkg add install.browser.firefox
+omarchy pkg drop install.browser.firefox
+omarchy pkg add firefox mc          # raw nixpkgs attributes also work
 ```
 
-They update `omarchy-packages.json` beside the consumer flake and rebuild.
-Use `omarchy-nix-search` for an interactive nixpkgs search. Use a catalog ID
-when automating an opinionated menu choice. If the consumer manages packages
-directly in Nix, edit its configuration and follow its own validation and
-deployment instructions.
+These route at `omarchy-nix-add` / `omarchy-nix-remove`, update
+`omarchy-packages.json` beside the consumer flake, and rebuild. For an
+interactive search, use **Install → Package** in the launcher or
+`omarchy-nix-search`. Agents may call `omarchy-nix-add` /
+`omarchy-nix-remove` directly when scripting. If the consumer manages
+packages in Nix by hand, edit `omarchy-packages.json` or the flake and
+rebuild.
 
 Add/remove operations are transactional: a per-file lock serializes them,
 the JSON is written atomically, a failed rebuild rolls back only that
@@ -342,12 +415,11 @@ explicitly authorizes it (see Ownership and Safety).
 
 For a package:
 
-1. Prefer `omarchy-nix-search` for an interactive request.
-2. Use `omarchy-nix-add` only with a verified catalog ID or nixpkgs
-   attribute.
+1. Prefer `omarchy pkg add <catalog-id>` (or `omarchy-nix-search`
+   interactively, which batches into one `pkg add` transaction).
+2. Use a verified catalog ID or nixpkgs attribute; never pacman or AUR.
 3. Verify the rebuild and the resulting command or desktop entry.
-4. Use `omarchy-nix-remove` for items managed through
-   `omarchy-packages.json`.
+4. Use `omarchy pkg drop <id>` for items in `omarchy-packages.json`.
 
 For a reset, request confirmation first, then use the narrowest command:
 
@@ -390,7 +462,9 @@ omarchy reminder clear
 
 1. If it is a stock runtime action, use the documented `omarchy` command.
 2. If it is user customization, edit `~/.config` or a user theme/plugin/hook.
-3. If it installs or removes software, use the NixOS package workflow.
+3. If a human installs or removes software, use `omarchy pkg add|drop` (or the
+   Install/Remove menus). Agents edit `omarchy-packages.json` or `omarchy.*`
+   in the consumer flake.
 4. If it changes services, users, boot, hardware, or policy, change the
    consumer flake and follow its deployment rules.
 5. If it changes packaged Omarchy or omarchy-nix itself, stop using this skill
@@ -428,8 +502,8 @@ for:
 - "Set up night light at sunset" → `omarchy toggle nightlight` or edit
   `~/.config/hypr/hyprsunset.conf`
 - "Change the UI font" → `omarchy font list`, then `omarchy font set <name>`
-- "Install Firefox" → `omarchy-nix-add install.browser.firefox` (or
-  `omarchy-nix-search` interactively), never `omarchy pkg add`
+- "Install Firefox" → `omarchy pkg add install.browser.firefox` (or
+  `omarchy-nix-search` interactively)
 - "Install a dev database" → no catalog entry exists for databases/docker:
   enable them in the consumer flake (e.g. `virtualisation.docker.enable =
   true;`) and rebuild; a direct `omarchy install ...` may be a
@@ -445,6 +519,11 @@ for:
   `~/.config/omarchy/shell.json`
 - "Reset the shell/bar to defaults" → ask for confirmation, then
   `omarchy refresh shell`
-- "Enable fingerprint unlock" → set `omarchy.fingerprint.enable = true` in
-  the consumer flake and rebuild; the `omarchy setup security fingerprint`
-  wizard is a stub on NixOS
+- "Set up Omahedron on this NixOS box" → `omarchy setup` (writes the
+  consumer flake; human never required to open Nix)
+- "Enable fingerprint unlock" → `omarchy setup fingerprint on`, then
+  `fprintd-enroll` after rebuild
+- "Allow Obsidian / unfree installs" → `omarchy setup unfree on`
+- "Pin Omahedron to a release" → `omarchy pin omahedron-4.0.2`
+- "Change my default terminal to ghostty" → `omarchy default terminal ghostty`
+- "Skip the login screen on LUKS" → `omarchy setup autologin ada`

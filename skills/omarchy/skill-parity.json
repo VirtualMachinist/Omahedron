@@ -65,7 +65,7 @@
     },
     "Decision Framework": {
       "status": "adapted",
-      "note": "Same decision order; the package branch points at omarchy-nix-* instead of omarchy pkg/pkg aur."
+      "note": "Same decision order; humans use omarchy pkg add|drop; agents edit omarchy-packages.json or omarchy.* in the consumer flake."
     },
     "Reminder Requests": {
       "status": "preserved",
@@ -78,7 +78,7 @@
     },
     "Example Requests": {
       "status": "adapted",
-      "note": "Example set kept where NixOS-safe; package examples rewritten to the omarchy-nix workflow.",
+      "note": "Example set kept where NixOS-safe; package examples use omarchy pkg add|drop (routes at omarchy-nix-*).",
       "anchor": "nix-add"
     }
   },
@@ -138,12 +138,14 @@
       "anchor": "omarchy reminder --help"
     },
     "pkg": {
-      "status": "omitted",
-      "reason": "pacman/AUR interface; omarchy-pkg-* are declarative-note stubs on NixOS. Replaced by omarchy-nix-search/add/remove writing omarchy-packages.json."
+      "status": "adapted",
+      "note": "omarchy pkg add|drop is the human package interface on NixOS (routes at omarchy-nix-add/remove, omarchy-packages.json). Legacy omarchy-pkg-pacman-* stay stubs; no pacman/AUR.",
+      "anchor": "omarchy pkg add"
     },
     "setup": {
       "status": "adapted",
-      "note": "Interactive setup wizards that mutate the system (fingerprint, lock, sshd, timezone, plymouth) are declarative-note stubs or hidden menu entries on NixOS — the equivalent is the named NixOS/omarchy option in the consumer flake."
+      "note": "omarchy setup is the install destination (writes the consumer flake on the G0 locator). Some narrow setup subcommands remain declarative-note stubs; system options live in omarchy.*.",
+      "anchor": "omarchy setup"
     },
     "update": {
       "status": "adapted",

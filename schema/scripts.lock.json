@@ -17,12 +17,13 @@
     },
     {
       "id": "omarchy",
-      "class": "vendor",
+      "class": "wrap",
       "upstream": "bin/omarchy",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
       "since_pin": "v4.0.2",
-      "phase": "v1"
+      "phase": "v1",
+      "notes": "Help copy made NixOS-honest via --replace-fail in pkgs/omarchy.nix (main help heredoc, GROUP_DESCRIPTIONS); routing/dispatch logic is upstream verbatim. oma-cli G1a."
     },
     {
       "id": "omarchy-agent",
@@ -414,14 +415,13 @@
     },
     {
       "id": "omarchy-channel-set",
-      "class": "stub",
+      "class": "wrap",
       "upstream": "bin/omarchy-channel-set",
       "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
-      "since_pin": "v4.0.2",
+      "since_pin": "v4.0.3",
       "phase": "v1",
-      "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
+      "notes": "oma-cli G3: exec omarchy-pin (flake input tag pin + rebuild); Arch channel names are not used on NixOS."
     },
     {
       "id": "omarchy-chromium-copy-url-host",
@@ -553,12 +553,13 @@
     },
     {
       "id": "omarchy-default-terminal",
-      "class": "vendor",
+      "class": "wrap",
       "upstream": "bin/omarchy-default-terminal",
-      "stand_in": null,
+      "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
-      "since_pin": "v4.0.2",
-      "phase": "v1"
+      "since_pin": "v4.0.3",
+      "phase": "v1",
+      "notes": "oma-cli G3: vendor live xdg-terminals.list switch; pkgs/omarchy.nix calls omarchy-setup-terminal after the live change to persist omarchy.terminal (modules/config/omarchy-nix-setup-terminal.sh)."
     },
     {
       "id": "omarchy-dev-add-migration",
@@ -2142,14 +2143,13 @@
     },
     {
       "id": "omarchy-pkg-add",
-      "class": "stub",
+      "class": "wrap",
       "upstream": "bin/omarchy-pkg-add",
       "stand_in": "pkgs/omarchy.nix",
-      "user_visible": false,
-      "since_pin": "v4.0.2",
+      "user_visible": true,
+      "since_pin": "v4.0.3",
       "phase": "v1",
-      "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
+      "notes": "oma-cli G4: omarchy pkg add routes at omarchy-nix-add (modules/config/omarchy-nix-pkg-add.sh)."
     },
     {
       "id": "omarchy-pkg-aur-accessible",
@@ -2186,25 +2186,23 @@
     },
     {
       "id": "omarchy-pkg-drop",
-      "class": "stub",
+      "class": "wrap",
       "upstream": "bin/omarchy-pkg-drop",
       "stand_in": "pkgs/omarchy.nix",
-      "user_visible": false,
-      "since_pin": "v4.0.2",
+      "user_visible": true,
+      "since_pin": "v4.0.3",
       "phase": "v1",
-      "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
+      "notes": "oma-cli G4: omarchy pkg drop routes at omarchy-nix-remove (modules/config/omarchy-nix-pkg-drop.sh)."
     },
     {
       "id": "omarchy-pkg-install",
-      "class": "stub",
+      "class": "wrap",
       "upstream": "bin/omarchy-pkg-install",
       "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "since_pin": "v4.0.2",
+      "since_pin": "v4.0.3",
       "phase": "v1",
-      "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
+      "notes": "oma-cli G4: exec omarchy-nix-search (fzf picker is the NixOS stand-in for upstream pacman TUI; modules/config/omarchy-nix-pkg-install.sh)."
     },
     {
       "id": "omarchy-pkg-missing",
@@ -2229,14 +2227,13 @@
     },
     {
       "id": "omarchy-pkg-remove",
-      "class": "stub",
+      "class": "wrap",
       "upstream": "bin/omarchy-pkg-remove",
       "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "since_pin": "v4.0.2",
+      "since_pin": "v4.0.3",
       "phase": "v1",
-      "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
+      "notes": "oma-cli G4: exec omarchy-nix-remove (interactive multi-select when no ids; modules/config/omarchy-nix-pkg-remove.sh)."
     },
     {
       "id": "omarchy-plugin-add",
@@ -2760,14 +2757,13 @@
     },
     {
       "id": "omarchy-remove-security-fingerprint",
-      "class": "stub",
+      "class": "wrap",
       "upstream": "bin/omarchy-remove-security-fingerprint",
       "stand_in": "pkgs/omarchy.nix",
       "user_visible": false,
-      "since_pin": "v4.0.2",
+      "since_pin": "v4.0.3",
       "phase": "v1",
-      "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
+      "notes": "oma-cli G3: exec omarchy-setup-fingerprint off (declarative omarchy.fingerprint.enable)."
     },
     {
       "id": "omarchy-remove-security-sshd",
@@ -3010,14 +3006,13 @@
     },
     {
       "id": "omarchy-setup-security-fingerprint",
-      "class": "stub",
+      "class": "wrap",
       "upstream": "bin/omarchy-setup-security-fingerprint",
       "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
-      "since_pin": "v4.0.2",
+      "since_pin": "v4.0.3",
       "phase": "v1",
-      "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
+      "notes": "oma-cli G3: exec omarchy-setup-fingerprint on (declarative omarchy.fingerprint.enable + optional fprintd-enroll)."
     },
     {
       "id": "omarchy-setup-security-sshd",
@@ -3962,14 +3957,13 @@
     },
     {
       "id": "omarchy-version-channel",
-      "class": "stub",
+      "class": "wrap",
       "upstream": "bin/omarchy-version-channel",
       "stand_in": "pkgs/omarchy.nix",
       "user_visible": true,
-      "since_pin": "v4.0.2",
+      "since_pin": "v4.0.3",
       "phase": "v1",
-      "reason": "nixos-declarative",
-      "notes": "Existing NixOS stand-in; declarative notes exit 0. The first output line is omahedron: stub: nixos-declarative (ADR-0009)."
+      "notes": "oma-cli G4: prints channel and state from $OMARCHY_PATH/pin.json (modules/config/omarchy-nix-version-channel.sh)."
     },
     {
       "id": "omarchy-version-pkgs",
@@ -4257,6 +4251,27 @@
       "reason": "nixos-declarative"
     },
     {
+      "id": "omarchy-nix-configlib",
+      "class": "wrap",
+      "upstream": "pkgs/omarchy.nix",
+      "stand_in": "pkgs/omarchy.nix",
+      "user_visible": false,
+      "since_pin": "v4.0.3",
+      "phase": "v1",
+      "notes": "oma-cli G3: modules/config/omarchy-nix-configlib.sh — shared configuration.nix / flake.nix patch + rebuild helpers; sourced, not executed.",
+      "executable": false
+    },
+    {
+      "id": "omarchy-nix-unfree-guard",
+      "class": "wrap",
+      "upstream": "pkgs/omarchy.nix",
+      "stand_in": "pkgs/omarchy.nix",
+      "user_visible": false,
+      "since_pin": "v4.0.3",
+      "phase": "v1",
+      "notes": "oma-cli G3a: desktop unfree guard invoked from omarchy-nix-add before catalog mutations (modules/config/omarchy-nix-unfree-guard.sh)."
+    },
+    {
       "id": "omarchy-nix-pkglib",
       "class": "wrap",
       "upstream": "pkgs/omarchy.nix",
@@ -4286,6 +4301,126 @@
       "since_pin": "v4.0.2",
       "phase": "v1",
       "notes": "Port-owned NixOS package/catalog helper."
+    },
+    {
+      "id": "omarchy-pin",
+      "class": "wrap",
+      "upstream": "pkgs/omarchy.nix",
+      "stand_in": "pkgs/omarchy.nix",
+      "user_visible": true,
+      "since_pin": "v4.0.3",
+      "phase": "v1",
+      "notes": "oma-cli G3: show or set inputs.omahedron ref on the consumer flake (modules/config/omarchy-nix-pin.sh)."
+    },
+    {
+      "id": "omarchy-rollback",
+      "class": "wrap",
+      "upstream": "pkgs/omarchy.nix",
+      "stand_in": "pkgs/omarchy.nix",
+      "user_visible": true,
+      "since_pin": "v4.0.3",
+      "phase": "v1",
+      "notes": "oma-cli G4 port verb: nixos-rebuild switch --rollback on the consumer flake; --list runs list-generations (modules/config/omarchy-nix-rollback.sh). Not Snapper; does not roll back $HOME."
+    },
+    {
+      "id": "omarchy-setup-autologin",
+      "class": "wrap",
+      "upstream": "pkgs/omarchy.nix",
+      "stand_in": "pkgs/omarchy.nix",
+      "user_visible": true,
+      "since_pin": "v4.0.3",
+      "phase": "v1",
+      "notes": "oma-cli G3: omarchy.autologin.user declarative verb."
+    },
+    {
+      "id": "omarchy-setup-email",
+      "class": "wrap",
+      "upstream": "pkgs/omarchy.nix",
+      "stand_in": "pkgs/omarchy.nix",
+      "user_visible": true,
+      "since_pin": "v4.0.3",
+      "phase": "v1",
+      "notes": "oma-cli G3: omarchy.email_address declarative verb."
+    },
+    {
+      "id": "omarchy-setup-fingerprint",
+      "class": "wrap",
+      "upstream": "pkgs/omarchy.nix",
+      "stand_in": "pkgs/omarchy.nix",
+      "user_visible": true,
+      "since_pin": "v4.0.3",
+      "phase": "v1",
+      "notes": "oma-cli G3: omarchy.fingerprint.enable declarative verb."
+    },
+    {
+      "id": "omarchy-setup-name",
+      "class": "wrap",
+      "upstream": "pkgs/omarchy.nix",
+      "stand_in": "pkgs/omarchy.nix",
+      "user_visible": true,
+      "since_pin": "v4.0.3",
+      "phase": "v1",
+      "notes": "oma-cli G3: omarchy.full_name declarative verb."
+    },
+    {
+      "id": "omarchy-setup-profile",
+      "class": "wrap",
+      "upstream": "pkgs/omarchy.nix",
+      "stand_in": "pkgs/omarchy.nix",
+      "user_visible": true,
+      "since_pin": "v4.0.3",
+      "phase": "v1",
+      "notes": "oma-cli G3: omarchy.profile declarative verb."
+    },
+    {
+      "id": "omarchy-setup-terminal",
+      "class": "wrap",
+      "upstream": "pkgs/omarchy.nix",
+      "stand_in": "pkgs/omarchy.nix",
+      "user_visible": true,
+      "since_pin": "v4.0.3",
+      "phase": "v1",
+      "notes": "oma-cli G3: omarchy.terminal persist via modules/config/omarchy-nix-setup-terminal.sh; live switch stays in vendor omarchy-default-terminal."
+    },
+    {
+      "id": "omarchy-setup-timezone",
+      "class": "wrap",
+      "upstream": "pkgs/omarchy.nix",
+      "stand_in": "pkgs/omarchy.nix",
+      "user_visible": true,
+      "since_pin": "v4.0.3",
+      "phase": "v1",
+      "notes": "oma-cli G3: omarchy.timezone + time.timeZone declarative verb."
+    },
+    {
+      "id": "omarchy-setup-unfree",
+      "class": "wrap",
+      "upstream": "pkgs/omarchy.nix",
+      "stand_in": "pkgs/omarchy.nix",
+      "user_visible": true,
+      "since_pin": "v4.0.3",
+      "phase": "v1",
+      "notes": "oma-cli G3: omarchy.unfree.enable declarative verb (ADR-0024)."
+    },
+    {
+      "id": "omarchy-setup",
+      "class": "wrap",
+      "upstream": "pkgs/omarchy.nix",
+      "stand_in": "pkgs/omarchy.nix",
+      "user_visible": true,
+      "since_pin": "v4.0.3",
+      "phase": "v1",
+      "notes": "oma-cli G2 (ADR-0025 installer A): `omarchy setup` launcher in $OMARCHY_PATH/bin so the vendored router routes to the port-owned omarchy-nix-setup wizard (pkgs/omarchy-nix-setup.nix, modules/setup/); exits 127 with guidance when the wizard is not on PATH."
+    },
+    {
+      "id": "omarchy-update-pins",
+      "class": "wrap",
+      "upstream": "pkgs/omarchy.nix",
+      "stand_in": "pkgs/omarchy.nix",
+      "user_visible": false,
+      "since_pin": "v4.0.3",
+      "phase": "v1",
+      "notes": "oma-cli G4: COMPETE update print contract — pin / omarchy-src / newest-stable / channel lines (modules/config/omarchy-nix-update-pins.sh); omarchy-update calls it before confirm."
     }
   ]
 }

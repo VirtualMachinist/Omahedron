@@ -2106,6 +2106,17 @@
       "notes": "Port package outside install/*.packages; supplied by the default Omarchy module. Consumers may disable the Fish profile or boot/login themes through omarchy options."
     },
     {
+      "upstream": "omarchy-nix-setup",
+      "status": "pkgs",
+      "attr": "omarchy-nix-setup",
+      "availability": "default",
+      "evidence": [
+        "flake.nix",
+        "pkgs/omarchy-nix-setup.nix"
+      ],
+      "notes": "Port package outside install/*.packages; supplied by the default Omarchy module via omarchy.setupPackage (Installer A)."
+    },
+    {
       "upstream": "plymouth-omarchy-theme",
       "status": "pkgs",
       "attr": "plymouth-omarchy-theme",

@@ -3,8 +3,9 @@
 This is the long form of the README's quick start. It covers a fresh machine, an existing NixOS install, the first build, daily use, and the knobs people ask about most.
 
 - [Requirements](#requirements)
+- [First hour](#first-hour)
 - [Fresh machine](#fresh-machine)
-- [Existing NixOS install](#existing-nixos-install)
+- [Manual flake install (agents)](#manual-flake-install-agents)
 - [First build: use the Hyprland cache](#first-build-use-the-hyprland-cache)
 - [First login](#first-login)
 - [Updating](#updating)
@@ -28,18 +29,66 @@ This is the long form of the README's quick start. It covers a fresh machine, an
 | GPU | Intel integrated graphics is the baseline. Anything Hyprland 0.56 supports should work; Nvidia follows the usual NixOS Hyprland caveats. |
 | Disk | Plan for a few GB of store growth. Hyprland and its Mesa come from a binary cache once it is registered (see [First build](#first-build-use-the-hyprland-cache)). |
 
+## First hour
+
+Humans drive Omahedron with `omarchy` the way they drive Arch Omarchy. Agents edit Nix. See [oma-cli.md](oma-cli.md) for the full split.
+
+| Step | Human | Under the hood |
+|---|---|---|
+| Install on NixOS | `omarchy setup` | Writes the consumer flake onto the G0 locator (`$OMARCHY_NIX_FLAKE`, then `/etc/nixos`), copies `hardware-configuration.nix` (never regenerates it), asks identity questions, rebuilds with the Hyprland/Mesa cache |
+| Optional software | `omarchy pkg add` / `omarchy pkg drop` | `omarchy-nix-add` / `omarchy-nix-remove` update `<flake>/omarchy-packages.json` and rebuild — not pacman |
+| Refresh the system | **Update → Omarchy** or `omarchy update` | `nix flake update` on your flake, then `nixos-rebuild switch` |
+
+You are not required to open `flake.nix` or `configuration.nix` for that loop. Agents inspect and edit the consumer flake, `omarchy.*`, and `omarchy-packages.json` directly.
+
+### What `omarchy setup` asks
+
+The wizard prompt copy lives in `skills/omarchy/setup-prompts.json` (packaged under `$OMARCHY_PATH/default/setup/prompts.json`). In order:
+
+1. **Full name** — seeds git and the shell (`omarchy.full_name`)
+2. **Username** — your Linux account
+3. **Password** — login password (hashed before it is written)
+4. **Hostname** — machine name and flake configuration name (e.g. `mybox` in `.#mybox`)
+5. **Timezone** — IANA only (`America/Chicago`, not `USA/Dallas`)
+6. **Theme** — one of the 22 stock Omarchy themes
+7. **Terminal** — foot, ghostty, alacritty, or kitty
+8. **Profile** — `desktop` (thin default) or `workstation` (Docker, zram, creative/dev extras)
+9. **Scale** — `1` for standard displays, `2` for HiDPI
+10. **Fingerprint** — optional; enables `omarchy.fingerprint` when the hardware has a reader (`fprintd-enroll` after rebuild)
+11. **Autologin** — optional; skips SDDM when you already unlocked the disk at boot
+
+Setup copies `hardware-configuration.nix` from your existing NixOS install and never runs `nixos-generate-config` over it. On non-`x86_64-linux` systems it exits with: *omarchy setup supports x86_64-linux only.*
+
+Installer A (`omarchy setup` on an existing NixOS) is in product (ADR-0025) but does not ship on every tag yet. Until it lands on your pin, agents can use [Manual flake install (agents)](#manual-flake-install-agents); the disk stage for a blank machine is still [Fresh machine](#fresh-machine).
+
+### Changing system options (no Nix editing)
+
+After setup, change identity and system knobs with `omarchy` — each command writes your flake and rebuilds. Help copy is in `skills/omarchy/verb-help.json` (packaged as `$OMARCHY_PATH/default/verbs/help.json`).
+
+| You want | Command |
+|---|---|
+| Change name / email / timezone | `omarchy setup name …`, `omarchy setup email …`, `omarchy setup timezone …` |
+| Desktop vs workstation | `omarchy setup profile desktop` or `workstation` |
+| Allow unfree packages (Obsidian, etc.) | `omarchy setup unfree on` |
+| Default terminal (live + saved) | `omarchy default terminal [foot\|ghostty\|alacritty\|kitty]` |
+| Fingerprint unlock | `omarchy setup fingerprint on`, then `fprintd-enroll` |
+| Skip SDDM on LUKS | `omarchy setup autologin <user>` or `off` |
+| Pin Omahedron release | `omarchy pin omahedron-4.0.2` or `omarchy channel set …` |
+
+`omarchy pkg add` for an unfree package on the desktop profile tells you to run `omarchy setup unfree on` first.
+
 ## Fresh machine
 
-Omahedron does not ship an ISO **on this tag**. ADR-0025 puts an Omahedron installer in product: first `omarchy setup` on an existing NixOS, then a NixOS-shaped ISO (systemd-boot, generations — not Limine/Snapper). Until those ship, install NixOS the normal way, then add Omahedron to the flake.
+Omahedron does not ship an ISO **on this tag**. ADR-0025 puts an Omahedron installer in product: first `omarchy setup` on an existing NixOS, then a NixOS-shaped ISO (systemd-boot, generations — not Limine/Snapper). Until those ship, install NixOS the normal way, then run `omarchy setup` (or let an agent use the manual flake path below).
 
 1. Boot the [NixOS minimal ISO](https://nixos.org/download/) and install as usual. Use UEFI with systemd-boot. If you want disk encryption, set up LUKS at this stage; Omahedron has an option to make the login flow sensible on an encrypted disk (see [Common options](#common-options)).
 2. Reboot into the new system. Make sure networking works.
-3. Convert `/etc/nixos` to a flake if it is not one already. The snippets in the next section are a complete `flake.nix` and `configuration.nix` you can drop in beside the generated `hardware-configuration.nix`.
-4. Continue with [Existing NixOS install](#existing-nixos-install).
+3. Run `omarchy setup` — it writes the consumer flake, copies `hardware-configuration.nix`, and rebuilds. You do not need to hand-edit Nix for the first switch.
+4. If `omarchy setup` is not on your pin yet, an agent can follow [Manual flake install (agents)](#manual-flake-install-agents) instead.
 
-## Existing NixOS install
+## Manual flake install (agents)
 
-Omahedron is a NixOS module plus a Home Manager module. You import both, set `omarchy.enable = true`, and rebuild.
+Omahedron is a NixOS module plus a Home Manager module. Import both, set `omarchy.enable = true`, and rebuild. Use this path when scripting or when Installer A is not on your pin yet — not as the long-term human default.
 
 ### `flake.nix`
 
@@ -179,7 +228,7 @@ Two NixOS-side defaults worth knowing on day one:
 
 ## Updating
 
-Omarchy's **Update** menu entry, and the `omarchy-update` command, do on NixOS what they do on Arch: refresh the desktop and the system. Underneath, they run `nix flake update` on your configuration flake and then `nixos-rebuild switch`.
+Omarchy's **Update** menu entry, and `omarchy update`, refresh the desktop and the system on NixOS — not `pacman -Syu`. `omarchy update` prints the pin block first (`omarchy update pins`: Omahedron pin, `omarchy-src` tag, newest stable Omarchy, channel state), asks to proceed, then runs `nix flake update` and `nixos-rebuild switch`. `omarchy version channel` prints channel and state from the shipped pin. Help copy: `skills/omarchy/verb-help.json`.
 
 For that to work the scripts need to find your flake. They check, in order:
 
@@ -198,11 +247,21 @@ Because the Omahedron input is pinned in your `flake.lock`, a flake update also 
 
 ## Nix verbs (search / add / remove / apply / update)
 
-The five Nix-facing operations — search, add, remove, apply, and update — are documented on one page: **[NIX-VERBS.md](NIX-VERBS.md)**. Menu labels stay `omarchy-*`; port helpers (`omarchy-nix-search`, `omarchy-nix-add`, `omarchy-nix-remove`, `omarchy-update-system-pkgs`) sit underneath. All of them share the G0 flake locator (`$OMARCHY_NIX_FLAKE`, then `/etc/nixos`).
+The five Nix-facing operations — search, add, remove, apply, and update — are documented on one page: **[NIX-VERBS.md](NIX-VERBS.md)**. Humans type `omarchy pkg add|drop` and `omarchy update`; menus and port helpers (`omarchy-nix-search`, `omarchy-nix-add`, `omarchy-nix-remove`, `omarchy-update-system-pkgs`) sit underneath. All of them share the G0 flake locator (`$OMARCHY_NIX_FLAKE`, then `/etc/nixos`).
 
 ## Installing and removing packages
 
-The **Install** and **Remove** menus, and the `omarchy-install-*` commands behind them, do not run pacman. They run `omarchy-nix-add` and `omarchy-nix-remove` (see [NIX-VERBS.md](NIX-VERBS.md)), which:
+Humans add and remove optional software with `omarchy pkg add|drop|install|remove` (or the **Install** and **Remove** menus). None of these run pacman; `omarchy pkg aur *` stays a stub on NixOS. They route at `omarchy-nix-add`, `omarchy-nix-remove`, and `omarchy-nix-search` (see [NIX-VERBS.md](NIX-VERBS.md)), which:
+
+```sh
+omarchy pkg add install.browser.firefox   # catalog ID
+omarchy pkg add firefox                   # nixpkgs attribute or menu Arch name
+omarchy pkg install                       # interactive search picker
+omarchy pkg drop install.browser.firefox
+omarchy pkg remove                        # interactive multi-select
+```
+
+Each transaction:
 
 1. Resolve your flake the same way `omarchy-update` does.
 2. Add or remove the package in `<flake>/omarchy-packages.json`, with a lock held for the whole transaction and a hash-checked rollback if the rebuild fails.
@@ -228,13 +287,15 @@ still requires `omarchy.unfree.enable` for Obsidian. Override
 
 ## Rolling back
 
-This is the reason many people are here. Every `nixos-rebuild switch` creates a new generation, and every generation is a boot menu entry.
+This is the reason many people are here. Every `nixos-rebuild switch` creates a new generation, and every generation is a boot menu entry. On NixOS this is a **boot generation** rollback — not Snapper, not pacman undo.
 
-- At boot, pick an older generation from the systemd-boot menu.
-- From a running system, `sudo nixos-rebuild switch --rollback` returns to the previous generation.
-- To pin an older Omahedron, put its tag in `omahedron.url` and rebuild.
+- From a running system, `omarchy rollback` (or `sudo nixos-rebuild switch --rollback`) returns to the **previous** generation. `omarchy rollback --list` shows generations.
+- At boot, pick an older generation from the systemd-boot menu (the brick path).
+- To pin an older Omahedron release, `omarchy pin omahedron-X.Y.Z` or put the tag in `omahedron.url` and rebuild.
 
-Home Manager state under `$HOME` is not part of a generation. Your edited config files stay as they are across rollbacks, which is what you want.
+**Rollback does not roll back `$HOME`.** Home Manager state and your edited files under `~/.config` stay as they are across generations — themes, Hyprland overrides, and monitor settings are unchanged. Only the system generation (packages, kernel, module options) moves.
+
+If an update misbehaves, use `omarchy rollback` — your `$HOME` files are not reverted.
 
 ## Common options
 

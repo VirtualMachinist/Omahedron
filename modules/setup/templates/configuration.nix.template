@@ -1,0 +1,38 @@
+# Omahedron consumer configuration (written by omarchy setup).
+{ pkgs, ... }:
+{
+  networking.hostName = "@HOSTNAME@";
+  time.timeZone = "@TIMEZONE@";
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  omarchy.enable = true;
+  omarchy.profile = "@PROFILE@";
+  omarchy.full_name = "@FULL_NAME@";
+  omarchy.email_address = "@EMAIL@";
+  omarchy.timezone = "@TIMEZONE@";
+  omarchy.theme = "@THEME@";
+  omarchy.terminal = "@TERMINAL@";
+  omarchy.scale = @SCALE@;
+@FINGERPRINT_BLOCK@
+@AUTOLOGIN_BLOCK@
+
+  omarchy.managedPackagesFile =
+    if builtins.pathExists ./omarchy-packages.json then ./omarchy-packages.json else null;
+
+  users.users.@USERNAME@ = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" "video" "input" "networkmanager" ];
+    initialHashedPassword = "@PASSWORD_HASH@";
+  };
+
+  home-manager.users.@USERNAME@ = {
+    home.username = "@USERNAME@";
+    home.homeDirectory = "/home/@USERNAME@";
+    home.stateVersion = "26.05";
+    omarchy.enable = true;
+  };
+
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+  system.stateVersion = "26.05";
+}
