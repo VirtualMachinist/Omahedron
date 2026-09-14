@@ -44,6 +44,12 @@ The vendored omarchy derivation (`$out/share/omarchy`). Set automatically by
 the flake's `nixosModules.default`; leave `null` to resolve `OMARCHY_PATH`
 yourself.
 
+### `omarchy.setupPackage` *(nullOr package, default `null`, injected by the flake)*
+
+The `omarchy-nix-setup` derivation (Installer A: writes the consumer flake
+onto the G0 locator). Set automatically by the flake's `nixosModules.default`;
+puts `omarchy-nix-setup` on PATH so `omarchy setup` can exec it.
+
 ### `omarchy.plymouthPackage` *(nullOr package, default `null`, injected by the flake)*
 
 The `plymouth-omarchy-theme` derivation. Set automatically by the flake when
