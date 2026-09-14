@@ -376,6 +376,30 @@
 
               touch "$out"
             '';
+          # Runtime Nix skill pack (rebuild/flake/module/forensics/compat/pins).
+          # Source SKILL.md must be packaged byte-identical; frontmatter name
+          # matches the directory; no pacman happy path; pack.json is the list.
+          omahedron-nix-skills =
+            let
+              pack = builtins.fromJSON (builtins.readFile ./skills/pack.json);
+              extra = builtins.filter (n: n != "omarchy") pack.runtime;
+              omarchyPkg = self.packages.${system}.omarchy;
+            in
+            pkgs.runCommand "omahedron-nix-skills-check" { nativeBuildInputs = [ pkgs.jq ]; } ''
+              jq -e '.runtime | index("omarchy")' ${./skills/pack.json} >/dev/null
+              jq -e '.agentRoots | index(".omp/skills")' ${./skills/pack.json} >/dev/null
+              ${pkgs.lib.concatMapStrings (name: ''}
+                src=${./skills/${name}/SKILL.md}
+                dst=${omarchyPkg}/share/omarchy/default/agents/skills/${name}/SKILL.md
+                cmp "$src" "$dst"
+                grep -Fq "name: ${name}" "$dst"
+                grep -Fq "Observe first" "$dst"
+                grep -Fq "Tool loop" "$dst"
+                grep -Fq "Eval" "$dst"
+                ! grep -Eq 'pacman -(S|Syu)|yay -S' "$dst"
+              '') extra}
+              touch "$out"
+            '';
           # Catalog consistency: every catalog pkg/feature-implied pkg must
           # exist in the pinned nixpkgs (eval-time), every cataloged menu id
           # must appear rewired in omarchy-menu.jsonc, AND every entry must

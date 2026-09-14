@@ -32,3 +32,7 @@ If [Lapis](https://github.com/VirtualMachinist/lapis) (or any vault RAG) is inst
 ## Nix verbs
 
 Search / add / remove / apply / update: one page, G0 locator, `omarchy-*` pixels — [NIX-VERBS.md](NIX-VERBS.md).
+
+## Nix skill pack
+
+Desktop chrome stays `skills/omarchy`. Rebuild / flake / module / forensics / COMPAT / pins are sibling runtime skills listed in [skills/pack.json](../skills/pack.json). Home Manager links every name under `.agents`, `.claude`, `.codex`, `.pi/agent`, and `.omp` (omapi). Do not fold Nix textbooks into the omarchy skill.

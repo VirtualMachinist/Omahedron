@@ -412,6 +412,9 @@ for:
   Follow the repository's `AGENTS.md` instead.
 - Arch package management: `pacman`, `yay`, AUR helpers, Arch package
   names. There is no AUR on NixOS.
+- Nix eval, rebuild forensics, flake inputs, pins, and COMPAT stubs:
+  sibling skills `nix-rebuild`, `nix-flake`, `nix-module`,
+  `nix-forensics`, `omahedron-compat`, `omahedron-pins`.
 
 ## Example Requests
 

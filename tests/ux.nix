@@ -721,25 +721,52 @@
     # that directory (as GC would), rerun the HM activation unit, and require
     # the links to point at the active package target again.
     with machine.nested("NixOS agent skill links survive package updates"):
-        skill_paths = [
-            ".agents/skills/omarchy",
-            ".claude/skills/omarchy",
-            ".codex/skills/omarchy",
-            ".pi/agent/skills/omarchy",
+        skill_names = [
+            "omarchy",
+            "nix-rebuild",
+            "nix-flake",
+            "nix-module",
+            "nix-forensics",
+            "omahedron-compat",
+            "omahedron-pins",
         ]
-        expected = machine.succeed(
-            as_demo("readlink -f \"$OMARCHY_PATH/default/agents/skills/omarchy\"")
-        ).strip()
-        assert expected.startswith("/nix/store/"), expected
+        agent_roots = [
+            ".agents/skills",
+            ".claude/skills",
+            ".codex/skills",
+            ".pi/agent/skills",
+            ".omp/skills",
+        ]
+        skill_paths = [
+            "%s/%s" % (root, name)
+            for root in agent_roots
+            for name in skill_names
+        ]
+        expected_by_name = {}
+        for name in skill_names:
+            expected = machine.succeed(
+                as_demo(
+                    "readlink -f \"$OMARCHY_PATH/default/agents/skills/%s\""
+                    % name
+                )
+            ).strip()
+            assert expected.startswith("/nix/store/"), expected
+            expected_by_name[name] = expected
 
         for skill_path in skill_paths:
+            name = skill_path.rsplit("/", 1)[-1]
             resolved = machine.succeed(
                 as_demo("readlink -f ~/" + skill_path)
             ).strip()
-            assert resolved == expected, \
-                "%s resolves to %r, expected %r" % (skill_path, resolved, expected)
+            assert resolved == expected_by_name[name], \
+                "%s resolves to %r, expected %r" % (
+                    skill_path, resolved, expected_by_name[name]
+                )
             machine.succeed(
-                as_demo("grep -Fq \"Omarchy on NixOS\" ~/" + skill_path + "/SKILL.md")
+                as_demo(
+                    "grep -Fq \"name: %s\" ~/%s/SKILL.md"
+                    % (name, skill_path)
+                )
             )
 
         machine.succeed("mkdir -p /tmp/stale-omarchy-skill")
@@ -749,7 +776,7 @@
             )
 
         # Simulate garbage collection of the old generation: the stale target
-        # disappears, leaving all four links dangling (test -e follows symlinks).
+        # disappears, leaving all skill links dangling (test -e follows symlinks).
         machine.succeed("rm -rf /tmp/stale-omarchy-skill")
         for skill_path in skill_paths:
             machine.succeed("test ! -e /home/demo/" + skill_path)
@@ -757,11 +784,14 @@
         machine.succeed("systemctl restart home-manager-demo.service")
         for skill_path in skill_paths:
             machine.succeed("test -e /home/demo/" + skill_path)
+            name = skill_path.rsplit("/", 1)[-1]
             resolved = machine.succeed(
                 as_demo("readlink -f ~/" + skill_path)
             ).strip()
-            assert resolved == expected, \
-                "HM did not refresh %s: %r != %r" % (skill_path, resolved, expected)
+            assert resolved == expected_by_name[name], \
+                "HM did not refresh %s: %r != %r" % (
+                    skill_path, resolved, expected_by_name[name]
+                )
 
     # --- (9) Theme switch x2: regression guard for the read-only store bug. -
     # cp from the read-only Nix store inherits 444/555 modes, leaving theme
