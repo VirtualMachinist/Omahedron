@@ -1546,7 +1546,7 @@
                   # steam is unfree; the add path now refuses it on desktop
                   # without omarchy.unfree.enable (oma-cli G3a). This case is
                   # about flock serialisation, not the unfree gate.
-                  printf '{ omarchy.unfree.enable = true; }\n' >"$OMARCHY_NIX_FLAKE/configuration.nix"
+                  printf '%s\n' '{' '  omarchy.unfree.enable = true;' '}' >"$OMARCHY_NIX_FLAKE/configuration.nix"
                   printf '{"packages":["firefox"],"features":[]}\n' >"$OMARCHY_NIX_FLAKE/omarchy-packages.json"
                   omarchy-nix-add install.gaming.steam >/dev/null 2>&1 &
                   omarchy-nix-remove firefox >/dev/null 2>&1 &
