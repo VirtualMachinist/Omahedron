@@ -1543,16 +1543,15 @@
                 # for disjoint effects both orders converge to the same state.
                 for round in $(seq 1 10); do
                   new_flake "b$round"
-                  # steam is unfree; the add path now refuses it on desktop
-                  # without omarchy.unfree.enable (oma-cli G3a). This case is
-                  # about flock serialisation, not the unfree gate.
-                  printf '%s\n' '{' '  omarchy.unfree.enable = true;' '}' >"$OMARCHY_NIX_FLAKE/configuration.nix"
+                  # Use a free catalog feature (tailscale). Steam is unfree and
+                  # oma-cli G3a refuses it on desktop without unfree.enable —
+                  # that gate is covered by omarchy-verbs, not this flock test.
                   printf '{"packages":["firefox"],"features":[]}\n' >"$OMARCHY_NIX_FLAKE/omarchy-packages.json"
-                  omarchy-nix-add install.gaming.steam >/dev/null 2>&1 &
+                  omarchy-nix-add install.service.tailscale >/dev/null 2>&1 &
                   omarchy-nix-remove firefox >/dev/null 2>&1 &
                   wait
                   jq -e . "$OMARCHY_NIX_FLAKE/omarchy-packages.json" >/dev/null || fail "case b round $round: invalid json"
-                  [[ $(json_feats) == '["steam"]' ]] || fail "case b round $round: steam feature lost"
+                  [[ $(json_feats) == '["tailscale"]' ]] || fail "case b round $round: tailscale feature lost"
                   [[ $(json_pkgs) == '[]' ]] || fail "case b round $round: firefox not removed"
                 done
                 echo "case b (parallel add/remove x10) OK"
