@@ -1583,9 +1583,9 @@
                 # --- (e) one rebuild per batch (add, search, remove) ------------
                 new_flake e
                 : >"$COUNT_FILE"
-                omarchy-nix-add install.browser.firefox install.gaming.steam mc >/dev/null
+                omarchy-nix-add install.browser.firefox install.service.tailscale mc >/dev/null
                 [[ $(json_pkgs) == '["firefox","mc"]' ]] || fail "case e: batch add pkgs"
-                [[ $(json_feats) == '["steam"]' ]] || fail "case e: batch add features"
+                [[ $(json_feats) == '["tailscale"]' ]] || fail "case e: batch add features"
                 [[ $(wc -l <"$COUNT_FILE") == 1 ]] || fail "case e: batch add must be 1 rebuild"
 
                 export OMARCHY_NIX_INDEX_FILE=$TMPDIR/index-e.tsv
