@@ -2353,98 +2353,100 @@ c";
                 ];
               }
               ''
-              set -euo pipefail
-              fail() { echo "FAIL: $*" >&2; exit 1; }
-              export HOME=$TMPDIR/home XDG_STATE_HOME=$TMPDIR/state XDG_CONFIG_HOME=$TMPDIR/home/.config
-              mkdir -p "$HOME/.config" "$XDG_STATE_HOME"
-              export TZDIR=${pkgs.tzdata}/share/zoneinfo
-              export OMARCHY_PATH=${omarchyPkg}/share/omarchy
-              export OMARCHY_NIX_UPDATE_DRY_RUN=1
-              STUB=$TMPDIR/bin; mkdir -p "$STUB"
-              ln -s ${stubNotify} "$STUB/omarchy-notification-send"
-              ln -s ${stubHwFingerprint} "$STUB/omarchy-hw-fingerprint"
-              ln -s ${stubNix} "$STUB/nix"
-              export PATH="$STUB:$OMARCHY_PATH/bin:$PATH"
-              T=$TMPDIR/flake; mkdir -p "$T"
-              install -m644 ${fixtureConfig} "$T/configuration.nix"
-              install -m644 ${fixtureFlake} "$T/flake.nix"
-              export OMARCHY_NIX_FLAKE=$T
-              cfg() { grep -E "^[[:space:]]*$1[[:space:]]*=" "$T/configuration.nix" || fail "configuration.nix lacks: $1"; }
-              dry() { grep -Fq "DRY-RUN: sudo nixos-rebuild switch --flake $T" "$1" || fail "no dry-run rebuild in: $(cat "$1")"; }
+                set -euo pipefail
+                fail() { echo "FAIL: $*" >&2; exit 1; }
+                export HOME=$TMPDIR/home XDG_STATE_HOME=$TMPDIR/state XDG_CONFIG_HOME=$TMPDIR/home/.config
+                mkdir -p "$HOME/.config" "$XDG_STATE_HOME"
+                export TZDIR=${pkgs.tzdata}/share/zoneinfo
+                export OMARCHY_PATH=${omarchyPkg}/share/omarchy
+                export OMARCHY_NIX_UPDATE_DRY_RUN=1
+                STUB=$TMPDIR/bin; mkdir -p "$STUB"
+                ln -s ${stubNotify} "$STUB/omarchy-notification-send"
+                ln -s ${stubHwFingerprint} "$STUB/omarchy-hw-fingerprint"
+                ln -s ${stubNix} "$STUB/nix"
+                export PATH="$STUB:$OMARCHY_PATH/bin:$PATH"
+                T=$TMPDIR/flake; mkdir -p "$T"
+                install -m644 ${fixtureConfig} "$T/configuration.nix"
+                install -m644 ${fixtureFlake} "$T/flake.nix"
+                export OMARCHY_NIX_FLAKE=$T
+                cfg() { grep -E "^[[:space:]]*$1[[:space:]]*=" "$T/configuration.nix" || fail "configuration.nix lacks: $1"; }
+                dry() { grep -Fq "DRY-RUN: sudo nixos-rebuild switch --flake $T" "$1" || fail "no dry-run rebuild in: $(cat "$1")"; }
 
-              # --- help copy comes from verb-help.json through the router --------
-              shown=$(omarchy setup name --help)
-              grep -Fq ${pkgs.lib.escapeShellArg help.verbs."setup.name".summary} <<<"$shown" || fail "setup name help: $shown"
-              shown=$(omarchy pin --help)
-              grep -Fq ${pkgs.lib.escapeShellArg help.verbs."pin".summary} <<<"$shown" || fail "pin help: $shown"
-              shown=$(omarchy setup --help)
-              grep -Fq 'omarchy setup unfree' <<<"$shown" || fail "setup group help lacks unfree: $shown"
-              echo "help copy OK"
+                # --- help copy comes from verb-help.json through the router --------
+                shown=$(omarchy setup name --help)
+                grep -Fq ${
+                  pkgs.lib.escapeShellArg help.verbs."setup.name".summary
+                } <<<"$shown" || fail "setup name help: $shown"
+                shown=$(omarchy pin --help)
+                grep -Fq ${pkgs.lib.escapeShellArg help.verbs."pin".summary} <<<"$shown" || fail "pin help: $shown"
+                shown=$(omarchy setup --help)
+                grep -Fq 'omarchy setup unfree' <<<"$shown" || fail "setup group help lacks unfree: $shown"
+                echo "help copy OK"
 
-              # --- G3a identity / profile / unfree ---------------------------------
-              omarchy setup name "Ada Lovelace" >"$TMPDIR/name.out" 2>&1 || { cat "$TMPDIR/name.out"; fail "setup name"; }
-              cfg 'omarchy\.full_name' | grep -Fq '"Ada Lovelace"' || fail "full_name not written"; dry "$TMPDIR/name.out"
-              omarchy setup email ada@example.com >"$TMPDIR/email.out" 2>&1 || { cat "$TMPDIR/email.out"; fail "setup email"; }
-              cfg 'omarchy\.email_address' | grep -Fq '"ada@example.com"' || fail "email not written"; dry "$TMPDIR/email.out"
-              if omarchy setup timezone USA/Dallas >"$TMPDIR/tzbad.out" 2>&1; then fail "USA/Dallas must be rejected"; fi
-              cfg 'omarchy\.timezone' | grep -Fq '"Etc/UTC"' || fail "bad timezone changed the file"
-              omarchy setup timezone Europe/London >"$TMPDIR/tz.out" 2>&1 || { cat "$TMPDIR/tz.out"; fail "setup timezone"; }
-              cfg 'omarchy\.timezone' | grep -Fq '"Europe/London"' || fail "omarchy.timezone not written"
-              cfg 'time\.timeZone' | grep -Fq '"Europe/London"' || fail "time.timeZone not written"; dry "$TMPDIR/tz.out"
-              if omarchy setup profile server >/dev/null 2>&1; then fail "bad profile accepted"; fi
-              omarchy setup profile workstation >"$TMPDIR/prof.out" 2>&1 || { cat "$TMPDIR/prof.out"; fail "setup profile"; }
-              cfg 'omarchy\.profile' | grep -Fq '"workstation"' || fail "profile not written"; dry "$TMPDIR/prof.out"
-              omarchy setup profile desktop >/dev/null 2>&1 || fail "setup profile desktop"
-              echo "identity/profile OK"
+                # --- G3a identity / profile / unfree ---------------------------------
+                omarchy setup name "Ada Lovelace" >"$TMPDIR/name.out" 2>&1 || { cat "$TMPDIR/name.out"; fail "setup name"; }
+                cfg 'omarchy\.full_name' | grep -Fq '"Ada Lovelace"' || fail "full_name not written"; dry "$TMPDIR/name.out"
+                omarchy setup email ada@example.com >"$TMPDIR/email.out" 2>&1 || { cat "$TMPDIR/email.out"; fail "setup email"; }
+                cfg 'omarchy\.email_address' | grep -Fq '"ada@example.com"' || fail "email not written"; dry "$TMPDIR/email.out"
+                if omarchy setup timezone USA/Dallas >"$TMPDIR/tzbad.out" 2>&1; then fail "USA/Dallas must be rejected"; fi
+                cfg 'omarchy\.timezone' | grep -Fq '"Etc/UTC"' || fail "bad timezone changed the file"
+                omarchy setup timezone Europe/London >"$TMPDIR/tz.out" 2>&1 || { cat "$TMPDIR/tz.out"; fail "setup timezone"; }
+                cfg 'omarchy\.timezone' | grep -Fq '"Europe/London"' || fail "omarchy.timezone not written"
+                cfg 'time\.timeZone' | grep -Fq '"Europe/London"' || fail "time.timeZone not written"; dry "$TMPDIR/tz.out"
+                if omarchy setup profile server >/dev/null 2>&1; then fail "bad profile accepted"; fi
+                omarchy setup profile workstation >"$TMPDIR/prof.out" 2>&1 || { cat "$TMPDIR/prof.out"; fail "setup profile"; }
+                cfg 'omarchy\.profile' | grep -Fq '"workstation"' || fail "profile not written"; dry "$TMPDIR/prof.out"
+                omarchy setup profile desktop >/dev/null 2>&1 || fail "setup profile desktop"
+                echo "identity/profile OK"
 
 
-              # --- G3b default terminal: live vendor AND persisted ----------------
-              omarchy default terminal ghostty >"$TMPDIR/term.out" 2>&1 || { cat "$TMPDIR/term.out"; fail "default terminal"; }
-              grep -Fq 'com.mitchellh.ghostty.desktop' "$HOME/.config/xdg-terminals.list" || fail "live xdg-terminals.list not written"
-              cfg 'omarchy\.terminal' | grep -Fq '"ghostty"' || fail "omarchy.terminal not persisted"; dry "$TMPDIR/term.out"
-              if omarchy setup terminal xterm >/dev/null 2>&1; then fail "bad terminal accepted"; fi
-              echo "terminal live+persist OK"
+                # --- G3b default terminal: live vendor AND persisted ----------------
+                omarchy default terminal ghostty >"$TMPDIR/term.out" 2>&1 || { cat "$TMPDIR/term.out"; fail "default terminal"; }
+                grep -Fq 'com.mitchellh.ghostty.desktop' "$HOME/.config/xdg-terminals.list" || fail "live xdg-terminals.list not written"
+                cfg 'omarchy\.terminal' | grep -Fq '"ghostty"' || fail "omarchy.terminal not persisted"; dry "$TMPDIR/term.out"
+                if omarchy setup terminal xterm >/dev/null 2>&1; then fail "bad terminal accepted"; fi
+                echo "terminal live+persist OK"
 
-              # --- G3c fingerprint / autologin / pin ------------------------------
-              omarchy setup security fingerprint >"$TMPDIR/fp.out" 2>&1 || { cat "$TMPDIR/fp.out"; fail "setup security fingerprint"; }
-              cfg 'omarchy\.fingerprint\.enable' | grep -Fq 'true' || fail "fingerprint.enable not written"; dry "$TMPDIR/fp.out"
-              grep -Fqi 'fprintd-enroll' "$TMPDIR/fp.out" || fail "fingerprint on does not mention fprintd-enroll: $(cat "$TMPDIR/fp.out")"
-              ! grep -Fq 'omahedron: stub:' "$TMPDIR/fp.out" || fail "fingerprint still prints a stub banner"
-              omarchy remove security fingerprint >/dev/null 2>&1 || fail "remove security fingerprint"
-              cfg 'omarchy\.fingerprint\.enable' | grep -Fq 'false' || fail "fingerprint.enable off not written"
-              omarchy setup autologin ada >"$TMPDIR/al.out" 2>&1 || { cat "$TMPDIR/al.out"; fail "setup autologin"; }
-              cfg 'omarchy\.autologin\.user' | grep -Fq '"ada"' || fail "autologin.user not written"; dry "$TMPDIR/al.out"
-              omarchy setup autologin off >/dev/null 2>&1 || fail "setup autologin off"
-              cfg 'omarchy\.autologin\.user' | grep -Fq 'null' || fail "autologin off not written"
-              shown=$(omarchy pin); grep -Fq 'github:VirtualMachinist/Omahedron' <<<"$shown" || fail "pin show: $shown"
-              if omarchy pin not-a-tag >/dev/null 2>&1; then fail "bad pin accepted"; fi
-              omarchy channel set omahedron-4.0.2 >"$TMPDIR/pin.out" 2>&1 || { cat "$TMPDIR/pin.out"; fail "channel set"; }
-              grep -Fq 'omahedron.url = "github:VirtualMachinist/Omahedron/omahedron-4.0.2"' "$T/flake.nix" || fail "flake.nix input not moved"
-              grep -Fq 'DRY-RUN: nix flake lock --update-input omahedron' "$TMPDIR/pin.out" || fail "pin dry-run lock line missing: $(cat "$TMPDIR/pin.out")"
-              dry "$TMPDIR/pin.out"
-              [ ! -e "$TMPDIR/nix-called" ] || fail "a verb invoked nix under dry-run"
-              ! grep -Fq 'omahedron: stub:' "$TMPDIR/pin.out" || fail "channel set still prints a stub banner"
-              echo "fingerprint/autologin/pin OK"
+                # --- G3c fingerprint / autologin / pin ------------------------------
+                omarchy setup security fingerprint >"$TMPDIR/fp.out" 2>&1 || { cat "$TMPDIR/fp.out"; fail "setup security fingerprint"; }
+                cfg 'omarchy\.fingerprint\.enable' | grep -Fq 'true' || fail "fingerprint.enable not written"; dry "$TMPDIR/fp.out"
+                grep -Fqi 'fprintd-enroll' "$TMPDIR/fp.out" || fail "fingerprint on does not mention fprintd-enroll: $(cat "$TMPDIR/fp.out")"
+                ! grep -Fq 'omahedron: stub:' "$TMPDIR/fp.out" || fail "fingerprint still prints a stub banner"
+                omarchy remove security fingerprint >/dev/null 2>&1 || fail "remove security fingerprint"
+                cfg 'omarchy\.fingerprint\.enable' | grep -Fq 'false' || fail "fingerprint.enable off not written"
+                omarchy setup autologin ada >"$TMPDIR/al.out" 2>&1 || { cat "$TMPDIR/al.out"; fail "setup autologin"; }
+                cfg 'omarchy\.autologin\.user' | grep -Fq '"ada"' || fail "autologin.user not written"; dry "$TMPDIR/al.out"
+                omarchy setup autologin off >/dev/null 2>&1 || fail "setup autologin off"
+                cfg 'omarchy\.autologin\.user' | grep -Fq 'null' || fail "autologin off not written"
+                shown=$(omarchy pin); grep -Fq 'github:VirtualMachinist/Omahedron' <<<"$shown" || fail "pin show: $shown"
+                if omarchy pin not-a-tag >/dev/null 2>&1; then fail "bad pin accepted"; fi
+                omarchy channel set omahedron-4.0.2 >"$TMPDIR/pin.out" 2>&1 || { cat "$TMPDIR/pin.out"; fail "channel set"; }
+                grep -Fq 'omahedron.url = "github:VirtualMachinist/Omahedron/omahedron-4.0.2"' "$T/flake.nix" || fail "flake.nix input not moved"
+                grep -Fq 'DRY-RUN: nix flake lock --update-input omahedron' "$TMPDIR/pin.out" || fail "pin dry-run lock line missing: $(cat "$TMPDIR/pin.out")"
+                dry "$TMPDIR/pin.out"
+                [ ! -e "$TMPDIR/nix-called" ] || fail "a verb invoked nix under dry-run"
+                ! grep -Fq 'omahedron: stub:' "$TMPDIR/pin.out" || fail "channel set still prints a stub banner"
+                echo "fingerprint/autologin/pin OK"
 
-              # (last: omarchy-nix-add spawns a background omarchy-nix-search
-              # --refresh, so nothing below may assert that nix was not called)
-              # --- G3a unfree pkg add on desktop without the flag says so ---------
-              [ ! -e "$T/omarchy-packages.json" ] || fail "fixture has a package list"
-              if omarchy nix add install.editor.vscode >"$TMPDIR/unfree.out" 2>&1; then fail "unfree add must refuse on desktop without the flag"; fi
-              grep -Fq ${pkgs.lib.escapeShellArg help.shared.errors.unfreePkgAddDesktop} "$TMPDIR/unfree.out" || fail "unfree message: $(cat "$TMPDIR/unfree.out")"
-              [ ! -e "$T/omarchy-packages.json" ] || fail "refused add still wrote omarchy-packages.json"
-              omarchy setup unfree on >"$TMPDIR/unfree-on.out" 2>&1 || { cat "$TMPDIR/unfree-on.out"; fail "setup unfree on"; }
-              cfg 'omarchy\.unfree\.enable' | grep -Fq 'true' || fail "unfree.enable not written"; dry "$TMPDIR/unfree-on.out"
-              omarchy nix add install.editor.vscode >"$TMPDIR/unfree2.out" 2>&1 || { cat "$TMPDIR/unfree2.out"; fail "add after unfree on"; }
-              jq -e '.packages | index("vscode")' "$T/omarchy-packages.json" >/dev/null || fail "vscode not in package list"
-              omarchy setup unfree off >/dev/null 2>&1 || fail "setup unfree off"
-              cfg 'omarchy\.unfree\.enable' | grep -Fq 'false' || fail "unfree.enable off not written"
-              echo "unfree gate OK"
+                # (last: omarchy-nix-add spawns a background omarchy-nix-search
+                # --refresh, so nothing below may assert that nix was not called)
+                # --- G3a unfree pkg add on desktop without the flag says so ---------
+                [ ! -e "$T/omarchy-packages.json" ] || fail "fixture has a package list"
+                if omarchy nix add install.editor.vscode >"$TMPDIR/unfree.out" 2>&1; then fail "unfree add must refuse on desktop without the flag"; fi
+                grep -Fq ${pkgs.lib.escapeShellArg help.shared.errors.unfreePkgAddDesktop} "$TMPDIR/unfree.out" || fail "unfree message: $(cat "$TMPDIR/unfree.out")"
+                [ ! -e "$T/omarchy-packages.json" ] || fail "refused add still wrote omarchy-packages.json"
+                omarchy setup unfree on >"$TMPDIR/unfree-on.out" 2>&1 || { cat "$TMPDIR/unfree-on.out"; fail "setup unfree on"; }
+                cfg 'omarchy\.unfree\.enable' | grep -Fq 'true' || fail "unfree.enable not written"; dry "$TMPDIR/unfree-on.out"
+                omarchy nix add install.editor.vscode >"$TMPDIR/unfree2.out" 2>&1 || { cat "$TMPDIR/unfree2.out"; fail "add after unfree on"; }
+                jq -e '.packages | index("vscode")' "$T/omarchy-packages.json" >/dev/null || fail "vscode not in package list"
+                omarchy setup unfree off >/dev/null 2>&1 || fail "setup unfree off"
+                cfg 'omarchy\.unfree\.enable' | grep -Fq 'false' || fail "unfree.enable off not written"
+                echo "unfree gate OK"
 
-              # --- the parsed result is still valid Nix -----------------------------
-              grep -c 'omarchy\.' "$T/configuration.nix" >/dev/null
-              touch $out
-            '';
+                # --- the parsed result is still valid Nix -----------------------------
+                grep -c 'omarchy\.' "$T/configuration.nix" >/dev/null
+                touch $out
+              '';
 
           # oma-cli G4 (workstream 4): `omarchy pkg add|drop` route at
           # omarchy-nix-add|remove (catalog ids, the menus' Arch names, or raw
@@ -2535,9 +2537,13 @@ c";
                 # stable" comes from GitHub (offline here -> unknown (offline)).
                 omarchy update pins >"$TMPDIR/pins.out" 2>&1 || { cat "$TMPDIR/pins.out"; fail "update pins"; }
                 grep -Fq 'pin: unlocked (github:VirtualMachinist/Omahedron)' "$TMPDIR/pins.out" || fail "pins: fixture has no lock, expected unlocked: $(cat "$TMPDIR/pins.out")"
-                grep -Fq 'omarchy-src: ${pin.omarchy_tag} (${builtins.substring 0 7 pin.omarchy_rev})' "$TMPDIR/pins.out" || fail "pins: omarchy-src line: $(cat "$TMPDIR/pins.out")"
+                grep -Fq 'omarchy-src: ${pin.omarchy_tag} (${
+                  builtins.substring 0 7 pin.omarchy_rev
+                })' "$TMPDIR/pins.out" || fail "pins: omarchy-src line: $(cat "$TMPDIR/pins.out")"
                 grep -Fq 'newest-stable: unknown (offline)' "$TMPDIR/pins.out" || fail "pins: offline newest-stable line: $(cat "$TMPDIR/pins.out")"
-                grep -Fq 'channel: ${pin.channel} state=${pin.state} security-fast-path=${if pin.security_fast_path then "yes" else "no"}' "$TMPDIR/pins.out" || fail "pins: channel line: $(cat "$TMPDIR/pins.out")"
+                grep -Fq 'channel: ${pin.channel} state=${pin.state} security-fast-path=${
+                  if pin.security_fast_path then "yes" else "no"
+                }' "$TMPDIR/pins.out" || fail "pins: channel line: $(cat "$TMPDIR/pins.out")"
                 [ ! -e "$TMPDIR/curl-called" ] || fail "update pins hit the network while offline"
                 grep -Fq 'omarchy-update-pins' "$OMARCHY_PATH/bin/omarchy-update" || fail "omarchy-update does not print the pins first"
                 grep -Fq 'omarchy-update-system-pkgs' "$OMARCHY_PATH/bin/omarchy-update" || fail "omarchy-update lost its engine"
@@ -2549,7 +2555,9 @@ c";
                 # --refresh, so nothing below may assert that nix was not called)
                 # --- G4a: pkg add|drop route at omarchy-nix-add|remove ------------
                 shown=$(omarchy pkg add --help)
-                grep -Fq ${pkgs.lib.escapeShellArg help.verbs."pkg.add".summary} <<<"$shown" || fail "pkg add help: $shown"
+                grep -Fq ${
+                  pkgs.lib.escapeShellArg help.verbs."pkg.add".summary
+                } <<<"$shown" || fail "pkg add help: $shown"
                 omarchy pkg add install.browser.firefox >"$TMPDIR/add.out" 2>&1 || { cat "$TMPDIR/add.out"; fail "pkg add catalog id"; }
                 jq -e '.packages | index("firefox")' "$J" >/dev/null || fail "catalog add did not write omarchy-packages.json: $(cat "$J")"
                 grep -Fq "DRY-RUN: sudo nixos-rebuild switch --flake $T" "$TMPDIR/add.out" || fail "pkg add did not reach the rebuild: $(cat "$TMPDIR/add.out")"

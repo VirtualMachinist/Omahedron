@@ -30,12 +30,9 @@ in
 pkgs.runCommand "omarchy-onbox-agents-check"
   {
     ENABLED_HAS_ETC = lib.boolToString (
-      exampleCfg.environment.etc ? "omahedron/AGENTS.md"
-      && (agentsEtc.enable or true)
+      exampleCfg.environment.etc ? "omahedron/AGENTS.md" && (agentsEtc.enable or true)
     );
-    DISABLED_HAS_ETC = lib.boolToString (
-      disabledCfg.environment.etc ? "omahedron/AGENTS.md"
-    );
+    DISABLED_HAS_ETC = lib.boolToString (disabledCfg.environment.etc ? "omahedron/AGENTS.md");
     HAS_AGENTS_EDIT_NIX = lib.boolToString (lib.hasInfix "agents edit Nix" agentsText);
     HAS_ETC_PATH = lib.boolToString (lib.hasInfix "/etc/omahedron/AGENTS.md" agentsText);
     HAS_OMARCHY_PATH = lib.boolToString (lib.hasInfix "$OMARCHY_PATH" agentsText);

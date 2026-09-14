@@ -93,12 +93,13 @@ let
   '';
 
   # oma-cli G5c: cwd-only harnesses may read $HOME/AGENTS.md before /etc.
-  homeAgentsPointer = pkgs.writeText "home-AGENTS-pointer.md" ''# AGENTS.md
+  homeAgentsPointer = pkgs.writeText "home-AGENTS-pointer.md" ''
+    # AGENTS.md
 
-Read /etc/omahedron/AGENTS.md first.
+    Read /etc/omahedron/AGENTS.md first.
 
-Humans use omarchy; agents edit Nix.
-'';
+    Humans use omarchy; agents edit Nix.
+  '';
 
 in
 {
@@ -128,261 +129,261 @@ in
           '';
         }
         (lib.mkIf (effPkg != null) {
-        # NOTE: we deliberately do NOT mirror `omarchy = osConfig.omarchy`
-        # here. That idiom would assign omarchy.enable from osConfig and form
-        # an evaluation cycle with the `mkIf cfg.enable` gate above. Instead
-        # effPkg/effScale/effTheme read directly from osConfig.omarchy with a
-        # fallback to the HM-local option; omarchy.enable stays an HM-local
-        # switch the consumer sets explicitly.
+          # NOTE: we deliberately do NOT mirror `omarchy = osConfig.omarchy`
+          # here. That idiom would assign omarchy.enable from osConfig and form
+          # an evaluation cycle with the `mkIf cfg.enable` gate above. Instead
+          # effPkg/effScale/effTheme read directly from osConfig.omarchy with a
+          # fallback to the HM-local option; omarchy.enable stays an HM-local
+          # switch the consumer sets explicitly.
 
-        # --- Class 0: agent skill links (managed on every activation) ---
-        # Upstream finalize-user creates per-agent skill links once. On Arch their
-        # target is the stable /usr/share path, but on NixOS OMARCHY_PATH is a
-        # generation-specific store path. A one-shot link therefore keeps the
-        # old package after an update and eventually becomes dangling after
-        # garbage collection. Home Manager owns the same upstream paths and
-        # refreshes them to the active package at every switch.
-        #
-        # Create every pack.json skill under every agent root unconditionally
-        # (not gated on which agents the user has installed).
-        #
-        # Real files/dirs at these paths are relocated before linkGeneration
-        # (omarchySkillLinkSafety) so a user-owned skill clone is never deleted.
-        # Existing symlinks are left for HM to replace; force is still required
-        # because linkGeneration cannot adopt unmanaged symlinks without it.
-        home.activation.omarchySkillLinkSafety = lib.hm.dag.entryBefore [ "linkGeneration" ] ''
-          # Relocate real skill targets so home.file cannot delete user data.
-          # Symlinks are left alone — force = true adopts/replaces them.
-          omarchy_skill_ts="$(date -u +%Y%m%dT%H%M%SZ)"
-          for omarchy_skill_rel in ${lib.escapeShellArgs skillRelPaths}
-          do
-            omarchy_skill_target="$HOME/$omarchy_skill_rel"
-            # -e is false for a dangling symlink; -L catches those too, but we
-            # only relocate real files/dirs — leave every symlink for force.
-            if [ -e "$omarchy_skill_target" ] && [ ! -L "$omarchy_skill_target" ]; then
-              omarchy_skill_backup="''${omarchy_skill_target}.hm-backup-''${omarchy_skill_ts}"
-              echo "warning: omarchy skill target $omarchy_skill_target is a real file/directory; moving aside to $omarchy_skill_backup before linking" >&2
-              mv "$omarchy_skill_target" "$omarchy_skill_backup"
-            fi
-          done
-        '';
-
-        home.file = lib.listToAttrs (
-          map (rel: {
-            name = rel;
-            value = {
-              source = "${omarchyPathOf effPkg}/default/agents/skills/${baseNameOf rel}";
-              force = true;
-            };
-          }) skillRelPaths
-        );
-
-        # --- Class 1: user-editable stubs (seeded once) ---
-        # Every file below is copied verbatim from the vendored upstream
-        # config/ tree the first time home-manager switches, and never
-        # touched again — so user edits survive subsequent switches
-        # (pattern from HM programs/t3code.nix + programs/gpg.nix).
-        # Legacy store symlinks (from older module versions that used
-        # xdg.configFile) are replaced on the next switch.
-        #
-        # hyprland.lua and .luarc.json are included here: upstream UX lets
-        # users edit them (Setup menu → edit config) and
-        # omarchy-refresh-config must be able to overwrite them. They must
-        # not be immutable store symlinks.
-        #
-        # monitors.lua is the one exception: it is generated from
-        # omarchy.scale + omarchy.monitors (upstream hardcodes GDK_SCALE=2).
-        #
-        # Grouped by upstream config/ subdir so the rationale stays local.
-        home.activation.omarchySeedUserConfig = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
-          # --- hypr/ : entry point + modules hyprland.lua requires() + the
-          # non-Lua Hyprland config files (greeter, portal, night light).
-          ${seedStub effPkg "hypr/hyprland.lua"}
-          ${seedStub effPkg "hypr/.luarc.json"}
-          ${seedStub effPkg "hypr/input.lua"}
-          ${seedStub effPkg "hypr/bindings.lua"}
-          ${seedStub effPkg "hypr/looknfeel.lua"}
-          ${seedStub effPkg "hypr/autostart.lua"}
-          ${seedStub effPkg "hypr/hyprsunset.conf"}
-          ${seedStub effPkg "hypr/xdph.conf"}
-          ${seedStubFrom "${monitorsLua effScale effMonitors}" "hypr/monitors.lua"}
-
-          # --- omarchy/ : the Quattro shell layout + hook drop-in dirs
-          # (sample scripts the user can enable by renaming .sample) +
-          # the menu launcher config + the themed template.
-          ${seedStub effPkg "omarchy/shell.json"}
-          ${seedStub effPkg "omarchy/extensions/omarchy-menu.jsonc"}
-          ${seedStub effPkg "omarchy/themed/alacritty.toml.tpl.sample"}
-          ${seedStub effPkg "omarchy/hooks/battery-low.d/play-warning-sound.sample"}
-          ${seedStub effPkg "omarchy/hooks/font-set.d/show-font-notification.sample"}
-          ${seedStub effPkg "omarchy/hooks/post-boot.d/weather.sample"}
-          ${seedStub effPkg "omarchy/hooks/post-update.d/show-update-notification.sample"}
-          ${seedStub effPkg "omarchy/hooks/pre-refresh-pacman.d/add-custom-repo.sample"}
-          ${seedStub effPkg "omarchy/hooks/theme-set.d/show-theme-notification.sample"}
-
-          # --- terminals : the four terminals Quattro ships configs for.
-          ${seedStub effPkg "ghostty/config"}
-          ${seedStub effPkg "foot/foot.ini"}
-          ${seedStub effPkg "alacritty/alacritty.toml"}
-          ${seedStub effPkg "kitty/kitty.conf"}
-
-          # --- dev tools
-          ${seedStub effPkg "git/config"}
-          ${seedStub effPkg "tmux/tmux.conf"}
-          ${seedStub effPkg "lazygit/config.yml"}
-          ${seedStub effPkg "btop/btop.conf"}
-          ${seedStub effPkg "starship.toml"}
-          ${seedStub effPkg "opencode/opencode.json"}
-
-          # --- input / media
-          ${seedStub effPkg "fcitx5/conf/clipboard.conf"}
-          ${seedStub effPkg "fcitx5/conf/xcb.conf"}
-          ${seedStubFrom fcitx5WaylandConf "fcitx5/conf/wayland.conf"}
-          ${seedStub effPkg "imv/config"}
-          ${seedStub effPkg "wireplumber/wireplumber.conf.d/bluetooth-a2dp-autoconnect.conf"}
-
-          # --- apps
-          ${seedStub effPkg "chromium-flags.conf"}
-          ${seedStub effPkg "chromium/Default/Preferences"}
-          ${seedStub effPkg "obsidian/user-flags.conf"}
-          ${seedStub effPkg "xournalpp/settings.xml"}
-          ${seedStub effPkg "hyprland-preview-share-picker/config.yaml"}
-
-          # --- autostart : XDG autostart desktop entries (launched by
-          # the desktop environment on session start).
-          ${seedStub effPkg "autostart/limine-snapper-notify.desktop"}
-          ${seedStub effPkg "autostart/org.fcitx.Fcitx5.desktop"}
-          ${seedStub effPkg "autostart/print-applet.desktop"}
-
-          # --- branding (ISO /etc/skel parity): the about + screensaver
-          # ASCII art. omarchy-screensaver loops "File not found" without
-          # screensaver.txt; omarchy-branding-* rewrites these at runtime.
-          ${seedStubFrom "${omarchyPathOf effPkg}/icon.txt" "omarchy/branding/about.txt"}
-          ${seedStubFrom "${omarchyPathOf effPkg}/logo.txt" "omarchy/branding/screensaver.txt"}
-
-          # --- skel parity outside ~/.config: nautilus-python extensions
-          # (right-click LocalSend / transcode actions) and the tensaku
-          # state file the app expects on first run.
-          ${seedFileFrom "${omarchyPathOf effPkg}/default/nautilus-python/extensions/localsend.py" ".local/share/nautilus-python/extensions/localsend.py"}
-          ${seedFileFrom "${omarchyPathOf effPkg}/default/nautilus-python/extensions/transcode.py" ".local/share/nautilus-python/extensions/transcode.py"}
-          ${seedFileFrom "${omarchyPathOf effPkg}/default/tensaku/state.toml" ".local/state/tensaku/state.toml"}
-
-          # --- voxtype dictation config. Upstream copies this in
-          # omarchy-voxtype-install; the package is shipped declaratively
-          # (runtimeDeps), so seed the default config up front — the install
-          # script's later cp is then a no-op over identical content.
-          ${seedStubFrom "${omarchyPathOf effPkg}/default/voxtype/config.toml" "voxtype/config.toml"}
-
-          # --- fastfetch config (upstream etc/fastfetch/config.jsonc; on Arch
-          # the ISO copies it to /etc/fastfetch). Gives omarchy-launch-about
-          # the branded layout (logo from ~/.config/omarchy/branding/about.txt
-          # seeded above, omarchy-version* command modules). Mutable seed —
-          # users can restyle fastfetch without a rebuild.
-          ${seedStubFrom "${omarchyPathOf effPkg}/etc/fastfetch/config.jsonc" "fastfetch/config.jsonc"}
-        '';
-
-        # --- Class 2: omarchy-nvim starter (seeded once) ---
-        # Upstream ships a LazyVim starter + omarchy overlay as the
-        # omarchy-nvim Arch package; the vendored config/ tree has no nvim
-        # dir, so the starter comes from pkgs/omarchy-nvim.nix. Its
-        # omarchy-nvim-setup script seeds ~/.config/nvim (writable copies,
-        # plus the theme.lua symlink into ~/.local/state/omarchy/current/
-        # theme). Seed-if-absent like the other stubs: user edits survive.
-        home.activation.omarchyNvimSeed = lib.hm.dag.entryAfter [ "omarchySeedUserConfig" ] (
-          lib.optionalString (effNvimPkg != null) ''
-            if [ ! -e "$HOME/.config/nvim" ]; then
-              "${effNvimPkg}/bin/omarchy-nvim-setup" >/dev/null 2>&1 || true
-            fi
-          ''
-        );
-
-        # --- Class 3: render the default theme into the state dir ---
-        # Upstream populates ~/.local/state/omarchy/current/theme as a REAL
-        # directory: omarchy-theme-set copies the chosen theme's colors.toml
-        # into a staging dir, runs omarchy-theme-set-templates (a bash+sed
-        # engine over default/themed/*.tpl) to render 16 per-app configs
-        # (foot.ini, shell.toml, hyprland.lua, alacritty.toml, ...), then
-        # atomically swaps the staging dir into place. foot.ini (seeded above)
-        # has `include=~/.local/state/omarchy/current/theme/foot.ini`, Hyprland
-        # requires("omarchy.current.theme.hyprland"), quickshell reads
-        # current/theme/shell.toml — all of them miss unless the theme is
-        # actually rendered, not just symlinked at the source dir (which only
-        # carries colors.toml + backgrounds).
-        #
-        # Run the upstream renderer headless (no Hyprland/D-Bus available
-        # during home-manager activation). OMARCHY_THEME_HEADLESS=1 skips the
-        # omarchy-shell IPC call and all post-theme hooks
-        # (omarchy-restart-*, omarchy-theme-set-*) that need a live session —
-        # exactly the same path upstream takes during ISO chroot finalization.
-        # PATH must include $OMARCHY_PATH/bin because the renderer calls its
-        # sibling helpers (omarchy-theme-color, omarchy-theme-set-templates)
-        # bare via PATH.
-        #
-        # Guard on current/theme.name: render only on the first activation.
-        # `omarchy theme set <name>` (and this activation) write that file, so
-        # a user who switches themes at runtime keeps their choice across
-        # switches instead of being reset to omarchy.theme.
-        home.activation.omarchyThemeRender =
-          lib.hm.dag.entryAfter
-            [
-              "omarchySeedUserConfig"
-              "linkGeneration"
-            ]
-            ''
-              omarchy_state="$HOME/.local/state/omarchy"
-              if [ ! -e "$omarchy_state/current/theme.name" ]; then
-                omarchy_pkg="${omarchyPathOf effPkg}"
-                PATH="$omarchy_pkg/bin:$PATH" \
-                OMARCHY_PATH="$omarchy_pkg" \
-                OMARCHY_THEME_HEADLESS=1 \
-                  "$omarchy_pkg/bin/omarchy-theme-set" "${effTheme}" >/dev/null 2>&1 \
-                  || echo "warning: failed to render omarchy theme '${effTheme}'; apply later with: omarchy-theme-set ${effTheme}" >&2 || true
+          # --- Class 0: agent skill links (managed on every activation) ---
+          # Upstream finalize-user creates per-agent skill links once. On Arch their
+          # target is the stable /usr/share path, but on NixOS OMARCHY_PATH is a
+          # generation-specific store path. A one-shot link therefore keeps the
+          # old package after an update and eventually becomes dangling after
+          # garbage collection. Home Manager owns the same upstream paths and
+          # refreshes them to the active package at every switch.
+          #
+          # Create every pack.json skill under every agent root unconditionally
+          # (not gated on which agents the user has installed).
+          #
+          # Real files/dirs at these paths are relocated before linkGeneration
+          # (omarchySkillLinkSafety) so a user-owned skill clone is never deleted.
+          # Existing symlinks are left for HM to replace; force is still required
+          # because linkGeneration cannot adopt unmanaged symlinks without it.
+          home.activation.omarchySkillLinkSafety = lib.hm.dag.entryBefore [ "linkGeneration" ] ''
+            # Relocate real skill targets so home.file cannot delete user data.
+            # Symlinks are left alone — force = true adopts/replaces them.
+            omarchy_skill_ts="$(date -u +%Y%m%dT%H%M%SZ)"
+            for omarchy_skill_rel in ${lib.escapeShellArgs skillRelPaths}
+            do
+              omarchy_skill_target="$HOME/$omarchy_skill_rel"
+              # -e is false for a dangling symlink; -L catches those too, but we
+              # only relocate real files/dirs — leave every symlink for force.
+              if [ -e "$omarchy_skill_target" ] && [ ! -L "$omarchy_skill_target" ]; then
+                omarchy_skill_backup="''${omarchy_skill_target}.hm-backup-''${omarchy_skill_ts}"
+                echo "warning: omarchy skill target $omarchy_skill_target is a real file/directory; moving aside to $omarchy_skill_backup before linking" >&2
+                mv "$omarchy_skill_target" "$omarchy_skill_backup"
               fi
-            '';
+            done
+          '';
 
-        # --- Class 4: first-run skip markers (invitation-only) ---
+          home.file = lib.listToAttrs (
+            map (rel: {
+              name = rel;
+              value = {
+                source = "${omarchyPathOf effPkg}/default/agents/skills/${baseNameOf rel}";
+                force = true;
+              };
+            }) skillRelPaths
+          );
 
-        # default/hypr/autostart.lua runs omarchy-provision-first-run on every
-        # login. install/ is vendored (see pkgs/omarchy.nix), so first-run and
-        # provision-user run for real. Do NOT pre-create first-run-user /
-        # finalize-user — those are the top-level completion markers
-        # upstream writes only after a successful run.
-        #
-        # omarchy-done markers are flat files under
-        # ~/.local/state/omarchy/done/<name> (no path components; see
-        # bin/omarchy-done). Per-step markers exist ONLY for the two
-        # invitation hooks (omarchy-done ensure inside the hook bodies):
-        #   - voxtype-install-invitation  (Arch tarball / omarchy-voxtype-install)
-        #   - fingerprint-setup-invitation (PAM/fprintd — out of scope)
-        # Pre-create those so install/user/first-run/*.hook still get
-        # installed by first-run, but never fire their invitation toasts.
-        # Arch mise steps have no markers — they are no-op'd in the package.
-        home.activation.omarchyFirstRunSkipMarkers = lib.hm.dag.entryAfter [ "omarchyThemeRender" ] ''
-          omarchy_done="$HOME/.local/state/omarchy/done"
-          mkdir -p "$omarchy_done"
-          for marker in voxtype-install-invitation fingerprint-setup-invitation; do
-            if [ ! -e "$omarchy_done/$marker" ]; then
-              touch "$omarchy_done/$marker"
+          # --- Class 1: user-editable stubs (seeded once) ---
+          # Every file below is copied verbatim from the vendored upstream
+          # config/ tree the first time home-manager switches, and never
+          # touched again — so user edits survive subsequent switches
+          # (pattern from HM programs/t3code.nix + programs/gpg.nix).
+          # Legacy store symlinks (from older module versions that used
+          # xdg.configFile) are replaced on the next switch.
+          #
+          # hyprland.lua and .luarc.json are included here: upstream UX lets
+          # users edit them (Setup menu → edit config) and
+          # omarchy-refresh-config must be able to overwrite them. They must
+          # not be immutable store symlinks.
+          #
+          # monitors.lua is the one exception: it is generated from
+          # omarchy.scale + omarchy.monitors (upstream hardcodes GDK_SCALE=2).
+          #
+          # Grouped by upstream config/ subdir so the rationale stays local.
+          home.activation.omarchySeedUserConfig = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+            # --- hypr/ : entry point + modules hyprland.lua requires() + the
+            # non-Lua Hyprland config files (greeter, portal, night light).
+            ${seedStub effPkg "hypr/hyprland.lua"}
+            ${seedStub effPkg "hypr/.luarc.json"}
+            ${seedStub effPkg "hypr/input.lua"}
+            ${seedStub effPkg "hypr/bindings.lua"}
+            ${seedStub effPkg "hypr/looknfeel.lua"}
+            ${seedStub effPkg "hypr/autostart.lua"}
+            ${seedStub effPkg "hypr/hyprsunset.conf"}
+            ${seedStub effPkg "hypr/xdph.conf"}
+            ${seedStubFrom "${monitorsLua effScale effMonitors}" "hypr/monitors.lua"}
+
+            # --- omarchy/ : the Quattro shell layout + hook drop-in dirs
+            # (sample scripts the user can enable by renaming .sample) +
+            # the menu launcher config + the themed template.
+            ${seedStub effPkg "omarchy/shell.json"}
+            ${seedStub effPkg "omarchy/extensions/omarchy-menu.jsonc"}
+            ${seedStub effPkg "omarchy/themed/alacritty.toml.tpl.sample"}
+            ${seedStub effPkg "omarchy/hooks/battery-low.d/play-warning-sound.sample"}
+            ${seedStub effPkg "omarchy/hooks/font-set.d/show-font-notification.sample"}
+            ${seedStub effPkg "omarchy/hooks/post-boot.d/weather.sample"}
+            ${seedStub effPkg "omarchy/hooks/post-update.d/show-update-notification.sample"}
+            ${seedStub effPkg "omarchy/hooks/pre-refresh-pacman.d/add-custom-repo.sample"}
+            ${seedStub effPkg "omarchy/hooks/theme-set.d/show-theme-notification.sample"}
+
+            # --- terminals : the four terminals Quattro ships configs for.
+            ${seedStub effPkg "ghostty/config"}
+            ${seedStub effPkg "foot/foot.ini"}
+            ${seedStub effPkg "alacritty/alacritty.toml"}
+            ${seedStub effPkg "kitty/kitty.conf"}
+
+            # --- dev tools
+            ${seedStub effPkg "git/config"}
+            ${seedStub effPkg "tmux/tmux.conf"}
+            ${seedStub effPkg "lazygit/config.yml"}
+            ${seedStub effPkg "btop/btop.conf"}
+            ${seedStub effPkg "starship.toml"}
+            ${seedStub effPkg "opencode/opencode.json"}
+
+            # --- input / media
+            ${seedStub effPkg "fcitx5/conf/clipboard.conf"}
+            ${seedStub effPkg "fcitx5/conf/xcb.conf"}
+            ${seedStubFrom fcitx5WaylandConf "fcitx5/conf/wayland.conf"}
+            ${seedStub effPkg "imv/config"}
+            ${seedStub effPkg "wireplumber/wireplumber.conf.d/bluetooth-a2dp-autoconnect.conf"}
+
+            # --- apps
+            ${seedStub effPkg "chromium-flags.conf"}
+            ${seedStub effPkg "chromium/Default/Preferences"}
+            ${seedStub effPkg "obsidian/user-flags.conf"}
+            ${seedStub effPkg "xournalpp/settings.xml"}
+            ${seedStub effPkg "hyprland-preview-share-picker/config.yaml"}
+
+            # --- autostart : XDG autostart desktop entries (launched by
+            # the desktop environment on session start).
+            ${seedStub effPkg "autostart/limine-snapper-notify.desktop"}
+            ${seedStub effPkg "autostart/org.fcitx.Fcitx5.desktop"}
+            ${seedStub effPkg "autostart/print-applet.desktop"}
+
+            # --- branding (ISO /etc/skel parity): the about + screensaver
+            # ASCII art. omarchy-screensaver loops "File not found" without
+            # screensaver.txt; omarchy-branding-* rewrites these at runtime.
+            ${seedStubFrom "${omarchyPathOf effPkg}/icon.txt" "omarchy/branding/about.txt"}
+            ${seedStubFrom "${omarchyPathOf effPkg}/logo.txt" "omarchy/branding/screensaver.txt"}
+
+            # --- skel parity outside ~/.config: nautilus-python extensions
+            # (right-click LocalSend / transcode actions) and the tensaku
+            # state file the app expects on first run.
+            ${seedFileFrom "${omarchyPathOf effPkg}/default/nautilus-python/extensions/localsend.py" ".local/share/nautilus-python/extensions/localsend.py"}
+            ${seedFileFrom "${omarchyPathOf effPkg}/default/nautilus-python/extensions/transcode.py" ".local/share/nautilus-python/extensions/transcode.py"}
+            ${seedFileFrom "${omarchyPathOf effPkg}/default/tensaku/state.toml" ".local/state/tensaku/state.toml"}
+
+            # --- voxtype dictation config. Upstream copies this in
+            # omarchy-voxtype-install; the package is shipped declaratively
+            # (runtimeDeps), so seed the default config up front — the install
+            # script's later cp is then a no-op over identical content.
+            ${seedStubFrom "${omarchyPathOf effPkg}/default/voxtype/config.toml" "voxtype/config.toml"}
+
+            # --- fastfetch config (upstream etc/fastfetch/config.jsonc; on Arch
+            # the ISO copies it to /etc/fastfetch). Gives omarchy-launch-about
+            # the branded layout (logo from ~/.config/omarchy/branding/about.txt
+            # seeded above, omarchy-version* command modules). Mutable seed —
+            # users can restyle fastfetch without a rebuild.
+            ${seedStubFrom "${omarchyPathOf effPkg}/etc/fastfetch/config.jsonc" "fastfetch/config.jsonc"}
+          '';
+
+          # --- Class 2: omarchy-nvim starter (seeded once) ---
+          # Upstream ships a LazyVim starter + omarchy overlay as the
+          # omarchy-nvim Arch package; the vendored config/ tree has no nvim
+          # dir, so the starter comes from pkgs/omarchy-nvim.nix. Its
+          # omarchy-nvim-setup script seeds ~/.config/nvim (writable copies,
+          # plus the theme.lua symlink into ~/.local/state/omarchy/current/
+          # theme). Seed-if-absent like the other stubs: user edits survive.
+          home.activation.omarchyNvimSeed = lib.hm.dag.entryAfter [ "omarchySeedUserConfig" ] (
+            lib.optionalString (effNvimPkg != null) ''
+              if [ ! -e "$HOME/.config/nvim" ]; then
+                "${effNvimPkg}/bin/omarchy-nvim-setup" >/dev/null 2>&1 || true
+              fi
+            ''
+          );
+
+          # --- Class 3: render the default theme into the state dir ---
+          # Upstream populates ~/.local/state/omarchy/current/theme as a REAL
+          # directory: omarchy-theme-set copies the chosen theme's colors.toml
+          # into a staging dir, runs omarchy-theme-set-templates (a bash+sed
+          # engine over default/themed/*.tpl) to render 16 per-app configs
+          # (foot.ini, shell.toml, hyprland.lua, alacritty.toml, ...), then
+          # atomically swaps the staging dir into place. foot.ini (seeded above)
+          # has `include=~/.local/state/omarchy/current/theme/foot.ini`, Hyprland
+          # requires("omarchy.current.theme.hyprland"), quickshell reads
+          # current/theme/shell.toml — all of them miss unless the theme is
+          # actually rendered, not just symlinked at the source dir (which only
+          # carries colors.toml + backgrounds).
+          #
+          # Run the upstream renderer headless (no Hyprland/D-Bus available
+          # during home-manager activation). OMARCHY_THEME_HEADLESS=1 skips the
+          # omarchy-shell IPC call and all post-theme hooks
+          # (omarchy-restart-*, omarchy-theme-set-*) that need a live session —
+          # exactly the same path upstream takes during ISO chroot finalization.
+          # PATH must include $OMARCHY_PATH/bin because the renderer calls its
+          # sibling helpers (omarchy-theme-color, omarchy-theme-set-templates)
+          # bare via PATH.
+          #
+          # Guard on current/theme.name: render only on the first activation.
+          # `omarchy theme set <name>` (and this activation) write that file, so
+          # a user who switches themes at runtime keeps their choice across
+          # switches instead of being reset to omarchy.theme.
+          home.activation.omarchyThemeRender =
+            lib.hm.dag.entryAfter
+              [
+                "omarchySeedUserConfig"
+                "linkGeneration"
+              ]
+              ''
+                omarchy_state="$HOME/.local/state/omarchy"
+                if [ ! -e "$omarchy_state/current/theme.name" ]; then
+                  omarchy_pkg="${omarchyPathOf effPkg}"
+                  PATH="$omarchy_pkg/bin:$PATH" \
+                  OMARCHY_PATH="$omarchy_pkg" \
+                  OMARCHY_THEME_HEADLESS=1 \
+                    "$omarchy_pkg/bin/omarchy-theme-set" "${effTheme}" >/dev/null 2>&1 \
+                    || echo "warning: failed to render omarchy theme '${effTheme}'; apply later with: omarchy-theme-set ${effTheme}" >&2 || true
+                fi
+              '';
+
+          # --- Class 4: first-run skip markers (invitation-only) ---
+
+          # default/hypr/autostart.lua runs omarchy-provision-first-run on every
+          # login. install/ is vendored (see pkgs/omarchy.nix), so first-run and
+          # provision-user run for real. Do NOT pre-create first-run-user /
+          # finalize-user — those are the top-level completion markers
+          # upstream writes only after a successful run.
+          #
+          # omarchy-done markers are flat files under
+          # ~/.local/state/omarchy/done/<name> (no path components; see
+          # bin/omarchy-done). Per-step markers exist ONLY for the two
+          # invitation hooks (omarchy-done ensure inside the hook bodies):
+          #   - voxtype-install-invitation  (Arch tarball / omarchy-voxtype-install)
+          #   - fingerprint-setup-invitation (PAM/fprintd — out of scope)
+          # Pre-create those so install/user/first-run/*.hook still get
+          # installed by first-run, but never fire their invitation toasts.
+          # Arch mise steps have no markers — they are no-op'd in the package.
+          home.activation.omarchyFirstRunSkipMarkers = lib.hm.dag.entryAfter [ "omarchyThemeRender" ] ''
+            omarchy_done="$HOME/.local/state/omarchy/done"
+            mkdir -p "$omarchy_done"
+            for marker in voxtype-install-invitation fingerprint-setup-invitation; do
+              if [ ! -e "$omarchy_done/$marker" ]; then
+                touch "$omarchy_done/$marker"
+              fi
+            done
+          '';
+
+          # --- Class 5: default browser (upstream provision-user parity) ---
+
+          # bin/omarchy-provision-user runs
+          #   env -u BROWSER xdg-settings set default-web-browser chromium.desktop
+          # env -u BROWSER is required: xdg-settings refuses to write the
+          # association when BROWSER is set (treats it as a higher-priority
+          # override). Idempotent — re-running just rewrites the same default.
+          # Fail soft: activation has no graphical session, and some xdg-utils
+          # backends need a DE; the || true keeps switch non-fatal. A later
+          # session-side oneshot (first-run) can reassert if needed.
+          home.activation.omarchyDefaultBrowser = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+            if command -v xdg-settings >/dev/null 2>&1; then
+              env -u BROWSER xdg-settings set default-web-browser chromium.desktop >/dev/null 2>&1 || true
             fi
-          done
-        '';
-
-        # --- Class 5: default browser (upstream provision-user parity) ---
-
-        # bin/omarchy-provision-user runs
-        #   env -u BROWSER xdg-settings set default-web-browser chromium.desktop
-        # env -u BROWSER is required: xdg-settings refuses to write the
-        # association when BROWSER is set (treats it as a higher-priority
-        # override). Idempotent — re-running just rewrites the same default.
-        # Fail soft: activation has no graphical session, and some xdg-utils
-        # backends need a DE; the || true keeps switch non-fatal. A later
-        # session-side oneshot (first-run) can reassert if needed.
-        home.activation.omarchyDefaultBrowser = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
-          if command -v xdg-settings >/dev/null 2>&1; then
-            env -u BROWSER xdg-settings set default-web-browser chromium.desktop >/dev/null 2>&1 || true
-          fi
-        '';
-      })
+          '';
+        })
       ]
     );
 }

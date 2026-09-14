@@ -29,6 +29,14 @@ stdenv.mkDerivation {
       --replace-fail @@SETUP_HYPR_CACHE_KEY@@ ${hyprlandCache.publicKey}
     chmod +x $out/bin/omarchy-nix-setup
     wrapProgram $out/bin/omarchy-nix-setup \
-      --prefix PATH : ${lib.makeBinPath [ jq gum util-linux openssl whois ]}
+      --prefix PATH : ${
+        lib.makeBinPath [
+          jq
+          gum
+          util-linux
+          openssl
+          whois
+        ]
+      }
   '';
 }
