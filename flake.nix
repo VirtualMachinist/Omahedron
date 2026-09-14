@@ -1543,9 +1543,12 @@
                 # for disjoint effects both orders converge to the same state.
                 for round in $(seq 1 10); do
                   new_flake "b$round"
-                  # Use a free catalog feature (tailscale). Steam is unfree and
-                  # oma-cli G3a refuses it on desktop without unfree.enable —
-                  # that gate is covered by omarchy-verbs, not this flock test.
+                  # Disjoint feature-add + package-remove. Use a free
+                  # catalog feature (tailscale): steam is unfree and the
+                  # add path refuses it on desktop without
+                  # omarchy.unfree.enable (oma-cli G3a). This case is
+                  # about flock serialisation, not the unfree gate — do
+                  # not reintroduce Steam or write unfree.enable here.
                   printf '{"packages":["firefox"],"features":[]}\n' >"$OMARCHY_NIX_FLAKE/omarchy-packages.json"
                   omarchy-nix-add install.service.tailscale >/dev/null 2>&1 &
                   omarchy-nix-remove firefox >/dev/null 2>&1 &
