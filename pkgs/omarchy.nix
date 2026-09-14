@@ -68,6 +68,9 @@ let
   # mutators at bump time).
   runtimeManifest = import ./omarchy-runtime-manifest.nix;
 
+  skillPack = builtins.fromJSON (builtins.readFile ../skills/pack.json);
+  extraRuntimeSkills = builtins.filter (n: n != "omarchy") skillPack.runtime;
+
   # Menu lines for the cataloged coding agents, inserted into
   # default/omarchy/omarchy-menu.jsonc after the install.ai.ollama entry in
   # postPatch. One entry per install.ai.* catalog id (the catalog-consistency
@@ -1564,6 +1567,11 @@ stdenv.mkDerivation (finalAttrs: {
     rm -rf "$dest/default/agents/skills/omarchy"
     install -Dm644 ${../skills/omarchy/SKILL.md} \
       "$dest/default/agents/skills/omarchy/SKILL.md"
+    skillpack=${../skills}
+    for name in ${lib.escapeShellArgs extraRuntimeSkills}; do
+      install -Dm644 "$skillpack/$name/SKILL.md" \
+        "$dest/default/agents/skills/$name/SKILL.md"
+    done
 
     # Top-level runtime assets referenced by relative paths from within the
     # copied tree (e.g. default/chromium/extensions/copy-url/icon.png symlinks

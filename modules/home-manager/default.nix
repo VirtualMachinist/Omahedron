@@ -107,7 +107,10 @@ in
       effMonitors = (osConfig.omarchy or cfg).monitors;
       effTheme = (osConfig.omarchy or cfg).theme;
       effNvimPkg = (osConfig.omarchy or cfg).nvimPackage or null;
-      effSkill = "${omarchyPathOf effPkg}/default/agents/skills/omarchy";
+      skillPack = builtins.fromJSON (builtins.readFile ../../skills/pack.json);
+      skillRelPaths = lib.concatMap (
+        root: map (name: "${root}/${name}") skillPack.runtime
+      ) skillPack.agentRoots;
     in
     lib.mkIf cfg.enable (
       lib.mkIf (effPkg != null) {
@@ -119,15 +122,15 @@ in
         # switch the consumer sets explicitly.
 
         # --- Class 0: agent skill links (managed on every activation) ---
-        # Upstream finalize-user creates these four links once. On Arch their
+        # Upstream finalize-user creates per-agent skill links once. On Arch their
         # target is the stable /usr/share path, but on NixOS OMARCHY_PATH is a
         # generation-specific store path. A one-shot link therefore keeps the
         # old package after an update and eventually becomes dangling after
         # garbage collection. Home Manager owns the same upstream paths and
         # refreshes them to the active package at every switch.
         #
-        # Create all four agent skill dirs unconditionally (not gated on which
-        # agents the user has installed) so the links match upstream finalize-user.
+        # Create every pack.json skill under every agent root unconditionally
+        # (not gated on which agents the user has installed).
         #
         # Real files/dirs at these paths are relocated before linkGeneration
         # (omarchySkillLinkSafety) so a user-owned skill clone is never deleted.
@@ -137,11 +140,7 @@ in
           # Relocate real skill targets so home.file cannot delete user data.
           # Symlinks are left alone — force = true adopts/replaces them.
           omarchy_skill_ts="$(date -u +%Y%m%dT%H%M%SZ)"
-          for omarchy_skill_rel in \
-            .agents/skills/omarchy \
-            .claude/skills/omarchy \
-            .codex/skills/omarchy \
-            .pi/agent/skills/omarchy
+          for omarchy_skill_rel in ${lib.escapeShellArgs skillRelPaths}
           do
             omarchy_skill_target="$HOME/$omarchy_skill_rel"
             # -e is false for a dangling symlink; -L catches those too, but we
@@ -154,18 +153,15 @@ in
           done
         '';
 
-        home.file =
-          lib.genAttrs
-            [
-              ".agents/skills/omarchy"
-              ".claude/skills/omarchy"
-              ".codex/skills/omarchy"
-              ".pi/agent/skills/omarchy"
-            ]
-            (_: {
-              source = effSkill;
+        home.file = lib.listToAttrs (
+          map (rel: {
+            name = rel;
+            value = {
+              source = "${omarchyPathOf effPkg}/default/agents/skills/${baseNameOf rel}";
               force = true;
-            });
+            };
+          }) skillRelPaths
+        );
 
         # --- Class 1: user-editable stubs (seeded once) ---
         # Every file below is copied verbatim from the vendored upstream

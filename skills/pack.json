@@ -1,0 +1,18 @@
+{
+  "runtime": [
+    "omarchy",
+    "nix-rebuild",
+    "nix-flake",
+    "nix-module",
+    "nix-forensics",
+    "omahedron-compat",
+    "omahedron-pins"
+  ],
+  "agentRoots": [
+    ".agents/skills",
+    ".claude/skills",
+    ".codex/skills",
+    ".pi/agent/skills",
+    ".omp/skills"
+  ]
+}
