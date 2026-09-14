@@ -1,5 +1,7 @@
 # Rebase / overlay plan (G2)
 
+> **Historical.** Compete G2 deliverable, kept for provenance. Since ADR-0026 (2026-09-12) Omahedron owns the glue; there is no standing rebase/overlay duty onto zicochaos. Do not execute this plan.
+
 Glue upstream: [zicochaos/omarchy-nix](https://github.com/zicochaos/omarchy-nix) `main` @ `c9f235637585189c71b3e8c53fce7f77fa5c9a87` (public snapshot of `673a57f2`).
 
 Omahedron branch: `feat/compete` (G0 @ `4374d86`, G1 @ `a39d27a`). **This document is the G2 deliverable.** It does **not** bump `omarchy-src` (G3).

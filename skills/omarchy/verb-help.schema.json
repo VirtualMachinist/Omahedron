@@ -1,0 +1,59 @@
+{
+  "$id": "omahedron:verb-help",
+  "title": "omarchy verb help copy (identity, configuration, pkg, rollback, update)",
+  "type": "object",
+  "required": ["version", "installPath", "verbs"],
+  "properties": {
+    "version": { "type": "integer", "const": 1 },
+    "installPath": {
+      "type": "string",
+      "description": "Path relative to $OMARCHY_PATH where the packaged copy is installed."
+    },
+    "groupDescriptions": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "shared": {
+      "type": "object",
+      "properties": {
+        "applyNote": { "type": "string" },
+        "errors": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "verbs": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["route", "summary", "description", "usage"],
+        "properties": {
+          "route": {
+            "type": "array",
+            "items": { "type": "string" },
+            "minItems": 1
+          },
+          "script": { "type": "string" },
+          "mapsTo": { "type": "string" },
+          "summary": { "type": "string" },
+          "description": { "type": "string" },
+          "usage": { "type": "string" },
+          "examples": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "choices": {},
+          "header": { "type": "string" },
+          "onSuccess": { "type": "object" },
+          "homeWarning": { "type": "string" },
+          "printContract": {
+            "type": "object",
+            "properties": {
+              "intro": { "type": "string" },
+              "lines": { "type": "object", "additionalProperties": { "type": "string" } },
+              "footer": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

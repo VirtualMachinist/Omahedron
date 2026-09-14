@@ -156,7 +156,7 @@ Omahedron rebuilds the desktop layer. The operating-system layer belongs to NixO
 |---|---|
 | pacman, yay, AUR, pkgs.omarchy.org | Flake packages and a rebuild. Never a host pacman. |
 | Limine, Snapper, mkinitcpio UKI | systemd-boot and NixOS generations |
-| The Omarchy ISO, `omarchy-apply-system`, `omarchy-apply-hardware` | The NixOS installer and your `hardware-configuration.nix` |
+| The Omarchy ISO (Arch), `omarchy-apply-system`, `omarchy-apply-hardware` as Arch chroot helpers | The NixOS installer and your `hardware-configuration.nix` today. An Omahedron installer is in product (ADR-0025, [docs/oma-cli.md](docs/oma-cli.md)): `omarchy setup` first, a NixOS-shaped Omahedron ISO later. Neither ships on this tag. |
 | The Omarchy Kernel as an Arch package | The kernel from nixpkgs |
 | Mutable `/usr/share/omarchy` | An immutable store path in `$OMARCHY_PATH` |
 | Omacom support | Not claimed. Omahedron is unofficial. |
@@ -227,6 +227,6 @@ When something we fix turns out to be an Omarchy bug rather than a NixOS-ism, it
 
 ## Credits and license
 
-Omahedron is built and maintained by [Hedronite](https://hedronite.com). The desktop is [Omarchy](https://omarchy.org) by DHH, Basecamp and Omacom. The vendor-into-store architecture and the first module design derive from [zicochaos/omarchy-nix](https://github.com/zicochaos/omarchy-nix), forked with license and credit intact. Full attribution is in [docs/CREDITS.md](docs/CREDITS.md).
+Omahedron is built and maintained by [Hedronite](https://hedronite.com). The desktop is [Omarchy](https://omarchy.org) by DHH, Basecamp and Omacom. The vendor-into-store architecture and the first module design derive from [zicochaos/omarchy-nix](https://github.com/zicochaos/omarchy-nix), forked with license and credit intact; Omahedron owns that glue now (ADR-0026). Full attribution is in [docs/CREDITS.md](docs/CREDITS.md).
 
 MIT. See [LICENSE](LICENSE). The Omahedron mark is Hedronite's; usage notes are in [docs/brand/](docs/brand/).

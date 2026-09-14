@@ -122,7 +122,7 @@ It does **not** enable Docker, Steam, Obsidian, Kdenlive, LibreOffice, mise-as-s
 - 8 GB RAM lite dogfood is doctrine, not an apology.
 - Security tags open a bump immediately.
 - Thin desktop default is a competitive requirement (COMPETE §2.8).
-- Treat zicochaos/omarchy-nix as glue upstream (rebase/overlay).
+- Own the Nix glue (ADR-0026). zicochaos/omarchy-nix is historical provenance and credit, not a rebase/overlay duty. Attributed cherry-picks only; no from-scratch `pkgs/omarchy.nix` rewrite.
 - One human maintainer; twelve directors orchestrate; subagents execute. Scope must fit that.
 - NixOS 26.05 EOL is 2026-12-31. Pairing with 26.11 is a planned event, not a surprise.
 - Do not say “best port” until COMPETE §4.5 allows.

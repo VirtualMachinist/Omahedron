@@ -344,3 +344,28 @@ User-facing OS for humans is the vendored **`omarchy`** command center (`omarchy
 **Supersedes in part:** SPEC “Out of scope (permanent)” bullet *ISO installer, `omarchy-apply-system`, `omarchy-apply-hardware` chroot* — the ISO and the *names* of those commands as NixOS wraps. The Arch chroot implementation remains out.
 
 **Does not supersede:** ADR-0002 (Rocky/Alma; no 1:1 installer parity with official Omarchy), ADR-0007 (kernel track), ADR-0008 (vendor rule), ADR-0009 (script classes), ADR-0024 (thin desktop, G0 locator, compete bar).
+
+---
+
+## ADR-0026 — Own the glue; zicochaos is provenance, not live upstream
+
+- Status: accepted
+- Date: 2026-09-12
+- Deciders: human maintainer
+
+**Decision.** Omahedron **owns** its Nix glue from this date. [zicochaos/omarchy-nix](https://github.com/zicochaos/omarchy-nix) is **historical provenance** (we adopted that shape — vendor derivation, NixOS + HM modules, `$OMARCHY_PATH`, `--replace-fail`). It is **not** live glue upstream. We do not rebase onto their `main`. We do not track `quattro`. We do not wait on their commits to ship. A useful hunk may still be taken the way we would take a patch from anyone, with credit, never as a merge obligation.
+
+**Why.** The shape is already in this tree. An ongoing rebase/overlay *duty* is a bus factor: if that repo goes quiet, a “glue upstream” rule leaves us blocked. Credit stays. Dependence does not.
+
+**Consequences.**
+
+- AGENTS.md implementation gate “treat zicochaos as glue upstream: rebase or overlay” is **deprecated**. Replace with: own `pkgs/omarchy.nix` + modules; pin `omarchy-src` to official Omarchy tags; optional attributed cherry-picks only.
+- CREDITS / README still name zicochaos as the glue we started from. MIT credit is mandatory (ADR-0017).
+- Do **not** from-scratch rewrite the vendor derivation to “prove independence.” That was compete G2b and still a fail.
+- Do not reopen compete G0–G8. Do not treat their kitchen-sink/`~/omarchy-nix` locators as something to re-import.
+- [docs/REBASE-PLAN.md](docs/REBASE-PLAN.md) is a historical compete G2 deliverable, not a standing duty.
+- Next free: **ADR-0027**.
+
+**Supersedes in part:** ADR-0003’s *ongoing* “rebase or overlay onto zicochaos as glue upstream,” and the same bullet in ADR-0024. The original adopt (fork-and-improve that tree; do not start from henrysipp / T00fy / omanix) still holds as history.
+
+**Does not supersede:** ADR-0003’s start-from-that-shape; ADR-0002; ADR-0005 (no `quattro` on user stable); ADR-0008 (vendor pixels from `omarchy-src`); ADR-0017 (credit); ADR-0024; ADR-0025.

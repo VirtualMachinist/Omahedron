@@ -108,6 +108,18 @@
             systemd = pkgs.systemd;
             tailscale = pkgs.tailscale;
           };
+          # oma-cli G2 (ADR-0025 installer A): the `omarchy setup` wizard.
+          # Backend-owned script + derivation (modules/setup/,
+          # pkgs/omarchy-nix-setup.nix); the Ada prompt copy is the
+          # frontend-owned JSON; the vendored router reaches it through the
+          # bin/omarchy-setup launcher written by pkgs/omarchy.nix. Put on
+          # PATH by nixosModules.default via omarchy.setupPackage.
+          omarchy-nix-setup = pkgs.callPackage ./pkgs/omarchy-nix-setup.nix {
+            omahedronFlakeUrl = "github:VirtualMachinist/Omahedron";
+            hyprlandCache = import ./modules/setup/cache.nix;
+            promptsJson = ./skills/omarchy/setup-prompts.json;
+            templates = ./modules/setup/templates;
+          };
           # Plymouth boot-splash theme + SDDM login theme/Hyprland greeter.
           # Consumed by the omarchy NixOS module (boot.plymouth.themePackages
           # and services.displayManager.sddm theme wiring); also exposed for
@@ -217,6 +229,8 @@
                 );
                 omarchy.nvimPackage = lib.mkDefault hostPackages.omarchy-nvim;
                 omarchy.fish.package = lib.mkDefault hostPackages.omarchy-fish;
+                # `omarchy setup` (installer A) on PATH for every enabled host.
+                omarchy.setupPackage = lib.mkDefault hostPackages.omarchy-nix-setup;
               }
 
               # Pin mesa to the hyprland input's nixpkgs. Stable nixpkgs mesa
@@ -258,6 +272,28 @@
         system:
         let
           pkgs = pkgsFor system;
+          # oma-cli G2: one fixed answer set for the `omarchy setup` checks
+          # (writer + eval). password_hash is a throwaway sha-512 crypt of
+          # "omarchy"; the sentence is the frontend-owned prompt copy.
+          setupSample = rec {
+            prompts = builtins.fromJSON (builtins.readFile ./skills/omarchy/setup-prompts.json);
+            dieSentence = prompts.errors.unsupportedArch;
+            cache = import ./modules/setup/cache.nix;
+            answers = {
+              full_name = "Ada Lovelace";
+              username = "ada";
+              password_hash = "$6$omahedron$7RtKq2a8yq1Jm2oBQ5Wq0xk2P8mFqL0c0G4Nn0vZK7xJdYtqQyq3oH1uLZ5Yb1XcVn3hR4S7W9U0M1H2N3D4E.";
+              hostname = "setuptest";
+              timezone = "Europe/London";
+              theme = "tokyo-night";
+              terminal = "ghostty";
+              profile = "desktop";
+              scale = 1;
+              fingerprint = false;
+              autologin = false;
+              email = "ada@example.com";
+            };
+          };
           # testers.nixosTest calls the test module as `lib.toFunction test pkgs`,
           # so it can only pass `pkgs`. Apply the function here (closure) to hand
           # each test the flake modules it imports (self + home-manager), then
@@ -279,6 +315,17 @@
               self
               system
               omarchy-src
+              ;
+          };
+          # oma-cli G5: enabled hosts ship /etc/omahedron/AGENTS.md (humans use
+          # omarchy; agents edit Nix), disabled hosts do not, and omarchy debug
+          # points at it. Backend-owned check body: checks/onbox-agents.nix.
+          omarchy-onbox-agents = import ./checks/onbox-agents.nix {
+            inherit
+              pkgs
+              nixpkgs
+              self
+              system
               ;
           };
           omarchy-desktop = pkgs.testers.nixosTest (loadTest ./tests/desktop.nix);
@@ -2127,8 +2174,459 @@ c";
                 fail "install.md must document first-build --option extra-substituters"
               grep -Fq 'omarchy-hyprland-cache' ${./docs/install.md} ||
                 fail "install.md must reference checks.omarchy-hyprland-cache"
+              # oma-cli G2c: `omarchy setup` bakes the same cache into its first
+              # apply (modules/setup/cache.nix is the shared source).
+              grep -Fq '${cacheUrl}' ${./modules/setup/cache.nix} ||
+                fail "modules/setup/cache.nix disagrees on the substituter URL"
+              grep -Fq '${cacheKey}' ${./modules/setup/cache.nix} ||
+                fail "modules/setup/cache.nix disagrees on the public key"
               touch $out
             '';
+
+          # oma-cli G2 (ADR-0025 installer A): `omarchy setup` write path,
+          # exercised in the sandbox with an answers file (no prompts, no
+          # rebuild). Proves: non-x86_64 dies with the prompt-copy sentence
+          # before touching anything; no hardware-configuration.nix -> refuse,
+          # and nixos-generate-config is never called (a PATH shim would
+          # record it); the explicit G0 locator is honoured for a directory
+          # that has no flake yet; hardware-configuration.nix hash is
+          # unchanged and reported; an existing flake.nix is refused without
+          # --force and backed up with it; the first-apply argv carries the
+          # Hyprland/Mesa substituter. Human input is not required anywhere.
+          omarchy-setup-writer =
+            let
+              setupPkg = self.packages.${system}.omarchy-nix-setup;
+              answers = pkgs.writeText "omarchy-setup-answers.json" (builtins.toJSON setupSample.answers);
+              hwFixture = ./modules/setup/fixtures/hardware-configuration.nix;
+              stubGenerateConfig = pkgs.writeShellScript "stub-nixos-generate-config" ''
+                echo "FORBIDDEN: nixos-generate-config $*" >&2
+                touch "$TMPDIR/generate-config-called"
+                exit 97
+              '';
+              stubUnameArm = pkgs.writeShellScript "stub-uname" ''
+                case "''${1:-}" in
+                  -s) echo Linux ;;
+                  *) echo aarch64 ;;
+                esac
+              '';
+            in
+            pkgs.runCommand "omarchy-setup-writer-check" { nativeBuildInputs = [ pkgs.jq ]; } ''
+              set -euo pipefail
+              fail() { echo "FAIL: $*" >&2; exit 1; }
+              export HOME=$TMPDIR/home
+              mkdir -p "$HOME"
+              export TZDIR=${pkgs.tzdata}/share/zoneinfo
+              STUB=$TMPDIR/bin
+              mkdir -p "$STUB"
+              ln -s ${stubGenerateConfig} "$STUB/nixos-generate-config"
+              export PATH="$STUB:${setupPkg}/bin:$PATH"
+              export OMARCHY_SETUP_ANSWERS=${answers}
+              export OMARCHY_SETUP_DRY_RUN=1
+              hw_hash() { sha256sum "$1" | cut -d' ' -f1; }
+
+              # --- G2b: not x86_64-linux -> the prompt-copy sentence, nothing written
+              ARM=$TMPDIR/armbin
+              mkdir -p "$ARM" "$TMPDIR/t0"
+              ln -s ${stubUnameArm} "$ARM/uname"
+              if PATH="$ARM:$PATH" OMARCHY_NIX_FLAKE=$TMPDIR/t0 omarchy-nix-setup -y >"$TMPDIR/arm.out" 2>"$TMPDIR/arm.err"; then
+                fail "non-x86_64-linux must not proceed"
+              fi
+              grep -Fq ${pkgs.lib.escapeShellArg setupSample.dieSentence} "$TMPDIR/arm.err" ||
+                fail "die sentence missing: $(cat "$TMPDIR/arm.err")"
+              [ -z "$(ls -A "$TMPDIR/t0")" ] || fail "non-x86_64-linux run wrote files"
+              echo "die-sentence OK"
+
+              # --- G2a: no hardware-configuration.nix anywhere -> refuse; never generate
+              mkdir -p "$TMPDIR/t1"
+              if OMARCHY_NIX_FLAKE=$TMPDIR/t1 omarchy-nix-setup -y >"$TMPDIR/nohw.out" 2>"$TMPDIR/nohw.err"; then
+                fail "missing hardware-configuration.nix must refuse"
+              fi
+              grep -Fq 'hardware-configuration.nix' "$TMPDIR/nohw.err" || fail "missing-hw message: $(cat "$TMPDIR/nohw.err")"
+              [ ! -e "$TMPDIR/generate-config-called" ] || fail "nixos-generate-config was invoked"
+              [ ! -e "$TMPDIR/t1/flake.nix" ] || fail "wrote flake.nix without a hardware config"
+              echo "no-hw refuse OK"
+
+              # --- G2a: explicit G0 locator with no flake yet; hw config kept, hash equal
+              T=$TMPDIR/t2
+              mkdir -p "$T"
+              install -m644 ${hwFixture} "$T/hardware-configuration.nix"
+              PRE=$(hw_hash "$T/hardware-configuration.nix")
+              OMARCHY_NIX_FLAKE=$T omarchy-nix-setup -y >"$TMPDIR/ok.out" 2>"$TMPDIR/ok.err" ||
+                { cat "$TMPDIR/ok.err" >&2; fail "answers-file run failed"; }
+              POST=$(hw_hash "$T/hardware-configuration.nix")
+              [ "$PRE" = "$POST" ] || fail "hardware-configuration.nix changed ($PRE -> $POST)"
+              grep -Fq "hardware-configuration.nix sha256 $PRE (kept, not regenerated)" "$TMPDIR/ok.out" ||
+                fail "hash line missing: $(cat "$TMPDIR/ok.out")"
+              [ ! -e "$TMPDIR/generate-config-called" ] || fail "nixos-generate-config was invoked"
+              [ -f "$T/flake.nix" ] && [ -f "$T/configuration.nix" ] || fail "consumer flake not written on the locator"
+              for needle in \
+                'nixosConfigurations.${setupSample.answers.hostname} ' \
+                'omahedron.url = "github:VirtualMachinist/Omahedron"' \
+                './hardware-configuration.nix' \
+                'omahedron.nixosModules.default' \
+                'home-manager.sharedModules = [ omahedron.homeManagerModules.default ]'; do
+                grep -Fq "$needle" "$T/flake.nix" || fail "flake.nix missing: $needle"
+              done
+              for needle in \
+                'networking.hostName = "${setupSample.answers.hostname}"' \
+                'omarchy.enable = true' \
+                'omarchy.full_name = "${setupSample.answers.full_name}"' \
+                'omarchy.timezone = "${setupSample.answers.timezone}"' \
+                'omarchy.theme = "${setupSample.answers.theme}"' \
+                'omarchy.terminal = "${setupSample.answers.terminal}"' \
+                'omarchy.profile = "${setupSample.answers.profile}"' \
+                'omarchy.scale = ${toString setupSample.answers.scale}' \
+                'users.users.${setupSample.answers.username} ' \
+                'initialHashedPassword = "${setupSample.answers.password_hash}"' \
+                'home-manager.users.${setupSample.answers.username} '; do
+                grep -Fq "$needle" "$T/configuration.nix" || fail "configuration.nix missing: $needle"
+              done
+              ! grep -Eq 'nixos-generate-config|pacman' "$T/flake.nix" "$T/configuration.nix" || fail "unexpected content"
+              echo "locator + hardware-config + rendering OK"
+
+              # --- G2c: first apply carries the Hyprland/Mesa cache
+              # fixed-string match: the public key contains ERE metacharacters (+ /)
+              grep -Fq "DRY-RUN: nixos-rebuild switch --flake $T#${setupSample.answers.hostname} --option extra-substituters ${setupSample.cache.url} --option extra-trusted-public-keys ${setupSample.cache.publicKey}" "$TMPDIR/ok.out" ||
+                fail "first-apply argv lacks the cache: $(grep DRY-RUN "$TMPDIR/ok.out" || true)"
+              echo "cache-on-first-apply OK"
+
+              # --- existing flake.nix: refuse without --force, back up with it
+              if OMARCHY_NIX_FLAKE=$T omarchy-nix-setup -y >/dev/null 2>"$TMPDIR/refuse.err"; then
+                fail "must refuse to overwrite an existing flake.nix"
+              fi
+              grep -Fq -- '--force' "$TMPDIR/refuse.err" || fail "refuse message: $(cat "$TMPDIR/refuse.err")"
+              OMARCHY_NIX_FLAKE=$T omarchy-nix-setup -y --force >/dev/null 2>"$TMPDIR/force.err" ||
+                { cat "$TMPDIR/force.err" >&2; fail "--force run failed"; }
+              ls "$T"/flake.nix.bak-* >/dev/null 2>&1 || fail "--force did not back up flake.nix"
+              [ "$PRE" = "$(hw_hash "$T/hardware-configuration.nix")" ] || fail "--force touched hardware-configuration.nix"
+              echo "refuse/--force OK"
+
+              touch $out
+            '';
+
+          # oma-cli G3 (workstream 3 verbs): identity / profile / unfree /
+          # terminal / fingerprint / autologin / pin verbs write omarchy.* in
+          # the consumer flake and apply (dry-run here). Sandbox fixture flake
+          # on an explicit G0 locator; the vendored router prints the
+          # frontend-owned help copy; `omarchy default terminal` is live
+          # vendor AND persists; unfree `pkg add` on desktop without the flag
+          # says so and nothing is written.
+          omarchy-verbs =
+            let
+              omarchyPkg = self.packages.${system}.omarchy;
+              help = builtins.fromJSON (builtins.readFile ./skills/omarchy/verb-help.json);
+              fixtureConfig = pkgs.writeText "configuration.nix" ''
+                { pkgs, ... }:
+                {
+                  networking.hostName = "verbtest";
+                  time.timeZone = "Etc/UTC";
+                  omarchy.enable = true;
+                  omarchy.profile = "desktop";
+                  omarchy.full_name = "Omarchy User";
+                  omarchy.timezone = "Etc/UTC";
+                  omarchy.terminal = "foot";
+                  system.stateVersion = "26.05";
+                }
+              '';
+              fixtureFlake = pkgs.writeText "flake.nix" ''
+                {
+                  inputs = {
+                    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
+                    omahedron.url = "github:VirtualMachinist/Omahedron";
+                  };
+                  outputs = { nixpkgs, omahedron, ... }: { };
+                }
+              '';
+              stubNotify = pkgs.writeShellScript "stub-omarchy-notification-send" "exit 0";
+              stubHwFingerprint = pkgs.writeShellScript "stub-omarchy-hw-fingerprint" "exit 1";
+              stubNix = pkgs.writeShellScript "stub-nix" ''
+                echo "FORBIDDEN: nix $*" >&2
+                touch "$TMPDIR/nix-called"
+                exit 97
+              '';
+            in
+            pkgs.runCommand "omarchy-verbs-check"
+              {
+                nativeBuildInputs = [
+                  pkgs.jq
+                  pkgs.util-linux # flock for the omarchy-nix-add transaction
+                ];
+              }
+              ''
+              set -euo pipefail
+              fail() { echo "FAIL: $*" >&2; exit 1; }
+              export HOME=$TMPDIR/home XDG_STATE_HOME=$TMPDIR/state XDG_CONFIG_HOME=$TMPDIR/home/.config
+              mkdir -p "$HOME/.config" "$XDG_STATE_HOME"
+              export TZDIR=${pkgs.tzdata}/share/zoneinfo
+              export OMARCHY_PATH=${omarchyPkg}/share/omarchy
+              export OMARCHY_NIX_UPDATE_DRY_RUN=1
+              STUB=$TMPDIR/bin; mkdir -p "$STUB"
+              ln -s ${stubNotify} "$STUB/omarchy-notification-send"
+              ln -s ${stubHwFingerprint} "$STUB/omarchy-hw-fingerprint"
+              ln -s ${stubNix} "$STUB/nix"
+              export PATH="$STUB:$OMARCHY_PATH/bin:$PATH"
+              T=$TMPDIR/flake; mkdir -p "$T"
+              install -m644 ${fixtureConfig} "$T/configuration.nix"
+              install -m644 ${fixtureFlake} "$T/flake.nix"
+              export OMARCHY_NIX_FLAKE=$T
+              cfg() { grep -E "^[[:space:]]*$1[[:space:]]*=" "$T/configuration.nix" || fail "configuration.nix lacks: $1"; }
+              dry() { grep -Fq "DRY-RUN: sudo nixos-rebuild switch --flake $T" "$1" || fail "no dry-run rebuild in: $(cat "$1")"; }
+
+              # --- help copy comes from verb-help.json through the router --------
+              shown=$(omarchy setup name --help)
+              grep -Fq ${pkgs.lib.escapeShellArg help.verbs."setup.name".summary} <<<"$shown" || fail "setup name help: $shown"
+              shown=$(omarchy pin --help)
+              grep -Fq ${pkgs.lib.escapeShellArg help.verbs."pin".summary} <<<"$shown" || fail "pin help: $shown"
+              shown=$(omarchy setup --help)
+              grep -Fq 'omarchy setup unfree' <<<"$shown" || fail "setup group help lacks unfree: $shown"
+              echo "help copy OK"
+
+              # --- G3a identity / profile / unfree ---------------------------------
+              omarchy setup name "Ada Lovelace" >"$TMPDIR/name.out" 2>&1 || { cat "$TMPDIR/name.out"; fail "setup name"; }
+              cfg 'omarchy\.full_name' | grep -Fq '"Ada Lovelace"' || fail "full_name not written"; dry "$TMPDIR/name.out"
+              omarchy setup email ada@example.com >"$TMPDIR/email.out" 2>&1 || { cat "$TMPDIR/email.out"; fail "setup email"; }
+              cfg 'omarchy\.email_address' | grep -Fq '"ada@example.com"' || fail "email not written"; dry "$TMPDIR/email.out"
+              if omarchy setup timezone USA/Dallas >"$TMPDIR/tzbad.out" 2>&1; then fail "USA/Dallas must be rejected"; fi
+              cfg 'omarchy\.timezone' | grep -Fq '"Etc/UTC"' || fail "bad timezone changed the file"
+              omarchy setup timezone Europe/London >"$TMPDIR/tz.out" 2>&1 || { cat "$TMPDIR/tz.out"; fail "setup timezone"; }
+              cfg 'omarchy\.timezone' | grep -Fq '"Europe/London"' || fail "omarchy.timezone not written"
+              cfg 'time\.timeZone' | grep -Fq '"Europe/London"' || fail "time.timeZone not written"; dry "$TMPDIR/tz.out"
+              if omarchy setup profile server >/dev/null 2>&1; then fail "bad profile accepted"; fi
+              omarchy setup profile workstation >"$TMPDIR/prof.out" 2>&1 || { cat "$TMPDIR/prof.out"; fail "setup profile"; }
+              cfg 'omarchy\.profile' | grep -Fq '"workstation"' || fail "profile not written"; dry "$TMPDIR/prof.out"
+              omarchy setup profile desktop >/dev/null 2>&1 || fail "setup profile desktop"
+              echo "identity/profile OK"
+
+
+              # --- G3b default terminal: live vendor AND persisted ----------------
+              omarchy default terminal ghostty >"$TMPDIR/term.out" 2>&1 || { cat "$TMPDIR/term.out"; fail "default terminal"; }
+              grep -Fq 'com.mitchellh.ghostty.desktop' "$HOME/.config/xdg-terminals.list" || fail "live xdg-terminals.list not written"
+              cfg 'omarchy\.terminal' | grep -Fq '"ghostty"' || fail "omarchy.terminal not persisted"; dry "$TMPDIR/term.out"
+              if omarchy setup terminal xterm >/dev/null 2>&1; then fail "bad terminal accepted"; fi
+              echo "terminal live+persist OK"
+
+              # --- G3c fingerprint / autologin / pin ------------------------------
+              omarchy setup security fingerprint >"$TMPDIR/fp.out" 2>&1 || { cat "$TMPDIR/fp.out"; fail "setup security fingerprint"; }
+              cfg 'omarchy\.fingerprint\.enable' | grep -Fq 'true' || fail "fingerprint.enable not written"; dry "$TMPDIR/fp.out"
+              grep -Fqi 'fprintd-enroll' "$TMPDIR/fp.out" || fail "fingerprint on does not mention fprintd-enroll: $(cat "$TMPDIR/fp.out")"
+              ! grep -Fq 'omahedron: stub:' "$TMPDIR/fp.out" || fail "fingerprint still prints a stub banner"
+              omarchy remove security fingerprint >/dev/null 2>&1 || fail "remove security fingerprint"
+              cfg 'omarchy\.fingerprint\.enable' | grep -Fq 'false' || fail "fingerprint.enable off not written"
+              omarchy setup autologin ada >"$TMPDIR/al.out" 2>&1 || { cat "$TMPDIR/al.out"; fail "setup autologin"; }
+              cfg 'omarchy\.autologin\.user' | grep -Fq '"ada"' || fail "autologin.user not written"; dry "$TMPDIR/al.out"
+              omarchy setup autologin off >/dev/null 2>&1 || fail "setup autologin off"
+              cfg 'omarchy\.autologin\.user' | grep -Fq 'null' || fail "autologin off not written"
+              shown=$(omarchy pin); grep -Fq 'github:VirtualMachinist/Omahedron' <<<"$shown" || fail "pin show: $shown"
+              if omarchy pin not-a-tag >/dev/null 2>&1; then fail "bad pin accepted"; fi
+              omarchy channel set omahedron-4.0.2 >"$TMPDIR/pin.out" 2>&1 || { cat "$TMPDIR/pin.out"; fail "channel set"; }
+              grep -Fq 'omahedron.url = "github:VirtualMachinist/Omahedron/omahedron-4.0.2"' "$T/flake.nix" || fail "flake.nix input not moved"
+              grep -Fq 'DRY-RUN: nix flake lock --update-input omahedron' "$TMPDIR/pin.out" || fail "pin dry-run lock line missing: $(cat "$TMPDIR/pin.out")"
+              dry "$TMPDIR/pin.out"
+              [ ! -e "$TMPDIR/nix-called" ] || fail "a verb invoked nix under dry-run"
+              ! grep -Fq 'omahedron: stub:' "$TMPDIR/pin.out" || fail "channel set still prints a stub banner"
+              echo "fingerprint/autologin/pin OK"
+
+              # (last: omarchy-nix-add spawns a background omarchy-nix-search
+              # --refresh, so nothing below may assert that nix was not called)
+              # --- G3a unfree pkg add on desktop without the flag says so ---------
+              [ ! -e "$T/omarchy-packages.json" ] || fail "fixture has a package list"
+              if omarchy nix add install.editor.vscode >"$TMPDIR/unfree.out" 2>&1; then fail "unfree add must refuse on desktop without the flag"; fi
+              grep -Fq ${pkgs.lib.escapeShellArg help.shared.errors.unfreePkgAddDesktop} "$TMPDIR/unfree.out" || fail "unfree message: $(cat "$TMPDIR/unfree.out")"
+              [ ! -e "$T/omarchy-packages.json" ] || fail "refused add still wrote omarchy-packages.json"
+              omarchy setup unfree on >"$TMPDIR/unfree-on.out" 2>&1 || { cat "$TMPDIR/unfree-on.out"; fail "setup unfree on"; }
+              cfg 'omarchy\.unfree\.enable' | grep -Fq 'true' || fail "unfree.enable not written"; dry "$TMPDIR/unfree-on.out"
+              omarchy nix add install.editor.vscode >"$TMPDIR/unfree2.out" 2>&1 || { cat "$TMPDIR/unfree2.out"; fail "add after unfree on"; }
+              jq -e '.packages | index("vscode")' "$T/omarchy-packages.json" >/dev/null || fail "vscode not in package list"
+              omarchy setup unfree off >/dev/null 2>&1 || fail "setup unfree off"
+              cfg 'omarchy\.unfree\.enable' | grep -Fq 'false' || fail "unfree.enable off not written"
+              echo "unfree gate OK"
+
+              # --- the parsed result is still valid Nix -----------------------------
+              grep -c 'omarchy\.' "$T/configuration.nix" >/dev/null
+              touch $out
+            '';
+
+          # oma-cli G4 (workstream 4): `omarchy pkg add|drop` route at
+          # omarchy-nix-add|remove (catalog ids, the menus' Arch names, or raw
+          # nixpkgs attributes), the AUR helpers stay stubs, `omarchy rollback`
+          # is the previous NixOS generation (never Snapper, never $HOME) and
+          # `omarchy update` prints pin / omarchy-src tag / newest stable /
+          # channel state first. Sandbox, dry-run, offline.
+          omarchy-pkg-rollback-update =
+            let
+              omarchyPkg = self.packages.${system}.omarchy;
+              help = builtins.fromJSON (builtins.readFile ./skills/omarchy/verb-help.json);
+              pin = builtins.fromJSON (builtins.readFile ./schema/pin.json);
+              fixtureConfig = pkgs.writeText "configuration.nix" ''
+                { pkgs, ... }:
+                {
+                  networking.hostName = "pkgtest";
+                  omarchy.enable = true;
+                  omarchy.profile = "desktop";
+                  system.stateVersion = "26.05";
+                }
+              '';
+              fixtureFlake = pkgs.writeText "flake.nix" ''
+                {
+                  inputs = {
+                    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
+                    omahedron.url = "github:VirtualMachinist/Omahedron";
+                  };
+                  outputs = { nixpkgs, omahedron, ... }: { };
+                }
+              '';
+              # `nix eval nixpkgs#<attr>.name` succeeds for the raw-attribute
+              # probe; anything else that would touch the store is forbidden.
+              stubNix = pkgs.writeShellScript "stub-nix" ''
+                case "$*" in
+                  *"nixpkgs#"*".name"*) exit 0 ;;
+                esac
+                echo "FORBIDDEN: nix $*" >&2
+                touch "$TMPDIR/nix-called"
+                exit 97
+              '';
+              stubCurl = pkgs.writeShellScript "stub-curl" ''
+                echo "FORBIDDEN: curl $*" >&2
+                touch "$TMPDIR/curl-called"
+                exit 97
+              '';
+            in
+            pkgs.runCommand "omarchy-pkg-rollback-update-check"
+              {
+                nativeBuildInputs = [
+                  pkgs.jq
+                  pkgs.util-linux
+                ];
+              }
+              ''
+                set -euo pipefail
+                fail() { echo "FAIL: $*" >&2; exit 1; }
+                export HOME=$TMPDIR/home XDG_STATE_HOME=$TMPDIR/state XDG_CONFIG_HOME=$TMPDIR/home/.config
+                mkdir -p "$HOME/.config" "$XDG_STATE_HOME"
+                export OMARCHY_PATH=${omarchyPkg}/share/omarchy
+                export OMARCHY_NIX_UPDATE_DRY_RUN=1 OMARCHY_NIX_OFFLINE=1
+                STUB=$TMPDIR/bin; mkdir -p "$STUB"
+                ln -s ${stubNix} "$STUB/nix"
+                ln -s ${stubCurl} "$STUB/curl"
+                export PATH="$STUB:$OMARCHY_PATH/bin:$PATH"
+                T=$TMPDIR/flake; mkdir -p "$T"
+                install -m644 ${fixtureConfig} "$T/configuration.nix"
+                install -m644 ${fixtureFlake} "$T/flake.nix"
+                export OMARCHY_NIX_FLAKE=$T
+                J=$T/omarchy-packages.json
+
+
+                # --- G4b: rollback = previous NixOS generation ---------------------
+                shown=$(omarchy rollback --help)
+                grep -Fqi 'generation' <<<"$shown" || fail "rollback help does not say generation: $shown"
+                grep -Fq 'HOME' <<<"$shown" || fail "rollback help does not say \$HOME is not rolled back: $shown"
+                # saying "not Snapper" is the point; Snapper as the engine is the failure
+                ! sed -E 's/(not|no|never|isn'"'"'t|instead of) snapper//Ig' <<<"$shown" | grep -Fqi 'snapper' || fail "rollback help presents snapper as the engine: $shown"
+                omarchy rollback >"$TMPDIR/rb.out" 2>&1 || { cat "$TMPDIR/rb.out"; fail "rollback"; }
+                grep -Fq 'DRY-RUN: sudo nixos-rebuild switch --rollback' "$TMPDIR/rb.out" || fail "rollback argv: $(cat "$TMPDIR/rb.out")"
+                grep -Fq 'HOME' "$TMPDIR/rb.out" || fail "rollback does not warn about \$HOME: $(cat "$TMPDIR/rb.out")"
+                ! sed -E 's/(not|no|never|isn'"'"'t|instead of) snapper//Ig' "$TMPDIR/rb.out" | grep -Fqi 'snapper' || fail "rollback presents snapper as the engine: $(cat "$TMPDIR/rb.out")"
+                omarchy rollback --list >"$TMPDIR/rbl.out" 2>&1 || { cat "$TMPDIR/rbl.out"; fail "rollback --list"; }
+                grep -Fq 'DRY-RUN: sudo nixos-rebuild list-generations' "$TMPDIR/rbl.out" || fail "rollback --list argv"
+                echo "rollback OK"
+
+                # --- G4c: update print contract (COMPETE 2.9) ----------------------
+                # One line per item, machine-readable prefixes; "newest known
+                # stable" comes from GitHub (offline here -> unknown (offline)).
+                omarchy update pins >"$TMPDIR/pins.out" 2>&1 || { cat "$TMPDIR/pins.out"; fail "update pins"; }
+                grep -Fq 'pin: unlocked (github:VirtualMachinist/Omahedron)' "$TMPDIR/pins.out" || fail "pins: fixture has no lock, expected unlocked: $(cat "$TMPDIR/pins.out")"
+                grep -Fq 'omarchy-src: ${pin.omarchy_tag} (${builtins.substring 0 7 pin.omarchy_rev})' "$TMPDIR/pins.out" || fail "pins: omarchy-src line: $(cat "$TMPDIR/pins.out")"
+                grep -Fq 'newest-stable: unknown (offline)' "$TMPDIR/pins.out" || fail "pins: offline newest-stable line: $(cat "$TMPDIR/pins.out")"
+                grep -Fq 'channel: ${pin.channel} state=${pin.state} security-fast-path=${if pin.security_fast_path then "yes" else "no"}' "$TMPDIR/pins.out" || fail "pins: channel line: $(cat "$TMPDIR/pins.out")"
+                [ ! -e "$TMPDIR/curl-called" ] || fail "update pins hit the network while offline"
+                grep -Fq 'omarchy-update-pins' "$OMARCHY_PATH/bin/omarchy-update" || fail "omarchy-update does not print the pins first"
+                grep -Fq 'omarchy-update-system-pkgs' "$OMARCHY_PATH/bin/omarchy-update" || fail "omarchy-update lost its engine"
+                shown=$(omarchy version channel); grep -Fq '${pin.channel} (${pin.state})' <<<"$shown" || fail "version channel: $shown"
+                [ ! -e "$TMPDIR/nix-called" ] || fail "a G4 verb invoked nix outside the allowed probe"
+                echo "update print contract OK"
+
+                # (last: omarchy-nix-add spawns a background omarchy-nix-search
+                # --refresh, so nothing below may assert that nix was not called)
+                # --- G4a: pkg add|drop route at omarchy-nix-add|remove ------------
+                shown=$(omarchy pkg add --help)
+                grep -Fq ${pkgs.lib.escapeShellArg help.verbs."pkg.add".summary} <<<"$shown" || fail "pkg add help: $shown"
+                omarchy pkg add install.browser.firefox >"$TMPDIR/add.out" 2>&1 || { cat "$TMPDIR/add.out"; fail "pkg add catalog id"; }
+                jq -e '.packages | index("firefox")' "$J" >/dev/null || fail "catalog add did not write omarchy-packages.json: $(cat "$J")"
+                grep -Fq "DRY-RUN: sudo nixos-rebuild switch --flake $T" "$TMPDIR/add.out" || fail "pkg add did not reach the rebuild: $(cat "$TMPDIR/add.out")"
+                omarchy pkg add ripgrep >"$TMPDIR/add2.out" 2>&1 || { cat "$TMPDIR/add2.out"; fail "pkg add raw nixpkgs attribute"; }
+                jq -e '.packages | index("ripgrep")' "$J" >/dev/null || fail "raw attribute not written"
+                # the menus' Arch name maps onto the catalog entry — and on the
+                # desktop profile without the flag an unfree entry says so
+                if omarchy pkg add visual-studio-code-bin >"$TMPDIR/add3.out" 2>&1; then fail "unfree Arch name must be refused on desktop without the flag"; fi
+                grep -Fq ${pkgs.lib.escapeShellArg help.shared.errors.unfreePkgAddDesktop} "$TMPDIR/add3.out" || fail "arch-name mapping / unfree message: $(cat "$TMPDIR/add3.out")"
+                ! jq -e '.packages | index("vscode")' "$J" >/dev/null || fail "refused add still wrote vscode"
+                omarchy pkg drop install.browser.firefox >"$TMPDIR/drop.out" 2>&1 || { cat "$TMPDIR/drop.out"; fail "pkg drop"; }
+                ! jq -e '.packages | index("firefox")' "$J" >/dev/null || fail "pkg drop did not remove firefox: $(cat "$J")"
+                grep -Fq "DRY-RUN: sudo nixos-rebuild switch --flake $T" "$TMPDIR/drop.out" || fail "pkg drop did not reach the rebuild"
+                for s in omarchy-pkg-add omarchy-pkg-drop omarchy-pkg-install omarchy-pkg-remove; do
+                  ! grep -Fq 'omahedron: stub:' "$OMARCHY_PATH/bin/$s" || fail "$s still carries a stub banner"
+                  ! grep -v '^#' "$OMARCHY_PATH/bin/$s" | grep -Eq '\bpacman\b' || fail "$s still runs pacman"
+                done
+                # AUR helpers stay stubs
+                shown=$(omarchy pkg aur add something 2>&1 || true)
+                [ "$(head -1 <<<"$shown")" = "omahedron: stub: nixos-declarative" ] || fail "pkg aur add is no longer a stub: $shown"
+                echo "pkg add|drop OK"
+                touch $out
+              '';
+
+          # oma-cli G2c: the flake `omarchy setup` actually writes evaluates
+          # with the pinned inputs. The sample is produced by the real writer
+          # (answers file, dry-run) and imported from that derivation; its
+          # nixosConfigurations.<host> is instantiated here (evaluation only:
+          # drvPath, no Hyprland build). Runs on lathe / GHA, never castle.
+          omarchy-setup-eval =
+            let
+              setupPkg = self.packages.${system}.omarchy-nix-setup;
+              answers = pkgs.writeText "omarchy-setup-answers.json" (builtins.toJSON setupSample.answers);
+              sample = pkgs.runCommand "omarchy-setup-sample" { nativeBuildInputs = [ pkgs.jq ]; } ''
+                export HOME=$TMPDIR/home
+                mkdir -p "$HOME" "$out"
+                export TZDIR=${pkgs.tzdata}/share/zoneinfo
+                install -m644 ${./modules/setup/fixtures/hardware-configuration.nix} "$out/hardware-configuration.nix"
+                OMARCHY_NIX_FLAKE=$out OMARCHY_SETUP_ANSWERS=${answers} OMARCHY_SETUP_DRY_RUN=1 \
+                  ${setupPkg}/bin/omarchy-nix-setup -y
+              '';
+              generated = import "${sample}/flake.nix";
+              consumer =
+                (generated.outputs {
+                  inherit nixpkgs;
+                  omahedron = self;
+                }).nixosConfigurations.${setupSample.answers.hostname};
+              lib = pkgs.lib;
+            in
+            pkgs.runCommand "omarchy-setup-eval-check"
+              {
+                # Evaluation only: forcing drvPath instantiates the whole generated
+                # system (that is the proof), but the string context would make
+                # the system closure a build input of this check and `nix build`
+                # would realize the desktop. Discard the context; the path is
+                # only echoed.
+                toplevel = builtins.unsafeDiscardStringContext consumer.config.system.build.toplevel.drvPath;
+                hostName = consumer.config.networking.hostName;
+                omarchyEnabled = lib.boolToString consumer.config.omarchy.enable;
+                setupOnPath = lib.boolToString (lib.elem setupPkg consumer.config.environment.systemPackages);
+                substituters = lib.concatStringsSep " " consumer.config.nix.settings.substituters;
+                timeZone = toString consumer.config.time.timeZone;
+              }
+              ''
+                set -euo pipefail
+                fail() { echo "FAIL: $*" >&2; exit 1; }
+                [ "$hostName" = ${setupSample.answers.hostname} ] || fail "hostName: $hostName"
+                [ "$omarchyEnabled" = true ] || fail "omarchy.enable not set by the generated flake"
+                [ "$setupOnPath" = true ] || fail "omarchy-nix-setup not on the generated system's PATH"
+                [ "$timeZone" = ${setupSample.answers.timezone} ] || fail "time.timeZone: $timeZone"
+                case " $substituters " in
+                  *" ${setupSample.cache.url} "*) ;;
+                  *) fail "generated system does not register the Hyprland cache: $substituters" ;;
+                esac
+                echo "generated flake evaluates: $toplevel"
+                touch $out
+              '';
 
           # G8: packaged stub bodies embed parseable omahedron: banners (COMPETE §3.6).
           omarchy-stub-banners = pkgs.runCommand "omarchy-stub-banners-check" { } ''

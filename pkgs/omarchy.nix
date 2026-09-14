@@ -52,6 +52,7 @@
   glib,
   makeWrapper,
   python3,
+  jq,
 }:
 
 let
@@ -379,6 +380,7 @@ stdenv.mkDerivation (finalAttrs: {
           name=$(basename "$path")
           cat >"$path" <<EOF
     #!/bin/bash
+    # omarchy:summary=NixOS stub: pacman/Arch packaging; use omarchy nix add|remove (omarchy-packages.json + rebuild)
     # omarchy-nix: $name is pacman/Arch packaging; packages are declarative on NixOS.
     echo "omahedron: stub: nixos-declarative"
     echo "NixOS: packages are declarative — add packages to your flake config and nixos-rebuild switch (via $name)"
@@ -399,6 +401,7 @@ stdenv.mkDerivation (finalAttrs: {
           name=$(basename "$path")
           cat >"$path" <<EOF
     #!/bin/bash
+    # omarchy:summary=NixOS stub: Arch update step (pacman/AUR/mise/orphans); the flake rebuild covers it
     # omarchy-nix: $name has no NixOS analogue (pacman/AUR/mise/orphans).
     echo "omahedron: stub: nixos-declarative"
     echo "NixOS: handled declaratively (via $name)"
@@ -408,17 +411,15 @@ stdenv.mkDerivation (finalAttrs: {
         }
 
         # Package install/remove/channel/version helpers → declarative note.
+        # oma-cli G4a: omarchy-pkg-add/drop/install/remove and
+        # omarchy-version-channel are wraps now (modules/config/, installed
+        # in installPhase): pkg add|drop route at omarchy-nix-add|remove.
+        # The AUR helpers stay stubs (there is no AUR on NixOS).
         for s in \
-          bin/omarchy-pkg-install \
-          bin/omarchy-pkg-remove \
-          bin/omarchy-pkg-add \
-          bin/omarchy-pkg-drop \
           bin/omarchy-pkg-aur-add \
           bin/omarchy-pkg-aur-install \
           bin/omarchy-reinstall-pkgs \
           bin/omarchy-refresh-pacman \
-          bin/omarchy-channel-set \
-          bin/omarchy-version-channel \
           bin/omarchy-version-pkgs \
           bin/omarchy-upgrade-to-quattro \
           bin/omarchy-install-service-1password \
@@ -457,6 +458,7 @@ stdenv.mkDerivation (finalAttrs: {
         # that gates on it skips AUR work cleanly.
         cat > bin/omarchy-pkg-aur-accessible <<'EOF'
     #!/bin/bash
+    # omarchy:summary=NixOS stub: reports the AUR as unavailable (there is no AUR on NixOS)
     # omarchy-nix: no AUR on NixOS.
     exit 1
     EOF
@@ -466,14 +468,17 @@ stdenv.mkDerivation (finalAttrs: {
         # imperatively (omarchy-apply-lock since v4.0.0, renamed from
         # omarchy-setup-lock); on NixOS those services are declared in the
         # module (blocks K/L), so runtime writes are both wrong and impossible.
+        # oma-cli G3c: omarchy-setup-security-fingerprint / omarchy-remove-
+        # security-fingerprint are wraps now (modules/config/, installed
+        # below): they set omarchy.fingerprint.enable in the consumer flake and
+        # rebuild. Only omarchy-apply-lock remains a PAM stub.
         for s in \
-          bin/omarchy-apply-lock \
-          bin/omarchy-setup-security-fingerprint \
-          bin/omarchy-remove-security-fingerprint
+          bin/omarchy-apply-lock
         do
           name=$(basename "$s")
           cat >"$s" <<EOF
     #!/bin/bash
+    # omarchy:summary=NixOS stub: lock-screen PAM is declarative here (omarchy.fingerprint.enable), not written at runtime
     # omarchy-nix: $name writes /etc/pam.d/* on Arch; PAM services are
     # declarative on NixOS (security.pam.services, omarchy module blocks K/L).
     echo "omahedron: stub: nixos-declarative"
@@ -502,6 +507,7 @@ stdenv.mkDerivation (finalAttrs: {
           lib.mapAttrsToList (name: m: ''
                         cat >bin/${name} <<'OMARCHY_NIX_STUB'
             #!/bin/bash
+            # omarchy:summary=NixOS stub: ${m.note}
             # omarchy-nix: upstream ${name} mutates Arch system state; on NixOS that
             # state is owned declaratively.
             echo "omahedron: stub: nixos-declarative"
@@ -790,6 +796,16 @@ stdenv.mkDerivation (finalAttrs: {
           --replace-fail "\$({ expac -S '%n %v (%r)' \$(pacman -Qqe) 2>/dev/null; comm -13 <(pacman -Sql | sort) <(pacman -Qqe | sort) | xargs -r expac -Q '%n %v (AUR)'; } | sort)" \
                          "\$(ls /run/current-system/sw/bin 2>/dev/null | sort || echo unavailable)"
 
+        # oma-cli G5c: `omarchy debug` points agents at the on-box AGENTS.md
+        # (shipped by the module at /etc/omahedron/AGENTS.md when
+        # omarchy.enable): once on stderr for the person running it, once in
+        # the log header so an uploaded/printed log carries the pointer too.
+        substituteInPlace bin/omarchy-debug \
+          --replace-fail $'LOG_FILE="/tmp/omarchy-debug.log"\n' \
+                         $'LOG_FILE="/tmp/omarchy-debug.log"\n\n# omarchy-nix (oma-cli G5c): the on-box agent manual.\necho "omarchy debug: agents should read /etc/omahedron/AGENTS.md first (humans use omarchy; agents edit Nix)." >&2\n' \
+          --replace-fail $'Omarchy Package: $(omarchy-version 2>/dev/null || echo "unknown")\n' \
+                         $'Omarchy Package: $(omarchy-version 2>/dev/null || echo "unknown")\nAgents: read /etc/omahedron/AGENTS.md (humans use omarchy; agents edit Nix)\n'
+
         substituteInPlace bin/omarchy-upload-log \
           --replace-fail 'echo "INSTALLED PACKAGES (pacman -Q)"' \
                          'echo "INSTALLED PACKAGES (/run/current-system/sw/bin)"' \
@@ -897,6 +913,8 @@ stdenv.mkDerivation (finalAttrs: {
         # scripts call omarchy-pkg-missing (kept: always exit 0) to proceed.
         cat > bin/omarchy-pkg-present <<'EOF'
     #!/bin/bash
+    # omarchy:summary=Report whether a catalog entry is managed in omarchy-packages.json or its binary is on PATH (NixOS presence probe)
+    # omarchy:args=<name>
     # omarchy-nix: presence probe for menu `when:` guards.
     # Exit 0 when the entry is managed (in omarchy-packages.json) or its binary
     # is on PATH; exit 1 otherwise.
@@ -959,6 +977,7 @@ stdenv.mkDerivation (finalAttrs: {
 
         cat > bin/omarchy-pkg-missing <<'EOF'
     #!/bin/bash
+    # omarchy:summary=NixOS stub: always reports packages missing so pkg-add stubs print their note
     # omarchy-nix: always report "missing" so pkg-add stubs run (and print).
     exit 0
     EOF
@@ -967,6 +986,7 @@ stdenv.mkDerivation (finalAttrs: {
         # Channel query used by the Update → Channel menu checkmarks.
         cat > bin/omarchy-channel-current <<'EOF'
     #!/bin/bash
+    # omarchy:summary=Print the active channel (NixOS: always "nixos"; the real channel is the omahedron flake input pin)
     # omarchy-nix: no pacman channel; report a stable label for the UI.
     echo nixos
     exit 0
@@ -978,6 +998,8 @@ stdenv.mkDerivation (finalAttrs: {
         # indicator instead of showing a stale "updates available".
         cat > bin/omarchy-update-available <<'EOF'
     #!/bin/bash
+    # omarchy:summary=NixOS stub: no pacman update probe, always reports no updates; run omarchy update instead
+    # omarchy:args=[-v]
     # omarchy-nix: no pacman update probe. Exit non-zero so the shell clears
     # the update indicator. Verbose when stdout is a TTY or -v is passed.
     if [[ -t 1 || ''${1:-} == "-v" || ''${1:-} == "--verbose" ]]; then
@@ -990,6 +1012,59 @@ stdenv.mkDerivation (finalAttrs: {
     EOF
         chmod +x bin/omarchy-update-available
 
+        # --- oma-cli G1a: NixOS-honest help copy ------------------------------
+        # bin/omarchy (the vendored command center) prints `omarchy --help`
+        # from a heredoc and titles group help from GROUP_DESCRIPTIONS; the
+        # per-command lines come from `# omarchy:summary=` headers (added to
+        # every port-written stub/wrap below). Text-only substitutions; the
+        # router's dispatch logic is not touched (ledger: omarchy -> wrap).
+        substituteInPlace bin/omarchy \
+          --replace-fail $'Omarchy command center\n\nUsage:' \
+                         $'Omarchy command center (Omahedron: the Omarchy desktop on NixOS)\n\nUsage:' \
+          --replace-fail '  omarchy update              Update Omarchy and system packages' \
+                         '  omarchy update              Update Omarchy: nix flake update + nixos-rebuild switch' \
+          --replace-fail $'  omarchy debug               Print debugging information\n' \
+                         $'  omarchy debug               Print debugging information\n  omarchy nix add <id>        Add a package declaratively (omarchy-packages.json + rebuild)\n  omarchy nix search          Search nixpkgs and add the picks\n' \
+          --replace-fail $'  omarchy commands --check    Validate command metadata and routes\n' \
+                         $'  omarchy commands --check    Validate command metadata and routes\n\nNixOS:\n  This is Omahedron. Packages, services and boot are declarative. pacman, AUR,\n  Limine and Snapper verbs print an "omahedron: stub:" note instead of acting;\n  rollback is a boot generation. Humans drive omarchy; agents edit the consumer\n  flake (omarchy.* options, omarchy-packages.json).\n' \
+          --replace-fail 'GROUP_DESCRIPTIONS[channel]="Omarchy release channel management"' \
+                         'GROUP_DESCRIPTIONS[channel]="Release channel (NixOS: the omahedron flake input pin; channel set is a stub)"' \
+          --replace-fail 'GROUP_DESCRIPTIONS[dns]="DNS resolver configuration"' \
+                         'GROUP_DESCRIPTIONS[dns]="DNS resolver (NixOS: services.resolved in your flake; the wizard is a stub)"' \
+          --replace-fail 'GROUP_DESCRIPTIONS[hibernation]="Hibernation setup and removal"' \
+                         'GROUP_DESCRIPTIONS[hibernation]="Hibernation (NixOS: boot.resumeDevice + swapDevices in hardware-configuration.nix; stubs)"' \
+          --replace-fail 'GROUP_DESCRIPTIONS[install]="Optional software installers"' \
+                         'GROUP_DESCRIPTIONS[install]="Optional software installers (NixOS: declarative catalog via omarchy nix add; no pacman)"' \
+          --replace-fail $'GROUP_DESCRIPTIONS[notification]="Notification helpers"\n' \
+                         $'GROUP_DESCRIPTIONS[nix]="NixOS package helpers: omarchy-packages.json + rebuild (add, remove, search)"\nGROUP_DESCRIPTIONS[notification]="Notification helpers"\n' \
+          --replace-fail 'GROUP_DESCRIPTIONS[pkg]="Package management helpers"' \
+                         'GROUP_DESCRIPTIONS[pkg]="Packages (NixOS: pacman/AUR verbs are stubs; use omarchy nix add|remove|search)"' \
+          --replace-fail 'GROUP_DESCRIPTIONS[plymouth]="Plymouth boot theme management"' \
+                         'GROUP_DESCRIPTIONS[plymouth]="Plymouth boot theme (NixOS: omarchy.plymouth / boot.plymouth at rebuild; setters are stubs)"' \
+          --replace-fail 'GROUP_DESCRIPTIONS[reinstall]="Reinstall and reset workflows"' \
+                         'GROUP_DESCRIPTIONS[reinstall]="Reinstall and reset (NixOS: stubs; delete a user config and rebuild to re-seed it)"' \
+          --replace-fail 'GROUP_DESCRIPTIONS[remove]="Removal workflows"' \
+                         'GROUP_DESCRIPTIONS[remove]="Removal workflows (NixOS: declarative via omarchy nix remove)"' \
+          --replace-fail 'GROUP_DESCRIPTIONS[setup]="Interactive setup wizards"' \
+                         'GROUP_DESCRIPTIONS[setup]="Setup wizards (NixOS: system-level ones point at omarchy.* options in your flake)"' \
+          --replace-fail 'GROUP_DESCRIPTIONS[snapshot]="System snapshots"' \
+                         'GROUP_DESCRIPTIONS[snapshot]="System snapshots (NixOS: stub; rollback is a boot generation, not Snapper)"' \
+          --replace-fail 'GROUP_DESCRIPTIONS[sudo]="Sudo configuration helpers"' \
+                         'GROUP_DESCRIPTIONS[sudo]="Sudo helpers (NixOS: security.sudo in your flake; passwordless is a stub)"' \
+          --replace-fail 'GROUP_DESCRIPTIONS[update]="Omarchy and system updates"' \
+                         'GROUP_DESCRIPTIONS[update]="Omarchy and system updates (NixOS: nix flake update + nixos-rebuild switch)"' \
+          --replace-fail 'GROUP_DESCRIPTIONS[version]="Version and channel information"' \
+                         'GROUP_DESCRIPTIONS[version]="Version and channel information (NixOS: the omahedron flake input pin)"'
+
+        # oma-cli G3b: `omarchy default terminal <name>` keeps the upstream live
+        # switch (xdg-terminals.list + notification) and then persists the
+        # choice as omarchy.terminal in the consumer flake and rebuilds via
+        # the port-owned omarchy-setup-terminal (modules/config/). A missing
+        # consumer flake keeps the live change and says so (ledger: wrap).
+        substituteInPlace bin/omarchy-default-terminal \
+          --replace-fail 'omarchy-notification-send -g $glyph "$name is now the default terminal"' \
+                         $'omarchy-notification-send -g $glyph "$name is now the default terminal"\n\n# omarchy-nix (oma-cli G3b): persist as omarchy.terminal in the consumer flake, then rebuild.\nomarchy-setup-terminal "$1" || echo "omarchy default terminal: live change kept; omarchy.terminal was not persisted (see above)." >&2'
+
         # Point the failure trap at the full log (issue #55): the
         # presentation window closes on any key (omarchy-show-done), so the
         # error text vanishes with it. omarchy-update already tees everything
@@ -998,13 +1073,21 @@ stdenv.mkDerivation (finalAttrs: {
         substituteInPlace bin/omarchy-update \
           --replace-fail \
             'correct the error, and retry the update.\n\nIf you need assistance' \
-            'correct the error, and retry the update.\n\nFull log: /tmp/omarchy-update.log\n\nIf you need assistance'
+            'correct the error, and retry the update.\n\nFull log: /tmp/omarchy-update.log\n\nIf you need assistance' \
+          --replace-fail \
+            '# omarchy:summary=Update Omarchy and system packages' \
+            '# omarchy:summary=Update Omarchy (NixOS: prints pin / omarchy-src tag / newest stable / channel, then nix flake update + nixos-rebuild switch)' \
+          --replace-fail \
+            $'omarchy-update-requires-free-space\n' \
+            $'omarchy-update-requires-free-space\n\n# omarchy-nix (oma-cli G4c, COMPETE 2.9): print the Omahedron pin, the\n# omarchy-src tag, the newest stable Omarchy tag and the channel state\n# before anything is asked or changed. The wrap below stays the engine.\nomarchy-update-pins || true\n'
 
         # Snapshot: snapper/limine are Arch. Exit 0 with a note so
         # `omarchy-snapshot create || (($? == 127))` in omarchy-update
         # continues (exit 0 also satisfies the || chain).
         cat > bin/omarchy-snapshot <<'EOF'
     #!/bin/bash
+    # omarchy:summary=NixOS stub: no Snapper snapshots; rollback is a boot generation (nixos-rebuild list-generations)
+    # omarchy:args=<create|restore>
     # omarchy-nix: snapper/limine snapshots are Arch-only.
 
     COMMAND="''${1:-}"
@@ -1042,6 +1125,7 @@ stdenv.mkDerivation (finalAttrs: {
         # switch. DRY-RUN and rebuild-cmd env vars support tests.
         cat > bin/omarchy-update-system-pkgs <<'EOF'
     #!/bin/bash
+    # omarchy:summary=Refresh the system on NixOS: nix flake update + nixos-rebuild switch on the consumer flake
     # omarchy-nix: NixOS-native system package refresh.
 
     set -e
@@ -1126,6 +1210,7 @@ stdenv.mkDerivation (finalAttrs: {
         # script.
         cat > bin/omarchy-migrate <<'EOF'
     #!/bin/bash
+    # omarchy:summary=Run pending Omarchy migrations (NixOS-aware, fail-closed runner)
     # omarchy-nix: NixOS-aware, fail-closed migration runner.
     #
     # Differences from upstream omarchy-migrate:
@@ -1645,6 +1730,8 @@ stdenv.mkDerivation (finalAttrs: {
     # package management so the menu does not open a useless pacman TUI.
     cat >"$dest/bin/omarchy-nix-declarative-note" <<'EOF'
     #!/bin/bash
+    # omarchy:summary=Print the NixOS declarative-packages note used by the Install/Remove menu (stub)
+    # omarchy:hidden=true
     # omarchy-nix: menu helper for Install/Remove Package/AUR on NixOS.
 
     cat <<'MSG'
@@ -1908,6 +1995,10 @@ stdenv.mkDerivation (finalAttrs: {
     # multiple ids per call (one transaction, one rebuild).
     cat >"$dest/bin/omarchy-nix-add" <<'EOF'
     #!/bin/bash
+    # omarchy:summary=Add catalog entries or nixpkgs attributes to omarchy-packages.json and rebuild (NixOS)
+    # omarchy:args=<id-or-attr...>
+    # omarchy:examples=omarchy nix add install.browser.firefox | omarchy nix add ripgrep jq
+    # omarchy:requires-sudo=true
     # omarchy-nix: add catalog entries (or raw nixpkgs attributes) to
     # omarchy-packages.json and rebuild the system.
 
@@ -1936,6 +2027,11 @@ stdenv.mkDerivation (finalAttrs: {
         pkgs+=("$id")
       fi
     done
+
+    # --- oma-cli G3a: unfree catalog entries on the desktop profile need
+    # omarchy.unfree.enable (ADR-0024). Says so and points at
+    # `omarchy setup unfree on` instead of failing inside the rebuild.
+    "$(dirname "''${BASH_SOURCE[0]}")/omarchy-nix-unfree-guard" "$@"
 
     # --- one locked transaction for the whole batch --------------------------
     txn_begin omarchy-nix-add "$@"
@@ -1977,6 +2073,10 @@ stdenv.mkDerivation (finalAttrs: {
 
     cat >"$dest/bin/omarchy-nix-remove" <<'EOF'
     #!/bin/bash
+    # omarchy:summary=Remove catalog entries or nixpkgs attributes from omarchy-packages.json and rebuild (NixOS)
+    # omarchy:args=[id-or-attr...]
+    # omarchy:examples=omarchy nix remove install.browser.firefox
+    # omarchy:requires-sudo=true
     # omarchy-nix: remove catalog entries (or raw nixpkgs attributes) from
     # omarchy-packages.json and rebuild the system.
 
@@ -2051,6 +2151,8 @@ stdenv.mkDerivation (finalAttrs: {
     # background after every successful omarchy-nix-add rebuild.
     cat >"$dest/bin/omarchy-nix-search" <<'EOF'
     #!/bin/bash
+    # omarchy:summary=Search nixpkgs interactively (fzf) and add the picks in one omarchy nix add transaction
+    # omarchy:requires-sudo=true
     # omarchy-nix: search nixpkgs (fzf) and install the picks via ONE
     # omarchy-nix-add transaction (tab multi-selects).
 
@@ -2112,6 +2214,86 @@ stdenv.mkDerivation (finalAttrs: {
     exec omarchy-nix-add "''${choices[@]}"
     EOF
     chmod +x "$dest/bin/omarchy-nix-search"
+
+    # oma-cli G2 (installer A): `omarchy setup`. The wizard itself is the
+    # port-owned omarchy-nix-setup package (pkgs/omarchy-nix-setup.nix +
+    # modules/setup/), put on PATH by the module via omarchy.setupPackage.
+    # The vendored router only discovers $OMARCHY_PATH/bin, so this launcher
+    # is what makes `omarchy setup` / `omarchy setup --help` route there.
+    # Its metadata header is what the command center prints.
+    cat >"$dest/bin/omarchy-setup" <<'EOF'
+    #!/bin/bash
+    # omarchy:summary=Install Omahedron on this NixOS machine: asks the identity questions, writes the consumer flake onto the G0 locator, copies hardware-configuration.nix (never regenerates it), rebuilds with the Hyprland/Mesa cache
+    # omarchy:args=[-y] [--force]
+    # omarchy:examples=omarchy setup | omarchy setup -y
+    # omarchy:requires-sudo=true
+    # omarchy-nix: launcher for the port-owned omarchy-nix-setup wizard.
+    if command -v omarchy-nix-setup >/dev/null 2>&1; then
+      exec omarchy-nix-setup "$@"
+    fi
+    echo "omarchy setup: omarchy-nix-setup is not on PATH. Enable omarchy.enable = true through the flake's nixosModules.default (it sets omarchy.setupPackage) and rebuild." >&2
+    exit 127
+    EOF
+    chmod +x "$dest/bin/omarchy-setup"
+
+    # Ada prompt copy (frontend-owned skills/omarchy/setup-prompts.json): the
+    # wizard's fallback prompts file when it is not handed one at build time.
+    install -Dm644 ${../skills/omarchy/setup-prompts.json} \
+      "$dest/default/setup/prompts.json"
+
+    # oma-cli G3 (ADR-0025 workstream 3 verbs): identity / profile / unfree /
+    # terminal-persist / fingerprint / autologin / pin. Backend-owned scripts
+    # under modules/config/ (omarchy-nix-<name>.sh + the sourced configlib)
+    # land in $OMARCHY_PATH/bin under their route names so the vendored
+    # command center discovers them (omarchy setup name, omarchy pin, ...).
+    # The `# omarchy:*` help header of each verb is regenerated from the
+    # frontend-owned skills/omarchy/verb-help.json (one source for help copy);
+    # scripts without an entry there keep their own header.
+    install -Dm644 ${../skills/omarchy/verb-help.json} "$dest/default/verbs/help.json"
+    # oma-cli G4c: the pin schema (omarchy_tag / rev / channel / state) ships
+    # with the package so omarchy-update-pins / omarchy-version-channel can
+    # print it on the box.
+    install -Dm644 ${../schema/pin.json} "$dest/pin.json"
+    for src in ${../modules/config}/omarchy-nix-*.sh; do
+      base=$(basename "$src" .sh)
+      case "$base" in
+        omarchy-nix-configlib|omarchy-nix-unfree-guard) name="$base" ;;
+        *) name="omarchy-''${base#omarchy-nix-}" ;;
+      esac
+      key="''${name#omarchy-}"; key="''${key//-/.}"
+      entry=$(${jq}/bin/jq -c --arg k "$key" '.verbs[$k] // empty' ${../skills/omarchy/verb-help.json})
+      {
+        if [[ $name == omarchy-nix-configlib ]]; then
+          cat "$src"
+        elif [[ $name == omarchy-nix-unfree-guard ]]; then
+          # internal helper (called by omarchy-nix-add): keep `omarchy commands --check` green
+          echo '#!/bin/bash'
+          echo '# omarchy:summary=Refuse unfree catalog entries on the desktop profile until omarchy.unfree.enable is on (used by omarchy nix add)'
+          echo '# omarchy:args=<catalog-id...>'
+          echo '# omarchy:hidden=true'
+          awk 'NR==1 && /^#!/ {next} /^# omarchy:/ {next} {print}' "$src"
+        elif [[ -n $entry ]]; then
+          route="omarchy ''${key//./ }"
+          usage=$(${jq}/bin/jq -r '.usage' <<<"$entry")
+          args="''${usage#"$route"}"; args="''${args# }"
+          echo '#!/bin/bash'
+          ${jq}/bin/jq -r '"# omarchy:summary=\(.summary)"' <<<"$entry"
+          [[ -z $args ]] || echo "# omarchy:args=$args"
+          ${jq}/bin/jq -r 'select(.examples | length > 0) | "# omarchy:examples=\(.examples | join(" | "))"' <<<"$entry"
+          echo '# omarchy:requires-sudo=true'
+          awk 'NR==1 && /^#!/ {next} /^# omarchy:/ {next} {print}' "$src"
+        else
+          cat "$src"
+        fi
+      } >"$dest/bin/$name"
+      sed -i \
+        -e "s|@@CONFIG_HELP_FILE@@|$dest/default/verbs/help.json|g" \
+        -e "s|@@CONFIG_CATALOG_FILE@@|$dest/nix-catalog.json|g" \
+        -e "s|@@CONFIG_PIN_FILE@@|$dest/pin.json|g" \
+        "$dest/bin/$name"
+      if [[ $name == omarchy-nix-configlib ]]; then chmod 644 "$dest/bin/$name"; else chmod 755 "$dest/bin/$name"; fi
+    done
+    ! grep -rl '@@CONFIG_' "$dest/bin" || { echo "omarchy-nix: unreplaced @@CONFIG_ token in a G3 verb" >&2; exit 1; }
 
     runHook postInstall
   '';

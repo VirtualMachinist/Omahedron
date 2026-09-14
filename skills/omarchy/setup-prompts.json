@@ -1,0 +1,177 @@
+{
+  "$schema": "./setup-prompts.schema.json",
+  "version": 1,
+  "installPath": "default/setup/prompts.json",
+  "help": {
+    "summary": "Install Omahedron on this NixOS system",
+    "description": "Writes your Omahedron configuration, copies hardware-configuration.nix (never regenerates it), and rebuilds. You are not asked to open a .nix file. x86_64-linux only.",
+    "longDescription": "Installer A (ADR-0025): run on an existing NixOS machine after the stock NixOS disk stage. Resolves the G0 flake locator ($OMARCHY_NIX_FLAKE, then /etc/nixos), asks a short set of questions, writes flake.nix and configuration.nix beside your existing hardware-configuration.nix, passes the Hyprland/Mesa binary cache on the first switch, and runs nixos-rebuild switch. Agents may inspect the generated flake; humans drive this wizard."
+  },
+  "errors": {
+    "unsupportedArch": "omarchy setup supports x86_64-linux only.",
+    "missingHardwareConfig": "hardware-configuration.nix was not found beside the flake locator. Install NixOS first, then run omarchy setup.",
+    "locatorNotWritable": "Could not write the consumer flake to the G0 locator. Check permissions or set OMARCHY_NIX_FLAKE."
+  },
+  "intro": {
+    "title": "Omahedron setup",
+    "subtitle": "A few questions, then your desktop rebuilds. No Nix editing required.",
+    "ready": "Ready to write your configuration and rebuild. This can take several minutes the first time while Hyprland and Mesa download from the cache."
+  },
+  "fields": {
+    "full_name": {
+      "mapsTo": "omarchy.full_name",
+      "gum": "input",
+      "prompt": "Your full name> ",
+      "placeholder": "Ada Lovelace",
+      "header": "What name should git and the shell use?"
+    },
+    "username": {
+      "mapsTo": "users.users.<username>",
+      "gum": "input",
+      "prompt": "Username> ",
+      "placeholder": "ada",
+      "header": "Linux account name (lowercase, no spaces).",
+      "validate": {
+        "pattern": "^[a-z][a-z0-9_-]*$",
+        "message": "Use lowercase letters, numbers, underscore, or hyphen; must start with a letter."
+      }
+    },
+    "password": {
+      "mapsTo": "users.users.<username>.initialHashedPassword",
+      "gum": "input",
+      "password": true,
+      "prompt": "Password> ",
+      "header": "Login password for this account (hashed before it is written).",
+      "confirm": {
+        "prompt": "Confirm password> ",
+        "mismatch": "Passwords did not match. Try again."
+      }
+    },
+    "hostname": {
+      "mapsTo": "networking.hostName",
+      "gum": "input",
+      "prompt": "Hostname> ",
+      "placeholder": "mybox",
+      "header": "Machine name (also the flake configuration name, e.g. mybox in .#mybox).",
+      "validate": {
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9.-]*$",
+        "message": "Use letters, numbers, dots, or hyphens."
+      }
+    },
+    "timezone": {
+      "mapsTo": "omarchy.timezone",
+      "gum": "input",
+      "prompt": "Timezone (IANA)> ",
+      "placeholder": "America/Chicago",
+      "header": "IANA timezone only (e.g. Europe/London, America/New_York). Not city nicknames like USA/Dallas.",
+      "validate": {
+        "kind": "iana-timezone",
+        "message": "Enter a valid IANA timezone (timedatectl list-timezones)."
+      }
+    },
+    "theme": {
+      "mapsTo": "omarchy.theme",
+      "gum": "choose",
+      "header": "Pick a stock Omarchy theme (you can change it later with omarchy theme set).",
+      "default": "tokyo-night",
+      "choices": [
+        "catppuccin",
+        "catppuccin-latte",
+        "ethereal",
+        "everforest",
+        "flexoki-light",
+        "gruvbox",
+        "hackerman",
+        "kanagawa",
+        "last-horizon",
+        "lumon",
+        "lupine",
+        "matte-black",
+        "miasma",
+        "nord",
+        "osaka-jade",
+        "retro-82",
+        "ristretto",
+        "rose-pine",
+        "solitude",
+        "tokyo-night",
+        "vantablack",
+        "white"
+      ]
+    },
+    "terminal": {
+      "mapsTo": "omarchy.terminal",
+      "gum": "choose",
+      "header": "Default terminal (Super+Enter).",
+      "default": "ghostty",
+      "choices": [
+        "foot",
+        "ghostty",
+        "alacritty",
+        "kitty"
+      ]
+    },
+    "profile": {
+      "mapsTo": "omarchy.profile",
+      "gum": "choose",
+      "header": "Desktop profile",
+      "default": "desktop",
+      "choices": [
+        {
+          "value": "desktop",
+          "label": "Desktop — thin Omarchy session (recommended)"
+        },
+        {
+          "value": "workstation",
+          "label": "Workstation — adds Docker, zram, and creative/dev extras"
+        }
+      ]
+    },
+    "scale": {
+      "mapsTo": "omarchy.scale",
+      "gum": "choose",
+      "header": "Display scale",
+      "default": "1",
+      "choices": [
+        {
+          "value": "1",
+          "label": "1 — standard displays"
+        },
+        {
+          "value": "2",
+          "label": "2 — HiDPI / retina"
+        }
+      ]
+    },
+    "fingerprint": {
+      "mapsTo": "omarchy.fingerprint.enable",
+      "gum": "confirm",
+      "prompt": "Enable fingerprint unlock for the lock screen?",
+      "header": "Only choose Yes if this machine has a fingerprint reader. After setup, run fprintd-enroll once to register your finger.",
+      "default": false
+    },
+    "autologin": {
+      "mapsTo": "omarchy.autologin.user",
+      "gum": "confirm",
+      "prompt": "Skip the login screen and go straight to the desktop?",
+      "header": "Useful on encrypted disks where you already typed your disk password at boot. SDDM will log in as the user you created above.",
+      "default": false,
+      "whenTrue": {
+        "setTo": "<username>"
+      }
+    }
+  },
+  "order": [
+    "full_name",
+    "username",
+    "password",
+    "hostname",
+    "timezone",
+    "theme",
+    "terminal",
+    "profile",
+    "scale",
+    "fingerprint",
+    "autologin"
+  ]
+}

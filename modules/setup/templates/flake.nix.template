@@ -1,0 +1,21 @@
+{
+  description = "Omahedron consumer flake (written by omarchy setup)";
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
+    omahedron.url = "@OMAHEDRON_FLAKE_URL@";
+  };
+
+  outputs = { nixpkgs, omahedron, ... }: {
+    nixosConfigurations.@HOSTNAME@ = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      modules = [
+        ./hardware-configuration.nix
+        ./configuration.nix
+        omahedron.nixosModules.default
+        omahedron.inputs.home-manager.nixosModules.home-manager
+        { home-manager.sharedModules = [ omahedron.homeManagerModules.default ]; }
+      ];
+    };
+  };
+}

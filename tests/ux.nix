@@ -531,10 +531,28 @@
     # runtime PAM writers are declarative stubs and must not write /etc/pam.d
     out = machine.succeed("omarchy-apply-lock")
     assert "declarative" in out, out
-    out = machine.succeed("omarchy-setup-security-fingerprint")
-    assert "omarchy.fingerprint.enable" in out, out
-    out = machine.succeed("omarchy-remove-security-fingerprint")
-    assert "declarative" in out, out
+    # oma-cli G3c: the fingerprint pair is a wrap (sets omarchy.fingerprint.
+    # enable in the consumer flake and rebuilds). This VM has no consumer
+    # flake, so both refuse with the help-copy sentence and write nothing.
+    for script in ["omarchy-setup-security-fingerprint", "omarchy-remove-security-fingerprint"]:
+        _rc, out = machine.execute(script + " 2>&1")
+        assert _rc != 0, "%s must refuse without a consumer flake: %r" % (script, out)
+        assert "consumer flake" in out, "%s did not name the missing consumer flake: %r" % (script, out)
+        assert "omahedron: stub:" not in out, "%s still prints a stub banner: %r" % (script, out)
+    machine.succeed("grep -q pam_fprintd /etc/pam.d/omarchy-lock-fingerprint")
+
+    # --- oma-cli G5: on-box AGENTS.md ---------------------------------------
+    # The module ships /etc/omahedron/AGENTS.md on an enabled host; it keeps
+    # the split (humans use omarchy; agents edit Nix); omarchy debug points
+    # at it; a cwd-only harness finds the pointer via motd or ~/AGENTS.md.
+    machine.succeed("test -r /etc/omahedron/AGENTS.md")
+    agents_md = machine.succeed("cat /etc/omahedron/AGENTS.md")
+    for needle in ["agents edit Nix", "$OMARCHY_PATH", "x86_64-linux", "hardware-configuration.nix", "omarchy-packages.json", "$HOME"]:
+        assert needle in agents_md, "on-box AGENTS.md lacks %r" % needle
+    assert "pacman -S" not in agents_md and "snapper" not in agents_md.lower(), agents_md
+    out = machine.succeed(as_demo("omarchy-debug --no-sudo --print 2>&1"))
+    assert "/etc/omahedron/AGENTS.md" in out, "omarchy debug does not point at the on-box AGENTS.md: %r" % out[:400]
+    machine.succeed("grep -q omahedron/AGENTS.md /etc/motd || grep -q omahedron/AGENTS.md /home/demo/AGENTS.md")
 
     # --- (4i) runtime mutator quarantine -----------------------------------
     # Arch system mutators are neutralized: declarative-note stubs print a

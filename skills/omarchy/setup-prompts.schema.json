@@ -1,0 +1,38 @@
+{
+  "$id": "omahedron:setup-prompts",
+  "title": "omarchy setup prompt copy",
+  "type": "object",
+  "required": ["version", "installPath", "help", "errors", "intro", "fields", "order"],
+  "properties": {
+    "version": { "type": "integer", "const": 1 },
+    "installPath": {
+      "type": "string",
+      "description": "Path relative to $OMARCHY_PATH where the packaged copy is installed."
+    },
+    "help": {
+      "type": "object",
+      "required": ["summary", "description"],
+      "properties": {
+        "summary": { "type": "string" },
+        "description": { "type": "string" },
+        "longDescription": { "type": "string" }
+      }
+    },
+    "errors": { "type": "object", "additionalProperties": { "type": "string" } },
+    "intro": {
+      "type": "object",
+      "required": ["title", "subtitle"],
+      "properties": {
+        "title": { "type": "string" },
+        "subtitle": { "type": "string" },
+        "ready": { "type": "string" }
+      }
+    },
+    "fields": { "type": "object", "additionalProperties": { "type": "object" } },
+    "order": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    }
+  }
+}

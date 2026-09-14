@@ -29,6 +29,9 @@ let
   # the identity variables below.
   fmt = import ../lib/omarchy-formats.nix { inherit lib; };
 
+  # oma-cli G5: frontend-owned on-box agent contract (modules/onbox/AGENTS.md).
+  onBoxAgentsFile = ../onbox/AGENTS.md;
+
   # Map an omarchy.exclude_packages entry (a package *attribute name* string,
   # e.g. "obsidian") to the same form a derivation exposes. We match on both
   # `pname` (preferred, e.g. "obsidian") and `name` (fallback, may carry a
@@ -89,15 +92,19 @@ let
   # the JSON actually manages — including hidden deps (steam-unwrapped,
   # firefox-bin-unwrapped, openssl-1.1.1w, electron-…). Literals avoid
   # lib.getName pkgs.${n} at config-construction time (throw-aliases, cycles).
-  managedUnfreeNames = lib.unique (
-    lib.concatMap (
-      attr:
-      lib.concatMap (e: lib.optionals (builtins.elem attr (e.pkgs or [ ])) (e.unfreeNames or [ ])) (
-        builtins.attrValues catalogJson.entries
+  managedUnfreeNames =
+    if cfg.unfree.enable || cfg.profile == "workstation" then
+      lib.unique (
+        lib.concatMap (
+          attr:
+          lib.concatMap (e: lib.optionals (builtins.elem attr (e.pkgs or [ ])) (e.unfreeNames or [ ])) (
+            builtins.attrValues catalogJson.entries
+          )
+        ) managedPkgs
+        ++ lib.concatMap (f: catalogJson.features.${f}.unfreeNames or [ ]) managedFeatures
       )
-    ) managedPkgs
-    ++ lib.concatMap (f: catalogJson.features.${f}.unfreeNames or [ ]) managedFeatures
-  );
+    else
+      [ ];
   managedInsecureNames = lib.unique (
     lib.concatMap (
       attr:
@@ -537,6 +544,10 @@ in
       # analogue. Instead OMARCHY_PATH is set through NixOS-native channels
       # (PAM session vars + uwsm env.d), which cover both login shells and
       # the uwsm-managed Hyprland session.
+      (lib.mkIf (cfg.setupPackage != null) {
+        environment.systemPackages = [ cfg.setupPackage ];
+      })
+
       (lib.mkIf (cfg.package != null) {
         environment.systemPackages = [ cfg.package ];
 
@@ -1413,6 +1424,16 @@ in
           account    required                    pam_unix.so
         '';
       })
+
+      # (N) On-box agent contract (oma-cli G5). Frontend owns the body at
+      # modules/onbox/AGENTS.md; omarchy debug and motd point agents here.
+      {
+        environment.etc."omahedron/AGENTS.md" = {
+          source = onBoxAgentsFile;
+          mode = "0444";
+        };
+        users.motd = lib.mkDefault "Agents: read /etc/omahedron/AGENTS.md — humans use omarchy; agents edit Nix.\n";
+      }
 
       # (M) Default interactive Fish shell (ADR-0011). Installs fish + the
       # vendored omarchy-fish profile (share/fish/vendor_*). nixpkgs' fish

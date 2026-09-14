@@ -14,9 +14,15 @@ SILENT = frozenset({
 })
 
 
+# A packaged stub prints the banner as its first stdout line (the runtime
+# contract is exercised by stub_output.py). In the body that is either a raw
+# heredoc line or an `echo "…"` / `echo -e '…'` statement; accept both.
+ECHO = re.compile(r'^\s*echo(?:\s+-[A-Za-z]+)*\s+')
+
+
 def banner_lines(body):
     for raw in body.splitlines():
-        line = raw.strip().strip('"').strip("'")
+        line = ECHO.sub('', raw.strip(), count=1).strip().strip('"').strip("'")
         if BANNER.match(line):
             yield line
 

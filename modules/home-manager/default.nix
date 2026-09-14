@@ -92,6 +92,14 @@ let
     Allow Overriding System XKB Settings=False
   '';
 
+  # oma-cli G5c: cwd-only harnesses may read $HOME/AGENTS.md before /etc.
+  homeAgentsPointer = pkgs.writeText "home-AGENTS-pointer.md" ''# AGENTS.md
+
+Read /etc/omahedron/AGENTS.md first.
+
+Humans use omarchy; agents edit Nix.
+'';
+
 in
 {
   options.omarchy = (import ../../config.nix { inherit lib; }).omarchyOptions;
@@ -113,7 +121,13 @@ in
       ) skillPack.agentRoots;
     in
     lib.mkIf cfg.enable (
-      lib.mkIf (effPkg != null) {
+      lib.mkMerge [
+        {
+          home.activation.omarchySeedHomeAgentsPointer = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+            ${seedFileFrom homeAgentsPointer "AGENTS.md"}
+          '';
+        }
+        (lib.mkIf (effPkg != null) {
         # NOTE: we deliberately do NOT mirror `omarchy = osConfig.omarchy`
         # here. That idiom would assign omarchy.enable from osConfig and form
         # an evaluation cycle with the `mkIf cfg.enable` gate above. Instead
@@ -368,6 +382,7 @@ in
             env -u BROWSER xdg-settings set default-web-browser chromium.desktop >/dev/null 2>&1 || true
           fi
         '';
-      }
+      })
+      ]
     );
 }

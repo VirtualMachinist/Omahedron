@@ -9,7 +9,7 @@ Read this entire file before writing code or docs. Then read [docs/COMPETE.md](d
 Omahedron: trailing-stable Omarchy desktop on NixOS. Public flake intended for daily-driver use. Unofficial. Desktop parity, not distro parity.
 
 Upstream product: https://github.com/basecamp/omarchy  
-Port architecture we adopt: https://github.com/zicochaos/omarchy-nix  
+Port architecture we started from (historical provenance, ADR-0026; we own the glue now): https://github.com/zicochaos/omarchy-nix  
 Public remote: https://github.com/VirtualMachinist/Omahedron  
 First pin: Omarchy **v4.0.2**.
 
@@ -123,7 +123,7 @@ Public remote is `github:VirtualMachinist/Omahedron`. Pin work is on `main` (Oma
 2. Run [checklists/bump.md](checklists/bump.md) on bump.
 3. Keep `schema/scripts.lock.json` aligned with that tag’s `bin/`.
 4. Metal on the Latitude before a *new* product tag.
-5. Treat zicochaos/omarchy-nix as glue upstream: rebase or overlay; do not silently diverge `pkgs/omarchy.nix`.
+5. We **own** the glue (ADR-0026). `pkgs/omarchy.nix` and the modules are ours; pin `omarchy-src` to official Omarchy tags. zicochaos/omarchy-nix is historical provenance: optional attributed cherry-picks only. Do not rebase or overlay onto their `main` / `quattro`. Do not wait on their commits. Do not from-scratch rewrite `pkgs/omarchy.nix` to “prove independence.” CREDITS / README keep the credit.
 
 Do not start from henrysipp/omarchy-nix. Do not start from T00fy/omanix.
 
