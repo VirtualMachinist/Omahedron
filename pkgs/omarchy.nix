@@ -1567,10 +1567,11 @@ stdenv.mkDerivation (finalAttrs: {
     rm -rf "$dest/default/agents/skills/omarchy"
     install -Dm644 ${../skills/omarchy/SKILL.md} \
       "$dest/default/agents/skills/omarchy/SKILL.md"
-    ${lib.concatMapStrings (name: ''
-      install -Dm644 ${../skills/${name}/SKILL.md} \
-        "$dest/default/agents/skills/${name}/SKILL.md"
-    '') extraRuntimeSkills}
+    skillpack=${../skills}
+    for name in ${lib.escapeShellArgs extraRuntimeSkills}; do
+      install -Dm644 "$skillpack/$name/SKILL.md" \
+        "$dest/default/agents/skills/$name/SKILL.md"
+    done
 
     # Top-level runtime assets referenced by relative paths from within the
     # copied tree (e.g. default/chromium/extensions/copy-url/icon.png symlinks
