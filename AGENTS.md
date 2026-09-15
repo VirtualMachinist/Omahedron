@@ -117,7 +117,7 @@ Before any patch:
 
 ## Implementation gate
 
-Public remote is `github:VirtualMachinist/Omahedron`. Pin work is on `main` (Omarchy **v4.0.2**). Git tag `omahedron-4.0.2` exists; public “best port” / follow-this-tag claims still wait COMPETE §4.2–§4.5.
+Public remote is `github:VirtualMachinist/Omahedron`. Pin work is on `main` (Omarchy **v4.0.3**). Git tag `omahedron-4.0.3` exists; public “best port” claims still wait COMPETE §4.2–§4.5.
 
 1. Keep `omarchy-src` on the claimed pin; do not track `quattro` HEAD on user-facing stable.
 2. Run [checklists/bump.md](checklists/bump.md) on bump.

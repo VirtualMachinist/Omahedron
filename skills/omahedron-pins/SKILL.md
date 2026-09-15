@@ -21,7 +21,7 @@ nix flake metadata "${OMARCHY_NIX_FLAKE:-/etc/nixos}"
 
 Current tag, `omarchy-src` rev, and lock SHAs come from those commands. Do not invent them.
 
-Last product git tag at handoff: `omahedron-4.0.2` (Omarchy v4.0.2). `feat/compete` may pin Omarchy v4.0.3 in the port repo — there is **no** `omahedron-4.0.3` user tag until metal + maintainer GO.
+Last product git tag: `omahedron-4.0.3` (Omarchy v4.0.3). Follow `github:VirtualMachinist/Omahedron/omahedron-4.0.3`.
 
 ## Strategies
 

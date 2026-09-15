@@ -45,7 +45,7 @@ It exists for **Omarchs who want NixOS underneath**: declarative configuration, 
 
 Omahedron is not a competing distro and not a rewrite. Unofficial. Not Basecamp, not 37signals, not Omacom.
 
-**Follow a pin.** Last product git tag: [`omahedron-4.0.2`](https://github.com/VirtualMachinist/Omahedron/releases/tag/omahedron-4.0.2) (Omarchy v4.0.2). On branch `feat/compete`, the flake pins Omarchy **v4.0.3** (`0534987`) — there is **no** `omahedron-4.0.3` flake tag until metal + maintainer GO. Do not say “best port” until [docs/COMPETE.md](docs/COMPETE.md) §4.5 and [`schema/scorecard.json`](schema/scorecard.json) allow it.
+**Follow a pin.** Last product git tag: [`omahedron-4.0.3`](https://github.com/VirtualMachinist/Omahedron/releases/tag/omahedron-4.0.3) (Omarchy v4.0.3 @ `0534987`). Do not say “best port” until [docs/COMPETE.md](docs/COMPETE.md) §4.5 and [`schema/scorecard.json`](schema/scorecard.json) allow it.
 
 **444** upstream commands classified in [`schema/scripts.lock.json`](schema/scripts.lock.json) at pin [`v4.0.3`](schema/pin.json) (341 vendor · 33 wrap · 70 stub · plus pacman policy row) · **206** upstream packages mapped · **22** CI checks · **3** VM test suites · **1** Quickshell process
 
@@ -55,16 +55,16 @@ Three steps on an existing NixOS install. The [install guide](docs/install.md) h
 
 **1. Add Omahedron to your flake.**
 
-Pin the last tagged release (Omarchy v4.0.2), or track `main` / `feat/compete` for the v4.0.3 bump (no `omahedron-4.0.3` tag yet):
+Pin the last tagged release:
 
 ```nix
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
-    # Followable product tag (Omarchy v4.0.2):
-    omahedron.url = "github:VirtualMachinist/Omahedron/omahedron-4.0.2";
-    # Or track branch head (currently Omarchy v4.0.3 on feat/compete):
-    # omahedron.url = "github:VirtualMachinist/Omahedron/feat/compete";
+    # Followable product tag (Omarchy v4.0.3):
+    omahedron.url = "github:VirtualMachinist/Omahedron/omahedron-4.0.3";
+    # Or track branch head:
+    # omahedron.url = "github:VirtualMachinist/Omahedron/main";
   };
 
   outputs = { nixpkgs, omahedron, ... }: {
@@ -182,13 +182,13 @@ Policy detail, including the bump state machine, is in [docs/CHANNELS.md](docs/C
 
 | | |
 |---|---|
-| Omarchy pin (branch `feat/compete`) | **v4.0.3** @ `0534987` — see [`schema/pin.json`](schema/pin.json) |
-| Last product git tag | **`omahedron-4.0.2`** @ `08e2f1d` (Omarchy v4.0.2); no GitHub Release yet |
+| Omarchy pin | **v4.0.3** @ `0534987` — see [`schema/pin.json`](schema/pin.json) |
+| Last product git tag | **`omahedron-4.0.3`** (Omarchy v4.0.3) |
 | NixOS | 26.05, with a planned cutover to 26.11 |
 | Hyprland | 0.56.2 |
 | Baseline hardware | Dell Latitude 5420, 8 GB RAM, Intel iGPU |
 
-Metal signed on **`omahedron-4.0.2`**. The v4.0.3 bump (security/patch train) is on `feat/compete` with eval-green CI; VM pre-gate and metal for v4.0.3 are still open. Competitive scorecard: [`schema/scorecard.json`](schema/scorecard.json). Queue: [docs/COMPETE.md](docs/COMPETE.md).
+Metal signed on **`omahedron-4.0.3`** (lathe / Latitude 5420, 2026-09-15). Competitive scorecard: [`schema/scorecard.json`](schema/scorecard.json). Queue: [docs/COMPETE.md](docs/COMPETE.md).
 
 ## How it works
 

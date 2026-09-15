@@ -73,7 +73,7 @@ After setup, change identity and system knobs with `omarchy` — each command wr
 | Default terminal (live + saved) | `omarchy default terminal [foot\|ghostty\|alacritty\|kitty]` |
 | Fingerprint unlock | `omarchy setup fingerprint on`, then `fprintd-enroll` |
 | Skip SDDM on LUKS | `omarchy setup autologin <user>` or `off` |
-| Pin Omahedron release | `omarchy pin omahedron-4.0.2` or `omarchy channel set …` |
+| Pin Omahedron release | `omarchy pin omahedron-4.0.3` or `omarchy channel set …` |
 
 `omarchy pkg add` for an unfree package on the desktop profile tells you to run `omarchy setup unfree on` first.
 
@@ -127,7 +127,7 @@ Home Manager is reused from Omahedron's own pinned input so you do not need a se
 To pin a specific release instead of tracking `main`, put the tag in the URL:
 
 ```nix
-omahedron.url = "github:VirtualMachinist/Omahedron/omahedron-4.0.2";
+omahedron.url = "github:VirtualMachinist/Omahedron/omahedron-4.0.3";
 ```
 
 ### `configuration.nix`

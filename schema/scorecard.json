@@ -1,15 +1,14 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "omahedron.scorecard",
-  "as_of": "2026-09-11",
+  "as_of": "2026-09-15",
   "our_pin": "4.0.3",
   "our_rev": "0534987009061cbe2dacdde4ad564092ab698d12",
-  "product_git_tag": "omahedron-4.0.2",
-  "branch_pin": "feat/compete",
+  "product_git_tag": "omahedron-4.0.3",
+  "branch_pin": "main",
   "readme_may_say_best": false,
   "disqualifiers": [
-    "tests loss vs zicochaos — UX VM suite on their main; v4.0.3 metal checklist not signed",
-    "No followable public flake tag for Omarchy v4.0.3 — last product tag remains omahedron-4.0.2 until maintainer GO"
+    "tests loss vs zicochaos — UX VM suite on their main; Latitude metal signed for 4.0.3 (lathe GO-B) but full metal.md form not filed"
   ],
   "rows": [
     {

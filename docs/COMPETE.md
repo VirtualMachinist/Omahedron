@@ -4,12 +4,11 @@ Handoff for agents. Product goal: Omahedron is the best Omarchy port on NixOS. N
 
 Read this before changing user-visible desktop behavior, module defaults, pins, or README claims.
 
-> **As landed 2026-09-11 (ADR-0024).** Verified against `github:VirtualMachinist/Omahedron` `main` @ `08e2f1d`:
+> **As landed 2026-09-15.** Verified against `github:VirtualMachinist/Omahedron` `main` (Omarchy v4.0.3 @ `0534987`):
 >
-> - Git tag `omahedron-4.0.2` exists (annotated; Latitude metal-cleared). There is no GitHub Release.
-> - Public README still tells people to track `main` until metal sign-off.
-> - `schema/pin.json` and `schema/scorecard.json` are checked in on `feat/compete` (G6).
-> - Kitchen-sink defaults (Docker, Steam, zram 100%, swappiness 150) and scavenger flake paths (`~/omarchy-nix`, `~/Projects/omarchy-nix`) are still live on `omarchy.enable`.
+> - Git tag `omahedron-4.0.3` is the followable product pin (Latitude metal: lathe GO-B 2026-09-15). Prior tag `omahedron-4.0.2` remains historical.
+> - README / `schema/pin.json` state `tagged`. GitHub Release ships with this tag.
+> - Kitchen-sink defaults stay off `omarchy.enable` (thin desktop; workstation / unfree are opt-in).
 >
 > Landscape §1 is the 2026-09 competitive snapshot. Live git wins for inventory. This file wins for the *bar* (what “best” means, module shape, release identity). Do not call this the best port until §4.5 allows.
 
@@ -36,7 +35,7 @@ All of these exist. Do not rediscover them.
 | T00fy/omanix | github:T00fy/omanix | Nix-native reimplementation | ~92★ | Declarative rice; accepts no live theme swap |
 | henrysipp/omarchy-nix | github:henrysipp/omarchy-nix | Early reimplementation / launchpad | ~797★, author moved back to Arch, not actively maintained | Mindshare and Google result for “omarchy nix” |
 | omanixy | github:atqamz/omanixy | Narrow presentation/OS boundary | ~16★ | Thin integration layer |
-| Omahedron | github:VirtualMachinist/Omahedron | Fork of zicochaos + tag pins + ledgers + metal gate | 0★, created 2026-09-04, pin v4.0.2, git tag `omahedron-4.0.2` @ `08e2f1d` (no GitHub Release; README still hedges) | Trailing-stable on paper; Hedronite fleet flake |
+| Omahedron | github:VirtualMachinist/Omahedron | Fork of zicochaos + tag pins + ledgers + metal gate | 0★, created 2026-09-04, pin v4.0.3, git tag `omahedron-4.0.3` | Trailing-stable on paper; Hedronite fleet flake |
 
 Omahedron’s current delta vs zicochaos: tag-pin policy, `schema/scripts.lock.json` + `packages.map.json`, COMPAT ledger, ADRs, Latitude 5420 metal checklist, brand. That is not enough. zicochaos is already newer upstream. henrysipp already owns the search term. nixarchy already owns the Nix CLI idea. omanix already owns Nix-purist philosophy.
 
@@ -478,7 +477,7 @@ Agents may put this sentence in README only when `schema/scorecard.json` + tag g
 
 Until then the honest sentence is:
 
-> Unofficial NixOS vendor port of Omarchy v4.0.2, forked from zicochaos/omarchy-nix. Git tag `omahedron-4.0.2` exists; do not pick this over zicochaos if you want current Quattro HEAD, and do not say “best port” until the scorecard and tag gates allow.
+> Unofficial NixOS vendor port of Omarchy v4.0.3, forked from zicochaos/omarchy-nix. Git tag `omahedron-4.0.3` exists; do not pick this over zicochaos if you want current Quattro HEAD, and do not say “best port” until the scorecard and tag gates allow.
 
 ## 5. Work queue (agents)
 

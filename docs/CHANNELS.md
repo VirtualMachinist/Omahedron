@@ -80,7 +80,7 @@ parity with Omarchy vX.Y.Z; known gaps: …
 
 ```nix
 # public remote
-omahedron.url = "github:VirtualMachinist/Omahedron/omahedron-4.0.2";
+omahedron.url = "github:VirtualMachinist/Omahedron/omahedron-4.0.3";
 # or follow the stable branch after it exists
 # omahedron.url = "github:VirtualMachinist/Omahedron/stable";
 ```

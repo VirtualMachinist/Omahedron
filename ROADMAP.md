@@ -9,6 +9,7 @@ Exit for *calling ourselves the port to pick*:
 - [x] SPEC, DECISIONS, AGENTS, README (public)
 - [x] COMPAT + ledgers + CI fail-closed
 - [x] Pin v4.0.2 + Latitude metal + git tag `omahedron-4.0.2`
+- [x] Pin v4.0.3 + Latitude metal (lathe GO-B) + git tag `omahedron-4.0.3`
 - [x] [docs/COMPETE.md](docs/COMPETE.md) landed; AGENTS points at it
 - [ ] Locator purge (`$OMARCHY_NIX_FLAKE` + `/etc/nixos` only)
 - [ ] Thin `desktop` profile vs `workstation` / `unfree.enable`
@@ -23,12 +24,16 @@ Ordered queue and merge/tag gates: [docs/COMPETE.md](docs/COMPETE.md) §5 and §
 
 ## Landed — stand up the port (`omahedron-4.0.2`)
 
-Fork of zicochaos/omarchy-nix, `omarchy-src` at v4.0.2, ledgers, VM pre-gate, Latitude metal, git tag `omahedron-4.0.2` @ `08e2f1d`. No GitHub Release yet. Package ledger still retains seven unaudited optional hardware mappings.
+Fork of zicochaos/omarchy-nix, `omarchy-src` at v4.0.2, ledgers, VM pre-gate, Latitude metal, git tag `omahedron-4.0.2` @ `08e2f1d`. Package ledger still retains seven unaudited optional hardware mappings.
 
-## Next + 1 — harden the rebuild (`4.0.2.x` / first security follow)
+## Landed — first security follow (`omahedron-4.0.3`)
+
+Omarchy v4.0.3 @ `0534987`. Latitude metal: lathe GO-B 2026-09-15. Product tag `omahedron-4.0.3` + GitHub Release. VM pre-gate still open. Changelog: [docs/changelog-4.0.3.md](docs/changelog-4.0.3.md).
+
+## Next + 1 — harden the rebuild
 
 - Channel refs (`stable` / `rc` / `edge`) as documented in CHANNELS.md
-- Bump record for any 4.0.3+ that appears
+- Bump record for any 4.0.4+ that appears
 - Agent surface: Cursor + Grok launch paths proven on the Latitude
 - COMPAT generated-from-schema or a check that prose and JSON cannot drift
 
