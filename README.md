@@ -12,6 +12,7 @@
 
 <p align="center">
   <a href="https://github.com/VirtualMachinist/Omahedron/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/VirtualMachinist/Omahedron/ci.yml?branch=main&style=flat&colorA=222222&colorB=8FD14F&label=ci" alt="CI"></a>
+  <a href="https://github.com/VirtualMachinist/Omahedron/releases/latest"><img src="https://img.shields.io/github/v/release/VirtualMachinist/Omahedron?style=flat&colorA=222222&colorB=8FD14F&label=Omahedron" alt="Omahedron latest release"></a>
   <a href="https://github.com/basecamp/omarchy/releases/tag/v4.0.3"><img src="https://img.shields.io/badge/Omarchy-v4.0.3-8FD14F?style=flat&colorA=222222" alt="Omarchy v4.0.3"></a>
   <a href="https://nixos.org"><img src="https://img.shields.io/badge/NixOS-26.05-5277C3?style=flat&colorA=222222&logo=nixos&logoColor=white" alt="NixOS 26.05"></a>
   <a href="https://github.com/hyprwm/Hyprland/releases/tag/v0.56.2"><img src="https://img.shields.io/badge/Hyprland-0.56.2-58C7F3?style=flat&colorA=222222" alt="Hyprland 0.56.2"></a>
@@ -29,6 +30,7 @@
   <a href="docs/options.md">Options</a> ·
   <a href="docs/COMPETE.md">Compete</a> ·
   <a href="schema/scorecard.json">Scorecard</a> ·
+  <a href="https://github.com/VirtualMachinist/Omahedron/releases">Releases</a> ·
   <a href="#contributing">Contributing</a>
 </p>
 
@@ -45,7 +47,7 @@ It exists for **Omarchs who want NixOS underneath**: declarative configuration, 
 
 Omahedron is not a competing distro and not a rewrite. Unofficial. Not Basecamp, not 37signals, not Omacom.
 
-**Follow a pin.** Last product git tag: [`omahedron-4.0.3`](https://github.com/VirtualMachinist/Omahedron/releases/tag/omahedron-4.0.3) (Omarchy v4.0.3 @ `0534987`).
+**Follow a pin.** Latest GitHub Release: [`omahedron-4.0.3`](https://github.com/VirtualMachinist/Omahedron/releases/tag/omahedron-4.0.3) (Omarchy v4.0.3 @ `0534987`).
 
 **444** upstream commands classified in [`schema/scripts.lock.json`](schema/scripts.lock.json) at pin [`v4.0.3`](schema/pin.json) (341 vendor · 33 wrap · 70 stub · plus pacman policy row) · **206** upstream packages mapped · **22** CI checks · **3** VM test suites · **1** Quickshell process
 
@@ -183,7 +185,8 @@ Policy detail, including the bump state machine, is in [docs/CHANNELS.md](docs/C
 | | |
 |---|---|
 | Omarchy pin | **v4.0.3** @ `0534987` — see [`schema/pin.json`](schema/pin.json) |
-| Last product git tag | **`omahedron-4.0.3`** (Omarchy v4.0.3) |
+| GitHub Release | **[Omahedron 4.0.3](https://github.com/VirtualMachinist/Omahedron/releases/tag/omahedron-4.0.3)** · [changelog](docs/changelog-4.0.3.md) |
+| Last product git tag | **`omahedron-4.0.3`** @ `36529ef` |
 | NixOS | 26.05, with a planned cutover to 26.11 |
 | Hyprland | 0.56.2 |
 | Baseline hardware | Dell Latitude 5420, 8 GB RAM, Intel iGPU |
