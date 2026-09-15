@@ -23,6 +23,7 @@
 
 <p align="center">
   <a href="#quick-start">Quick start</a> ·
+  <a href="#daily-drive">Daily drive</a> ·
   <a href="#what-you-get">What you get</a> ·
   <a href="#omachron-the-release-schedule">Omachron</a> ·
   <a href="#how-it-works">How it works</a> ·
@@ -49,11 +50,32 @@ Omahedron is not a competing distro and not a rewrite. Unofficial. Not Basecamp,
 
 **Follow a pin.** Latest GitHub Release: [`omahedron-4.0.3`](https://github.com/VirtualMachinist/Omahedron/releases/tag/omahedron-4.0.3) (Omarchy v4.0.3 @ `0534987`).
 
+Once it is running you drive it with **`omarchy`**, the same command center as Arch Omarchy. You do not open `flake.nix` or `configuration.nix` to theme, add packages, update, or roll back. Nix stays underneath so generations and undo still work.
+
 **444** upstream commands classified in [`schema/scripts.lock.json`](schema/scripts.lock.json) at pin [`v4.0.3`](schema/pin.json) (341 vendor · 33 wrap · 70 stub · plus pacman policy row) · **206** upstream packages mapped · **22** CI checks · **3** VM test suites · **1** Quickshell process
+
+## Daily drive
+
+Humans type `omarchy`. Agents edit Nix. That split is the [oma-cli](docs/oma-cli.md) workstream — there is no second CLI brand.
+
+```sh
+omarchy theme set tokyo-night
+omarchy pkg add cowsay
+omarchy update
+omarchy rollback
+omarchy pin omahedron-4.0.3
+omarchy setup name "Ada Lovelace"
+```
+
+The Omarchy menus do the same work. Each verb writes your flake and rebuilds; you never have to look at the file. Identity, profile, unfree, terminal, fingerprint, and autologin are `omarchy setup …` — see [install: no Nix editing](docs/install.md#changing-system-options-no-nix-editing).
+
+`omarchy rollback` is the previous NixOS generation. It does not roll back `$HOME`.
 
 ## Quick start
 
-Three steps on an existing NixOS install. The [install guide](docs/install.md) has the long version, including a fresh-machine walkthrough, the flake-follows question, and the first-build cache tip.
+On an existing NixOS box, `omarchy setup` writes the consumer flake, copies `hardware-configuration.nix`, and rebuilds. You do not hand-edit Nix for that first switch. The [install guide](docs/install.md) has the wizard questions, the fresh-machine walkthrough, and the first-build cache tip.
+
+If you are an agent wiring the flake by hand (or `omarchy setup` is not on PATH yet), this is the one-time module import:
 
 **1. Add Omahedron to your flake.**
 
@@ -128,7 +150,7 @@ Pin the last tagged release:
 sudo nixos-rebuild switch --flake /etc/nixos#mybox
 ```
 
-Log in at the SDDM greeter, press <kbd>Super</kbd>+<kbd>Enter</kbd>, and you are in Omarchy. The full option surface is in [docs/options.md](docs/options.md); the reference configuration this repo tests against is [example/configuration.nix](example/configuration.nix).
+Log in at the SDDM greeter, press <kbd>Super</kbd>+<kbd>Enter</kbd>, and you are in Omarchy. After that, stay on [Daily drive](#daily-drive). The full option surface is in [docs/options.md](docs/options.md); the reference configuration this repo tests against is [example/configuration.nix](example/configuration.nix).
 
 > [!TIP]
 > The very first build pulls a pinned Hyprland from the Hyprland binary cache once the module has registered it. On a brand-new machine that registration lands in the same switch, so pass the cache on the command line the first time to avoid compiling Hyprland from source. The [install guide](docs/install.md#first-build-use-the-hyprland-cache) shows the one-liner.
@@ -144,7 +166,7 @@ Everything below is Omarchy's own code, running from the Nix store.
 | Themes | 22 stock themes, TOML plus templates, live swap | Same engine, same themes, same live swap, plus your own under `~/.config/omarchy/themes` |
 | Commands | `omarchy-*` scripts on `PATH` | Same scripts on `PATH`, sourced from the pinned upstream tag |
 | Shell | Fish by default, Bash for scripts | Same, with an opt-out |
-| First run | Interactive identity prompt | Identity seeded from your Nix options, no prompt |
+| First run | Interactive identity prompt | `omarchy setup` asks once and writes Nix; no prompt you maintain |
 | Apps | Omarchy-owned apps from the Omarchy repo | The same apps packaged under `pkgs/` when nixpkgs lacks them |
 | Update | `omarchy update` | The same menu entry runs `nix flake update` and `nixos-rebuild switch` |
 | Install / Remove menus | pacman and yay | Writes `omarchy-packages.json` in your flake and rebuilds, so every install is declarative and rollback-safe |
@@ -158,7 +180,7 @@ Omahedron rebuilds the desktop layer. The operating-system layer belongs to NixO
 |---|---|
 | pacman, yay, AUR, pkgs.omarchy.org | Flake packages and a rebuild. Never a host pacman. |
 | Limine, Snapper, mkinitcpio UKI | systemd-boot and NixOS generations |
-| The Omarchy ISO (Arch), `omarchy-apply-system`, `omarchy-apply-hardware` as Arch chroot helpers | The NixOS installer and your `hardware-configuration.nix` today. An Omahedron installer is in product (ADR-0025, [docs/oma-cli.md](docs/oma-cli.md)): `omarchy setup` first, a NixOS-shaped Omahedron ISO later. Neither ships on this tag. |
+| The Omarchy ISO (Arch), `omarchy-apply-system`, `omarchy-apply-hardware` as Arch chroot helpers | `omarchy setup` on an existing NixOS ([docs/oma-cli.md](docs/oma-cli.md)). A NixOS-shaped Omahedron ISO is in product and does not ship on this tag. |
 | The Omarchy Kernel as an Arch package | The kernel from nixpkgs |
 | Mutable `/usr/share/omarchy` | An immutable store path in `$OMARCHY_PATH` |
 | Omacom support | Not claimed. Omahedron is unofficial. |
@@ -217,7 +239,7 @@ schema/                   # pin, scorecard, script ledger, package map, JSON sch
 checks/                   # ledger enforcement and stub behaviour tests
 tests/                    # NixOS VM suites: desktop, Fish, UX
 example/configuration.nix # the reference consumer config CI builds
-docs/                     # install, options, COMPAT, CHANNELS, UPSTREAM, COMPETE, brand
+docs/                     # install, oma-cli, options, COMPAT, CHANNELS, UPSTREAM, COMPETE, brand
 ```
 
 </details>
