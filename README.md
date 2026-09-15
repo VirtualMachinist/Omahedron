@@ -45,7 +45,7 @@ It exists for **Omarchs who want NixOS underneath**: declarative configuration, 
 
 Omahedron is not a competing distro and not a rewrite. Unofficial. Not Basecamp, not 37signals, not Omacom.
 
-**Follow a pin.** Last product git tag: [`omahedron-4.0.3`](https://github.com/VirtualMachinist/Omahedron/releases/tag/omahedron-4.0.3) (Omarchy v4.0.3 @ `0534987`). Do not say “best port” until [docs/COMPETE.md](docs/COMPETE.md) §4.5 and [`schema/scorecard.json`](schema/scorecard.json) allow it.
+**Follow a pin.** Last product git tag: [`omahedron-4.0.3`](https://github.com/VirtualMachinist/Omahedron/releases/tag/omahedron-4.0.3) (Omarchy v4.0.3 @ `0534987`).
 
 **444** upstream commands classified in [`schema/scripts.lock.json`](schema/scripts.lock.json) at pin [`v4.0.3`](schema/pin.json) (341 vendor · 33 wrap · 70 stub · plus pacman policy row) · **206** upstream packages mapped · **22** CI checks · **3** VM test suites · **1** Quickshell process
 
