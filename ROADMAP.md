@@ -1,89 +1,26 @@
 # ROADMAP.md
 
-Phases are gates, not vibes. Maintainer moves a phase only when the exit checks are true.
+The product is the Hedron theme pack, then plugins. The NixOS desktop port is archived.
 
-## Now — competitive bar (ADR-0024)
+## Now — theme pack (ADR-0027)
 
-Exit for *calling ourselves the port to pick*:
+- [x] `themes/hedron` and `themes/hedron-light` with wallpapers and stock theme files
+- [x] README leads with `~/.config/omarchy/themes/` and `omarchy theme set`
+- [x] Thin flake: overlay, theme package, opt-in Home Manager module
+- [x] NixOS desktop port moved to [legacy/os-port/](legacy/os-port/) and dropped from root CI
+- [x] Editor stubs name published schemes (Kanagawa, Catppuccin Latte)
 
-- [x] SPEC, DECISIONS, AGENTS, README (public)
-- [x] COMPAT + ledgers + CI fail-closed
-- [x] Pin v4.0.2 + Latitude metal + git tag `omahedron-4.0.2`
-- [x] Pin v4.0.3 + Latitude metal (lathe GO-B) + git tag `omahedron-4.0.3`
-- [x] [docs/COMPETE.md](docs/COMPETE.md) landed; AGENTS points at it
-- [ ] Locator purge (`$OMARCHY_NIX_FLAKE` + `/etc/nixos` only)
-- [ ] Thin `desktop` profile vs `workstation` / `unfree.enable`
-- [x] Rebase/overlay plan vs zicochaos `main` (Omarchy v4.0.3) — [docs/REBASE-PLAN.md](docs/REBASE-PLAN.md)
-- [x] Pin catch-up or dated deferral — v4.0.3 @ `0534987` (G3)
-- [x] Nix verbs page + locator that matches or beats nixarchy — [docs/NIX-VERBS.md](docs/NIX-VERBS.md)
-- [x] Hyprland/Mesa substituter proven in install.md — `checks.omarchy-hyprland-cache`
-- [ ] `schema/scorecard.json` checked in — [`schema/scorecard.json`](schema/scorecard.json) @ G6
-- [x] README rewrite; no “best” until COMPETE §4.5 — G7 @ feat/compete
+## Next — plugins
 
-Ordered queue and merge/tag gates: [docs/COMPETE.md](docs/COMPETE.md) §5 and §4.
+Ship a plugin only when its files exist in this repo and the README can tell a stranger how to enable it on stock Omarchy.
 
-## Landed — stand up the port (`omahedron-4.0.2`)
+- [Facet](https://github.com/Hedronite/facet)
+- [Geode](https://github.com/Hedronite/geode)
+- [Lapis](https://github.com/Hedronite/lapis-lattice)
+- [Hedronos](https://github.com/Hedronite/hedronos) / [fullstack-lab](https://github.com/Hedronite/fullstack-lab)
 
-Fork of zicochaos/omarchy-nix, `omarchy-src` at v4.0.2, ledgers, VM pre-gate, Latitude metal, git tag `omahedron-4.0.2` @ `08e2f1d`. Package ledger still retains seven unaudited optional hardware mappings.
+Each one gets a flake output next to the themes. The default install stays free of `allowUnfree`.
 
-## Landed — first security follow (`omahedron-4.0.3`)
+## Archived — NixOS desktop port
 
-Omarchy v4.0.3 @ `0534987`. Latitude metal: lathe GO-B 2026-09-15. Product tag `omahedron-4.0.3` + GitHub Release. VM pre-gate still open. Changelog: [docs/changelog-4.0.3.md](docs/changelog-4.0.3.md).
-
-## Next + 1 — harden the rebuild
-
-- Channel refs (`stable` / `rc` / `edge`) as documented in CHANNELS.md
-- Bump record for any 4.0.4+ that appears
-- Agent surface: Cursor + Grok launch paths proven on the Latitude
-- COMPAT generated-from-schema or a check that prose and JSON cannot drift
-
-## v1.1 — webapps and package completeness
-
-- Webapp install/remove wraps that do not call pacman
-- Remaining omarchy-owned apps not in nixpkgs
-- Menu actions that were stubbed only for lack of packaging
-
-## v1.2 — device extras
-
-- Voxtype (classify first; stub if the stack is Arch-only)
-- Fingerprint if the 5420 (or later metal) has a reader
-- `omarchy-windows-vm` wrap-or-stub from actual call sites
-
-## Later — kernel track (optional)
-
-Only after two successful stable desktop bumps.
-
-- Evaluate whether a `pkgs.linux_omarchy` from the same sources as official still makes sense
-- If yes: `boot.kernelPackages = pkgs.linuxPackagesFor pkgs.linux_omarchy`
-- Never install a `.pkg.tar.zst` kernel on NixOS
-- Separate pin from desktop HEAD
-
-## Later — installer (ADR-0025)
-
-- [ ] Installer A: `omarchy setup` on existing NixOS (human never opens Nix)
-- [ ] Buff `omarchy` verbs: identity, profile, unfree, terminal persist, pin, pkg, rollback
-- [ ] On-box `/etc/omahedron/AGENTS.md` (agents edit Nix)
-- [ ] Installer B: Omahedron ISO (systemd-boot, generations, metal on Latitude)
-
-Not the official Omarchy ISO. Not Limine/Snapper/UKI.
-
-## Later — nixpkgs 26.11 cutover
-
-Trigger: 26.11 released and Hyprland ≥0.56 plus Quickshell are sane on that pair. New ADR. Do not silently follow unstable.
-
-## Never (unless an ADR supersedes)
-
-- Host pacman
-- Official Omarchy ISO / Limine / Snapper / UKI parity (Omahedron ISO is the Later track above, ADR-0025)
-- Claiming Omacom support
-- Tracking `quattro` on user `stable`
-- Rewriting Quickshell in Nix
-- Using the Omarchanite brand in this repo
-
-## Watch items (not work items)
-
-- Official Omarchy security tags
-- Official kernel packaging story after 2026-09-03 (Omacom hire / linux-ptl model)
-- zicochaos glue commits worth cherry-picking
-- NixOS 26.05 EOL (2026-12-31)
-- New `omarchy-*` on `quattro` that will land in the next tag
+Landed through tag [`omahedron-4.0.3`](https://github.com/VirtualMachinist/Omahedron/releases/tag/omahedron-4.0.3) (Omarchy v4.0.3). Tree: [legacy/os-port/](legacy/os-port/). Root CI does not build it. New desktop-port work needs a new ADR; it is not the roadmap above.

@@ -1,0 +1,10 @@
+# Lock-screen overlay. The filename selects [lock]; no section header.
+# Mapped from colors.toml: text = foreground, placeholder = muted,
+# border / border-active / selection = accent (copper).
+text = "#eef1ff"
+placeholder = "#8b93b8"
+background = "#0a0e1e"
+border = "#a96a38"
+border-active = "#a96a38"
+border-error = "#c45c4a"
+selection = "#a96a38"

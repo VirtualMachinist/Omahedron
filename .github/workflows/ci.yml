@@ -1,5 +1,4 @@
-# Omahedron CI: package build and non-VM checks before release validation.
-# Full system and VM checks are manual; VM runs verify native KVM first.
+# Omahedron CI: theme layout and the thin install flake.
 name: ci
 
 on:
@@ -7,41 +6,26 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
-    inputs:
-      validation:
-        description: Validation scope (VM results are a pre-gate, not metal sign-off)
-        type: choice
-        default: light
-        options:
-          - light
-          - preflight
-          - system
-          - fish
-          - desktop
-          - ux
-          - all
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}-${{ inputs.validation || 'light' }}
+  group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
   contents: read
 
 jobs:
-  checks-light:
-    if: ${{ github.event_name != 'workflow_dispatch' || inputs.validation == 'light' }}
-    name: checks-light (non-VM)
+  theme-pack:
+    name: theme pack
     runs-on: ubuntu-latest
-    timeout-minutes: 180
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
-      - uses: DeterminateSystems/nix-installer-action@main
+      - name: theme layout
+        run: bash checks/theme-layout.sh
 
-      # magic-nix-cache: GHA cache 418 throttle can hang the Post step for 20m+.
-      # Prefer flake/binary caches; keep installer only until cache is stable.
-      # - uses: DeterminateSystems/magic-nix-cache-action@main
+      - uses: DeterminateSystems/nix-installer-action@main
 
       - name: flake show
         run: nix flake show --all-systems
@@ -49,151 +33,8 @@ jobs:
       - name: formatter
         run: nix fmt -- --ci .
 
-      - name: package omarchy
-        run: nix build -L .#packages.x86_64-linux.omarchy
+      - name: flake check
+        run: nix flake check
 
-      - name: non-VM checks (x86_64-linux)
-        run: |
-          set -euo pipefail
-          # VM harnesses run through the manual checks-system job below.
-          # Run the manifest / package / eval checks already defined in flake.nix.
-          checks=(
-            omarchy-ledgers
-            omarchy-skill
-            catalog-consistency
-            omarchy-migrations
-            omarchy-shebangs
-            omarchy-pam-eval
-            omarchy-binfmt-eval
-            omarchy-migration-parity
-            omarchy-etc-parity
-            omarchy-disabled-state
-            omarchy-runtime
-            omarchy-nix-transactions
-            omarchy-flake-resolver
-            omarchy-option-validation
-            omarchy-options-documented
-            omarchy-fish-package
-            omarchy-fish-parity
-            omarchy-fish-module
-            omarchy-setup-writer
-            omarchy-setup-eval
-            omarchy-verbs
-            omarchy-pkg-rollback-update
-            omarchy-onbox-agents
-          )
-          for c in "${checks[@]}"; do
-            echo "::group::check $c"
-            nix build -L ".#checks.x86_64-linux.$c"
-            echo "::endgroup::"
-          done
-
-      # oma-cli G2 (ADR-0025 installer A), outside the sandbox: the real
-      # `omarchy setup` write path copies /etc/nixos/hardware-configuration.nix
-      # (never regenerates it) onto an explicit G0 locator, and the flake it
-      # writes evaluates with the pinned inputs (instantiate only, no build).
-      - name: omarchy setup writer + generated flake eval
-        run: |
-          set -euo pipefail
-          nix build -L --out-link result-setup .#packages.x86_64-linux.omarchy-nix-setup
-          sudo mkdir -p /etc/nixos
-          sudo install -m644 modules/setup/fixtures/hardware-configuration.nix /etc/nixos/hardware-configuration.nix
-          pre=$(sha256sum /etc/nixos/hardware-configuration.nix | cut -d' ' -f1)
-          target="$RUNNER_TEMP/omahedron-setup"
-          mkdir -p "$target"
-          cat >"$RUNNER_TEMP/answers.json" <<'JSON'
-          {"full_name":"Ada Lovelace","username":"ada","password":"omarchy","hostname":"setuptest",
-           "timezone":"Europe/London","theme":"tokyo-night","terminal":"ghostty","profile":"desktop",
-           "scale":1,"fingerprint":false,"autologin":false,"email":"ada@example.com"}
-          JSON
-          OMARCHY_NIX_FLAKE="$target" OMARCHY_SETUP_ANSWERS="$RUNNER_TEMP/answers.json" \
-            OMARCHY_SETUP_DRY_RUN=1 TZDIR=/usr/share/zoneinfo \
-            ./result-setup/bin/omarchy-nix-setup -y | tee "$RUNNER_TEMP/setup.out"
-          post=$(sha256sum "$target/hardware-configuration.nix" | cut -d' ' -f1)
-          test "$pre" = "$post"
-          grep -F "hardware-configuration.nix sha256 $pre (copied, not regenerated)" "$RUNNER_TEMP/setup.out"
-          grep -F -- '--option extra-substituters https://hyprland.cachix.org' "$RUNNER_TEMP/setup.out"
-          nix eval --raw --no-write-lock-file --override-input omahedron "path:$PWD" \
-            "path:$target#nixosConfigurations.setuptest.config.system.build.toplevel.drvPath"
-          echo
-
-  checks-system:
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.validation != 'light' }}
-    name: checks-system (${{ inputs.validation }})
-    runs-on: ubuntu-24.04
-    timeout-minutes: 360
-    env:
-      VALIDATION: ${{ inputs.validation }}
-    steps:
-      - name: Check native KVM and storage
-        run: |
-          set -euo pipefail
-          test "$(uname -m)" = x86_64
-          free -h
-          df -h /
-          if [ "$VALIDATION" != preflight ]; then
-            available=$(df -B1 --output=avail / | tail -n 1)
-            if (( available < 35 * 1024 * 1024 * 1024 )); then
-              echo 'Full system/VM builds require at least 35 GiB free on this runner.' >&2
-              exit 1
-            fi
-          fi
-          # A system closure build does not need virtualization.
-          if [ "$VALIDATION" = system ]; then exit 0; fi
-          test -c /dev/kvm
-          # This ephemeral runner must expose KVM to Nix's build users too.
-          sudo chmod a+rw /dev/kvm
-          python3 - <<'PY'
-          import fcntl
-          import os
-
-          kvm = os.open('/dev/kvm', os.O_RDWR | os.O_CLOEXEC)
-          assert fcntl.ioctl(kvm, 0xAE00, 0) == 12, 'unsupported KVM API'
-          vm = fcntl.ioctl(kvm, 0xAE01, 0)
-          os.close(vm)
-          os.close(kvm)
-          print('PASS: native x86_64 KVM can create a VM')
-          PY
-
-      - uses: actions/checkout@v4
-        if: ${{ inputs.validation != 'preflight' }}
-
-      - uses: DeterminateSystems/nix-installer-action@main
-        if: ${{ inputs.validation != 'preflight' }}
-
-      - name: Full example system
-        if: ${{ inputs.validation == 'system' || inputs.validation == 'all' }}
-        run: |
-          set -euo pipefail
-          mkdir -p validation-logs
-          nix build -L --keep-going --max-jobs 2 --cores 2 --out-link result-system \
-            .#nixosConfigurations.example.config.system.build.toplevel \
-            2>&1 | tee validation-logs/system.log
-
-      - name: NixOS VM tests
-        if: ${{ contains(fromJSON('["fish", "desktop", "ux", "all"]'), inputs.validation) }}
-        run: |
-          set -euo pipefail
-          mkdir -p validation-logs
-          if [ "$VALIDATION" = all ]; then
-            suites=(fish desktop ux)
-          else
-            suites=("$VALIDATION")
-          fi
-          failed=0
-          for suite in "${suites[@]}"; do
-            if ! nix build -L --keep-going --max-jobs 2 --cores 2 \
-              --out-link "result-$suite" ".#checks.x86_64-linux.omarchy-$suite" \
-              2>&1 | tee "validation-logs/$suite.log"; then
-              failed=1
-            fi
-          done
-          exit "$failed"
-
-      - uses: actions/upload-artifact@v4
-        if: ${{ always() && inputs.validation != 'preflight' }}
-        with:
-          name: validation-${{ inputs.validation }}-${{ github.sha }}
-          path: validation-logs
-          if-no-files-found: ignore
-          retention-days: 7
+      - name: package themes
+        run: nix build -L .#omahedron-themes
