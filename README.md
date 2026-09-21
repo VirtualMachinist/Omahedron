@@ -42,6 +42,9 @@
 
 ---
 
+> **Status:** In production use as a daily-driver / dogfood NixOS desktop (Omarchy trailing-stable port). Hardening: release scorecard, install docs, and CI continue to track pinned Omarchy/Hyprland. Not a toy reference.
+
+
 Omahedron is the [Omarchy](https://omarchy.org) desktop running on NixOS: Hyprland session, Quickshell bar, launcher, menus, lock screen, twenty-two stock themes with live swap, keybindings, and `omarchy-*` commands — vendored from the pinned upstream tag into the Nix store.
 
 It exists for **Omarchs who want NixOS underneath**: declarative configuration, atomic upgrades, and rollback to any previous generation from the boot menu. If Arch's pace is the one thing keeping you off Omarchy, this is the way in. If you already run NixOS and want Omarchy's desktop without maintaining a rice, this is the way in too.
