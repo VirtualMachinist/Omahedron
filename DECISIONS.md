@@ -167,7 +167,7 @@ Clarifies the earlier interview question: “who is this human” is declarative
 **Decision.**
 
 - VM (Mac minis / Studio): required **pre-gate** — eval, module import, `nix flake check`, greeter/session start if the VM can.
-- Dell Latitude 5420 8 GB: **ship gate** — [checklists/metal.md](checklists/metal.md).
+- Dell Latitude 5420 8 GB: **ship gate** — [checklists/metal.md](legacy/os-port/checklists/metal.md).
 - Lite dogfood: all target tools installed, not all loaded. Cloud Grok stays in the cloud.
 - VMSVGA / QEMU software framebuffer does not count as Quickshell verification.
 - GPU passthrough from Macs is optional later, not a v1 blocker.
@@ -293,7 +293,7 @@ Clarifies the earlier interview question: “who is this human” is declarative
 - Date: 2026-09-11
 - Deciders: human maintainer
 
-**Decision.** [docs/COMPETE.md](docs/COMPETE.md) is the competitive bar and agent scoreboard. Agents must read it before changing user-visible desktop behavior, module defaults, pins, or README claims.
+**Decision.** [docs/COMPETE.md](legacy/os-port/docs/COMPETE.md) is the competitive bar and agent scoreboard. Agents must read it before changing user-visible desktop behavior, module defaults, pins, or README claims.
 
 Thin desktop is now a competitive requirement, not a taste preference:
 
@@ -337,7 +337,7 @@ User-facing OS for humans is the vendored **`omarchy`** command center (`omarchy
 
 - [SPEC.md](SPEC.md) is revised in the same change: ISO installer leaves the permanent out-of-scope list. Arch `omarchy-apply-system` / `omarchy-apply-hardware` *chroot* stay out; NixOS wraps of those *names* are in scope.
 - Limine / Snapper / mkinitcpio UKI / host pacman / official Omarchy ISO / linux-ptl as Arch packages stay out. ADR-0002 (not 1:1 OS/kernel/installer *parity*) still holds.
-- [docs/COMPETE.md](docs/COMPETE.md) §2.5 “ISO / installer competing with official NixOS install” was a **compete v1 budget** refuse, not a permanent product ban. Do not reopen G0–G8. Installer A does not compete with the NixOS ISO; it starts after it. Installer B is a later metal gate of its own.
+- [docs/COMPETE.md](legacy/os-port/docs/COMPETE.md) §2.5 “ISO / installer competing with official NixOS install” was a **compete v1 budget** refuse, not a permanent product ban. Do not reopen G0–G8. Installer A does not compete with the NixOS ISO; it starts after it. Installer B is a later metal gate of its own.
 - README must not claim an ISO ships until B exists. It must not say an Omahedron ISO is forbidden.
 - Next free ADR: **0026**.
 
@@ -363,9 +363,50 @@ User-facing OS for humans is the vendored **`omarchy`** command center (`omarchy
 - CREDITS / README still name zicochaos as the glue we started from. MIT credit is mandatory (ADR-0017).
 - Do **not** from-scratch rewrite the vendor derivation to “prove independence.” That was compete G2b and still a fail.
 - Do not reopen compete G0–G8. Do not treat their kitchen-sink/`~/omarchy-nix` locators as something to re-import.
-- [docs/REBASE-PLAN.md](docs/REBASE-PLAN.md) is a historical compete G2 deliverable, not a standing duty.
+- [docs/REBASE-PLAN.md](legacy/os-port/docs/REBASE-PLAN.md) is a historical compete G2 deliverable, not a standing duty.
 - Next free: **ADR-0027**.
 
 **Supersedes in part:** ADR-0003’s *ongoing* “rebase or overlay onto zicochaos as glue upstream,” and the same bullet in ADR-0024. The original adopt (fork-and-improve that tree; do not start from henrysipp / T00fy / omanix) still holds as history.
 
 **Does not supersede:** ADR-0003’s start-from-that-shape; ADR-0002; ADR-0005 (no `quattro` on user stable); ADR-0008 (vendor pixels from `omarchy-src`); ADR-0017 (credit); ADR-0024; ADR-0025.
+
+---
+
+## ADR-0027 — Theme pack; NixOS desktop port archived
+
+- Status: accepted
+- Date: 2026-09-21
+- Deciders: human maintainer
+
+## Context
+
+The GitHub description already called Omahedron an Omarchy theme and plugin pack. The tree still built and documented a NixOS port of the whole desktop: `modules/`, `pkgs/`, a pin of Omarchy v4.0.3, and a README whose body said the product was “the Omarchy desktop running on NixOS.” Mesh strategy is stock Omarchy plus a thin overlay. Hedron and Hedron Light are the packs in use on stock Omarchy. ADR-0002 (trailing-stable desktop rebuild) and the SPEC 0.3 one-sentence are the posture this retires.
+
+## Decision
+
+The product is a **theme and plugin pack for stock Omarchy** (Arch Omarchy and Omarchy-Nix). `themes/hedron` and `themes/hedron-light` are the source of truth. The root flake is a thin optional installer (overlay, theme package, opt-in Home Manager module, opt-in NixOS module that only adds the package). It does not set `allowUnfree`.
+
+The NixOS desktop port is **archived**, not deleted. Its tree is `legacy/os-port/`. Tag `omahedron-4.0.3` remains that port. Root CI validates theme layout and the thin flake. Plugins (Facet, Geode, Lapis, Hedronos / fullstack-lab) stay named targets until each has files in this repo.
+
+Editor stubs name published schemes (Kanagawa; Catppuccin Latte). Do not invent a marketplace id or a Hedron-native colorscheme.
+
+## Why
+
+A stranger opening the repository should see a theme pack they can `omarchy theme set`. Keeping the port as the root flake made the description a lie and made CI build a desktop nobody is shipping as the product.
+
+## Consequences
+
+- [SPEC.md](SPEC.md) 0.4 and [ROADMAP.md](ROADMAP.md) match this decision. [README.md](README.md) leads with theme install.
+- [AGENTS.md](AGENTS.md) is the current manual. [legacy/os-port/AGENTS.md](legacy/os-port/AGENTS.md) is the archived port manual.
+- Do not revive `omarchy.enable` as a root-flake desktop. New desktop-port work needs a newer ADR.
+- Credit for Omarchy and for zicochaos/omarchy-nix stays ([docs/CREDITS.md](docs/CREDITS.md)). No new affiliation.
+- Next free: **ADR-0028**.
+
+## Alternatives rejected
+
+- Leave the port flake at the root and only rewrite the README banner. The banner already said “theme pack” while CI still built the desktop.
+- Delete `modules/` and `pkgs/`. History and the tagged port stay in-tree under `legacy/os-port/`.
+
+**Supersedes in part:** ADR-0002’s product posture (trailing-stable *rebuild of the Omarchy desktop* on NixOS as what we market). The “never official, never 1:1 OS parity” half still holds. ADR-0003’s “the product is the fork of zicochaos/omarchy-nix” as the live tree. SPEC 0.3’s one sentence and module-default section as the current spec.
+
+**Does not supersede:** ADR-0001 (name Omahedron; Omarchanite reserved); ADR-0017 (license and credit); ADR-0018; ADR-0021’s refusal of silent `allowUnfree` (the theme flake simply has no unfree default); ADR-0026’s credit for the glue we already wrote, which now lives in the archive.

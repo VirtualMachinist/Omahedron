@@ -21,6 +21,6 @@ The Omahedron mark: a lime and dark-green isometric cube wireframe on black. It 
 ## Usage
 
 - Keep the black background. There is no transparent cut, and the mark is designed for dark surfaces.
-- Do not recolor. Lime `#8FD14F` on black is the identity; the README badges use the same lime as their accent.
+- Do not recolor the mark. Lime `#8FD14F` on black is the mark. README shields use the Hedron palette instead: lapis `#0a0e1e` / `#2e5ab8` and copper `#a96a38`.
 - Do not combine the mark with the Omarchy or NixOS logos in a way that implies endorsement. Omahedron is unofficial.
 - The reserved sibling brand named in [NAMING.md](../NAMING.md) has no mark and does not appear in this repository.

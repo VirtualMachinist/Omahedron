@@ -6,259 +6,152 @@
 
 <h1 align="center">Omahedron</h1>
 
-> **Status:** Theme + plugin pack for **stock Omarchy** (and Omarchy-Nix), not a long-term OS fork.
-> Pack targets: [Facet](https://github.com/Hedronite/facet) · [Geode](https://github.com/Hedronite/geode) · [Lapis](https://github.com/Hedronite/lapis-lattice) · [Hedronos](https://github.com/Hedronite/hedronos) / [fullstack-lab](https://github.com/Hedronite/fullstack-lab).
-> Canonical platform SoT: [github.com/Hedronite](https://github.com/Hedronite).
-
-
-
 <p align="center">
-  <strong>Omarchy theme + plugin pack</strong> (Facet · Geode · Lapis · Hedronos/fullstack-lab).<br>
+  <strong>Hedron themes for stock Omarchy.</strong><br>
+  Theme pack first. Plugins when they are real.
 </p>
 
 <p align="center">
-  <a href="https://github.com/VirtualMachinist/Omahedron/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/VirtualMachinist/Omahedron/ci.yml?branch=main&style=flat&colorA=222222&colorB=8FD14F&label=ci" alt="CI"></a>
-  <a href="https://github.com/VirtualMachinist/Omahedron/releases/latest"><img src="https://img.shields.io/github/v/release/VirtualMachinist/Omahedron?style=flat&colorA=222222&colorB=8FD14F&label=Omahedron" alt="Omahedron latest release"></a>
-  <a href="https://github.com/basecamp/omarchy/releases/tag/v4.0.3"><img src="https://img.shields.io/badge/Omarchy-v4.0.3-8FD14F?style=flat&colorA=222222" alt="Omarchy v4.0.3"></a>
-  <a href="https://nixos.org"><img src="https://img.shields.io/badge/NixOS-26.05-5277C3?style=flat&colorA=222222&logo=nixos&logoColor=white" alt="NixOS 26.05"></a>
-  <a href="https://github.com/hyprwm/Hyprland/releases/tag/v0.56.2"><img src="https://img.shields.io/badge/Hyprland-0.56.2-58C7F3?style=flat&colorA=222222" alt="Hyprland 0.56.2"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/VirtualMachinist/Omahedron?style=flat&colorA=222222&colorB=8FD14F" alt="MIT license"></a>
-  <a href="https://hedronite.com"><img src="https://img.shields.io/badge/Hedronite-hedronite.com-8FD14F?style=flat&colorA=222222" alt="Hedronite"></a>
-  <a href="https://x.com/Hedronite"><img src="https://img.shields.io/badge/@Hedronite-000000?style=flat&colorA=222222&logo=x&logoColor=white" alt="@Hedronite on X"></a>
+  <a href="https://github.com/VirtualMachinist/Omahedron/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/VirtualMachinist/Omahedron/ci.yml?branch=main&style=flat&colorA=0a0e1e&colorB=a96a38&label=ci" alt="CI"></a>
+  <a href="https://github.com/basecamp/omarchy"><img src="https://img.shields.io/badge/Omarchy-themes-a96a38?style=flat&colorA=0a0e1e" alt="Omarchy themes"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/VirtualMachinist/Omahedron?style=flat&colorA=0a0e1e&colorB=a96a38" alt="MIT license"></a>
+  <a href="https://hedronite.com"><img src="https://img.shields.io/badge/Hedronite-hedronite.com-2e5ab8?style=flat&colorA=0a0e1e" alt="Hedronite"></a>
 </p>
 
 <p align="center">
-  <a href="#quick-start">Quick start</a> ·
-  <a href="#daily-drive">Daily drive</a> ·
-  <a href="#what-you-get">What you get</a> ·
-  <a href="#omachron-the-release-schedule">Omachron</a> ·
-  <a href="#how-it-works">How it works</a> ·
+  <a href="#install">Install</a> ·
+  <a href="#themes">Themes</a> ·
+  <a href="#plugins">Plugins</a> ·
+  <a href="#nix">Nix</a> ·
   <a href="docs/install.md">Install guide</a> ·
-  <a href="docs/options.md">Options</a> ·
-  <a href="docs/COMPETE.md">Compete</a> ·
-  <a href="schema/scorecard.json">Scorecard</a> ·
-  <a href="https://github.com/VirtualMachinist/Omahedron/releases">Releases</a> ·
-  <a href="#contributing">Contributing</a>
-</p>
-
-<p align="center">
-  Built by <a href="https://hedronite.com">Hedronite</a>'s <a href="https://x.com/Hedronite">VirtualMachinist</a>.
-  Desktop by <a href="https://omarchy.org">Omarchy</a>. Not affiliated with Omarchy, Omacom, or 37signals.
+  <a href="#legacy-desktop-port">Legacy port</a>
 </p>
 
 ---
 
+Omahedron is a theme pack for [Omarchy](https://omarchy.org). It ships **Hedron** and **Hedron Light**: lapis fields, copper and bronze edges, wallpapers included. It runs on stock Arch Omarchy and on Omarchy-Nix. You install the theme directories, then set them with `omarchy theme`.
 
-Omahedron is the [Omarchy](https://omarchy.org) desktop running on NixOS: Hyprland session, Quickshell bar, launcher, menus, lock screen, twenty-two stock themes with live swap, keybindings, and `omarchy-*` commands — vendored from the pinned upstream tag into the Nix store.
+Unofficial. The desktop is Omarchy's. Omahedron is maintained by [Hedronite](https://hedronite.com). It is not affiliated with Omarchy, Basecamp, 37signals, or Omacom.
 
-It exists for **Omarchs who want NixOS underneath**: declarative configuration, atomic upgrades, and rollback to any previous generation from the boot menu. If Arch's pace is the one thing keeping you off Omarchy, this is the way in. If you already run NixOS and want Omarchy's desktop without maintaining a rice, this is the way in too.
+## Install
 
-Omahedron is not a competing distro and not a rewrite. Unofficial. Not Basecamp, not 37signals, not Omacom.
-
-**Follow a pin.** Latest GitHub Release: [`omahedron-4.0.3`](https://github.com/VirtualMachinist/Omahedron/releases/tag/omahedron-4.0.3) (Omarchy v4.0.3 @ `0534987`).
-
-Once it is running you drive it with **`omarchy`**, the same command center as Arch Omarchy. You do not open `flake.nix` or `configuration.nix` to theme, add packages, update, or roll back. Nix stays underneath so generations and undo still work.
-
-**444** upstream commands classified in [`schema/scripts.lock.json`](schema/scripts.lock.json) at pin [`v4.0.3`](schema/pin.json) (341 vendor · 33 wrap · 70 stub · plus pacman policy row) · **206** upstream packages mapped · **22** CI checks · **3** VM test suites · **1** Quickshell process
-
-## Daily drive
-
-Humans type `omarchy`. Agents edit Nix. That split is the [oma-cli](docs/oma-cli.md) workstream — there is no second CLI brand.
+Copy or symlink each theme into Omarchy's user theme directory, then set it.
 
 ```sh
-omarchy theme set tokyo-night
-omarchy pkg add cowsay
-omarchy update
-omarchy rollback
-omarchy pin omahedron-4.0.3
-omarchy setup name "Ada Lovelace"
+git clone https://github.com/VirtualMachinist/Omahedron.git
+cd Omahedron
+mkdir -p ~/.config/omarchy/themes
+ln -sfn "$PWD/themes/hedron" ~/.config/omarchy/themes/hedron
+ln -sfn "$PWD/themes/hedron-light" ~/.config/omarchy/themes/hedron-light
+omarchy theme set hedron
 ```
 
-The Omarchy menus do the same work. Each verb writes your flake and rebuilds; you never have to look at the file. Identity, profile, unfree, terminal, fingerprint, and autologin are `omarchy setup …` — see [install: no Nix editing](docs/install.md#changing-system-options-no-nix-editing).
-
-`omarchy rollback` is the previous NixOS generation. It does not roll back `$HOME`.
-
-## Quick start
-
-On an existing NixOS box, `omarchy setup` writes the consumer flake, copies `hardware-configuration.nix`, and rebuilds. You do not hand-edit Nix for that first switch. The [install guide](docs/install.md) has the wizard questions, the fresh-machine walkthrough, and the first-build cache tip.
-
-If you are an agent wiring the flake by hand (or `omarchy setup` is not on PATH yet), this is the one-time module import:
-
-**1. Add Omahedron to your flake.**
-
-Pin the last tagged release:
-
-```nix
-{
-  inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
-    # Followable product tag (Omarchy v4.0.3):
-    omahedron.url = "github:VirtualMachinist/Omahedron/omahedron-4.0.3";
-    # Or track branch head:
-    # omahedron.url = "github:VirtualMachinist/Omahedron/main";
-  };
-
-  outputs = { nixpkgs, omahedron, ... }: {
-    nixosConfigurations.mybox = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      modules = [
-        ./hardware-configuration.nix
-        ./configuration.nix
-        omahedron.nixosModules.default
-        omahedron.inputs.home-manager.nixosModules.home-manager
-        { home-manager.sharedModules = [ omahedron.homeManagerModules.default ]; }
-      ];
-    };
-  };
-}
-```
-
-**2. Turn it on in `configuration.nix`.**
-
-```nix
-{ pkgs, ... }:
-{
-  networking.hostName = "mybox";   # must match the nixosConfigurations key above
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
-  omarchy.enable = true;
-  omarchy.full_name = "Ada Lovelace";
-  omarchy.email_address = "ada@example.com";
-  omarchy.timezone = "Europe/London";
-  omarchy.theme = "tokyo-night";    # any of the 22 stock themes
-  omarchy.terminal = "ghostty";     # foot, ghostty, alacritty, or kitty
-
-  # Packages installed from the Omarchy menus land here, declaratively.
-  omarchy.managedPackagesFile =
-    if builtins.pathExists ./omarchy-packages.json then ./omarchy-packages.json else null;
-
-  users.users.ada = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" "video" "input" "networkmanager" ];
-    initialHashedPassword = "…";    # mkpasswd -m sha-512
-  };
-
-  home-manager.users.ada = {
-    home.username = "ada";
-    home.homeDirectory = "/home/ada";
-    home.stateVersion = "26.05";
-    omarchy.enable = true;
-  };
-
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  system.stateVersion = "26.05";
-}
-```
-
-**3. Build, reboot, log in.**
+Light twin:
 
 ```sh
-sudo nixos-rebuild switch --flake /etc/nixos#mybox
+omarchy theme set hedron-light
 ```
 
-Log in at the SDDM greeter, press <kbd>Super</kbd>+<kbd>Enter</kbd>, and you are in Omarchy. After that, stay on [Daily drive](#daily-drive). The full option surface is in [docs/options.md](docs/options.md); the reference configuration this repo tests against is [example/configuration.nix](example/configuration.nix).
+`~/.config/omarchy/themes/<name>/` is the user theme path. Omarchy's own themes live under `/usr/share/omarchy/themes/<name>/`. A user directory with the same name overlays the system one.
 
-> [!TIP]
-> The very first build pulls a pinned Hyprland from the Hyprland binary cache once the module has registered it. On a brand-new machine that registration lands in the same switch, so pass the cache on the command line the first time to avoid compiling Hyprland from source. The [install guide](docs/install.md#first-build-use-the-hyprland-cache) shows the one-liner.
+Use a symlink or a plain copy. `omarchy theme install <git-url>` clones a repository into a single theme folder. This repository is a pack of two themes, so that command lands the wrong tree. On Omarchy v4.0.3 a cloned theme also drops `neovim.lua` and `vscode.json` at activation. A symlink of `themes/hedron` is applied in full, including those editor stubs.
 
-## What you get
+Details and the optional Nix install: [docs/install.md](docs/install.md).
 
-Everything below is Omarchy's own code, running from the Nix store.
+## Themes
 
-| | Omarchy on Arch | Omahedron on NixOS |
-|---|---|---|
-| Compositor | Hyprland 0.56 with the Lua bootstrap | Same Hyprland, pinned at 0.56.2, with the same Lua bootstrap and your overrides in `~/.config/hypr` |
-| Shell | One Quickshell process for bar, launcher, menus, notifications, OSDs, lock, polkit | The same single Quickshell process |
-| Themes | 22 stock themes, TOML plus templates, live swap | Same engine, same themes, same live swap, plus your own under `~/.config/omarchy/themes` |
-| Commands | `omarchy-*` scripts on `PATH` | Same scripts on `PATH`, sourced from the pinned upstream tag |
-| Shell | Fish by default, Bash for scripts | Same, with an opt-out |
-| First run | Interactive identity prompt | `omarchy setup` asks once and writes Nix; no prompt you maintain |
-| Apps | Omarchy-owned apps from the Omarchy repo | The same apps packaged under `pkgs/` when nixpkgs lacks them |
-| Update | `omarchy update` | The same menu entry runs `nix flake update` and `nixos-rebuild switch` |
-| Install / Remove menus | pacman and yay | Writes `omarchy-packages.json` in your flake and rebuilds, so every install is declarative and rollback-safe |
-| Undo | Snapper snapshots | Every generation in the boot menu |
-
-### What stays on Arch, on purpose
-
-Omahedron rebuilds the desktop layer. The operating-system layer belongs to NixOS, and every place the two meet is written down rather than papered over. The full ledger lives in [docs/COMPAT.md](docs/COMPAT.md) with a machine-readable copy in [schema/](schema/) that CI enforces.
-
-| Upstream | On Omahedron |
-|---|---|
-| pacman, yay, AUR, pkgs.omarchy.org | Flake packages and a rebuild. Never a host pacman. |
-| Limine, Snapper, mkinitcpio UKI | systemd-boot and NixOS generations |
-| The Omarchy ISO (Arch), `omarchy-apply-system`, `omarchy-apply-hardware` as Arch chroot helpers | `omarchy setup` on an existing NixOS ([docs/oma-cli.md](docs/oma-cli.md)). A NixOS-shaped Omahedron ISO is in product and does not ship on this tag. |
-| The Omarchy Kernel as an Arch package | The kernel from nixpkgs |
-| Mutable `/usr/share/omarchy` | An immutable store path in `$OMARCHY_PATH` |
-| Omacom support | Not claimed. Omahedron is unofficial. |
-
-## Omachron: the release schedule
-
-Omahedron trails Omarchy on purpose. Omachron is the name of that cadence.
-
-- **Every release claims a desktop.** The user-facing version is Omarchy's own: `desktop = Omarchy 4.0.x`, frozen on a date, recorded in [`schema/pin.json`](schema/pin.json) and the changelog. Flake tags follow it as `omahedron-X.Y.Z` when metal and maintainer GO allow.
-- **Patch and security tags ship immediately.** When Omarchy publishes a `4.0.x`, a bump opens the same day with no soak. Security notes jump the queue.
-- **Minor and major releases wait for the train to stop.** A `4.1.0` is pinned once its follow-up patches have settled, not on release day.
-- **Every release names its gaps.** The changelog line is always `parity with Omarchy vX.Y.Z; known gaps: …`.
-
-| Channel | `omarchy-src` | nixpkgs | For |
+| Directory | Set with | Mode | Wallpaper |
 |---|---|---|---|
-| `stable` (default) | Official tag `vX.Y.Z` | nixos-26.05 | Daily driving |
-| `rc` | Official RC tag, when one exists | Same as stable | Trying the next release early |
-| `edge` | Omarchy `master` | nixos-unstable | Maintainer dogfood. Not supported, never 1:1. |
+| [`themes/hedron`](themes/hedron) | `omarchy theme set hedron` | dark | `backgrounds/hedron-platonic-altar.jpeg` |
+| [`themes/hedron-light`](themes/hedron-light) | `omarchy theme set hedron-light` | light (`light.mode`) | `backgrounds/hedron-platonic-altar-light.jpeg` |
 
-Policy detail, including the bump state machine, is in [docs/CHANNELS.md](docs/CHANNELS.md).
+Palette comes from those wallpapers. Dark accent is copper `#a96a38` on lapis `#0a0e1e`. Light accent is bronze `#7a4a32` on sky `#eef3f8`. Icons are `Yaru-blue`.
 
-### Current pin
+A stock Omarchy theme directory (v4.0.3) is the model. Each pack includes:
 
-| | |
+| File | Role |
 |---|---|
-| Omarchy pin | **v4.0.3** @ `0534987` — see [`schema/pin.json`](schema/pin.json) |
-| GitHub Release | **[Omahedron 4.0.3](https://github.com/VirtualMachinist/Omahedron/releases/tag/omahedron-4.0.3)** · [changelog](docs/changelog-4.0.3.md) |
-| Last product git tag | **`omahedron-4.0.3`** @ `36529ef` |
-| NixOS | 26.05, with a planned cutover to 26.11 |
-| Hyprland | 0.56.2 |
-| Baseline hardware | Dell Latitude 5420, 8 GB RAM, Intel iGPU |
+| `colors.toml` | Palette Omarchy templates render from |
+| `backgrounds/` | Wallpaper |
+| `icons.theme` | Icon theme name |
+| `preview.png`, `preview-unlock.png`, `unlock.png` | Theme switcher and lock art |
+| `keyboard.rgb` | Accent hex, no `#` |
+| `shell.lock.toml` | Lock-screen text, placeholder, and border from `colors.toml` |
+| `neovim.lua` | Nearest LazyVim colorscheme (see below) |
+| `vscode.json` | Nearest published VS Code theme |
+| `light.mode` | Present on Hedron Light only |
 
-Metal signed on **`omahedron-4.0.3`** (lathe / Latitude 5420, 2026-09-15). Competitive scorecard: [`schema/scorecard.json`](schema/scorecard.json). Queue: [docs/COMPETE.md](docs/COMPETE.md).
+Editor files are nearest published schemes. There is no Hedron-native Neovim or VS Code theme.
 
-## How it works
+| | Neovim (LazyVim) | VS Code extension | Theme name |
+|---|---|---|---|
+| Hedron | [`rebelot/kanagawa.nvim`](https://github.com/rebelot/kanagawa.nvim) `kanagawa` | `qufiwefefwoyn.kanagawa` | Kanagawa |
+| Hedron Light | [`catppuccin/nvim`](https://github.com/catppuccin/nvim) `catppuccin-latte` | `catppuccin.catppuccin-vsc` | Catppuccin Latte |
 
-One rule drives the whole design: **if the user can see it, it comes from Omarchy. If NixOS already models it, declare the NixOS option.** Nothing the user touches gets rewritten in Nix, not the Quickshell widgets, not the theme templates, not the script router.
+Kanagawa is the closest LazyVim scheme for the dark lapis field. Catppuccin Latte is the closest for the light sky field. Copper and bronze stay on the shell, window borders, and keyboard backlight.
 
-- The pinned Omarchy tree is vendored into the store as `$OMARCHY_PATH`, the same variable upstream uses, and `$OMARCHY_PATH/bin` is prepended to the session `PATH`.
-- Upstream scripts that need an Arch-ism are patched in place with `substituteInPlace --replace-fail`, so a silent upstream change fails the build instead of shipping broken.
-- Every upstream command at the pinned tag is classified in [`schema/scripts.lock.json`](schema/scripts.lock.json) as `vendor` (shipped with path/shebang adaptation), `wrap` (same name, NixOS mechanism underneath), or `stub` (parseable banner; never calls pacman). CI fails when a new upstream command appears unclassified.
-- Home Manager seeds the user-editable files once, as real files, so the Omarchy Setup menu and `omarchy-refresh-config` keep working exactly as upstream expects.
-- Hyprland comes from its own pinned flake input with a matching Mesa, so the compositor is the version Omarchy's Lua config was written for regardless of what stable nixpkgs carries.
+## Plugins
 
-<details>
-<summary><strong>Repository map</strong></summary>
+These are the pack targets. None of them are installed by this repository yet.
 
+| Target | What it is | Here |
+|---|---|---|
+| [Facet](https://github.com/Hedronite/facet) | API client for humans and agents | not packaged |
+| [Geode](https://github.com/Hedronite/geode) | File custody (GDE1 vaults) | not packaged |
+| [Lapis](https://github.com/Hedronite/lapis-lattice) | Vault search and RAG | not packaged |
+| [Hedronos](https://github.com/Hedronite/hedronos) | Terminal workshop; pulls fullstack-lab | not packaged |
+| [fullstack-lab](https://github.com/Hedronite/fullstack-lab) | Fullstack practice lab | not packaged |
+
+When one of those ships as an Omarchy plugin, it lands in this repo with the same install story as the themes: a directory you can point stock Omarchy at, plus a flake output. Until then the flake only installs themes.
+
+## Nix
+
+Optional. Stock Omarchy does not need it. The flake is a thin overlay and an opt-in Home Manager module. It does not enable a desktop, and it does not set `allowUnfree`.
+
+```nix
+{
+  inputs.omahedron.url = "github:VirtualMachinist/Omahedron";
+
+  outputs = { omahedron, ... }: {
+    # nixpkgs overlay: pkgs.omahedron-themes
+    # -> $out/share/omarchy/themes/{hedron,hedron-light}
+  };
+}
 ```
-flake.nix                 # inputs: nixpkgs, home-manager, hyprland, omarchy-src
-config.nix                # the omarchy.* option surface, shared by both modules
-modules/nixos/            # session, greeter, audio, portals, firmware, cache
-modules/home-manager/     # user seeds, theme state, first-run
-pkgs/omarchy.nix          # vendored upstream tree, patched, into $OMARCHY_PATH
-pkgs/<name>.nix           # Omarchy-owned apps that nixpkgs does not carry
-schema/                   # pin, scorecard, script ledger, package map, JSON schemas
-checks/                   # ledger enforcement and stub behaviour tests
-tests/                    # NixOS VM suites: desktop, Fish, UX
-example/configuration.nix # the reference consumer config CI builds
-docs/                     # install, oma-cli, options, COMPAT, CHANNELS, UPSTREAM, COMPETE, brand
+
+Home Manager, still opt-in:
+
+```nix
+{
+  imports = [ omahedron.homeManagerModules.default ];
+  omahedron.themes.enable = true;
+}
 ```
 
-</details>
+That symlinks the two theme directories into `~/.config/omarchy/themes/`. Then:
+
+```sh
+omarchy theme set hedron
+```
+
+`nixosModules.default` only adds the theme package to `environment.systemPackages` when `omahedron.themes.enable` is set. It is not a session, a greeter, or a Hyprland config.
+
+```sh
+nix build github:VirtualMachinist/Omahedron
+# result/share/omarchy/themes/hedron
+# result/share/omarchy/themes/hedron-light
+```
+
+## Legacy desktop port
+
+Earlier revisions of this repository were a NixOS port of the Omarchy desktop (modules, a vendored Omarchy pin, `omarchy.enable`). That port is archived under [`legacy/os-port/`](legacy/os-port/). The tagged release [`omahedron-4.0.3`](https://github.com/VirtualMachinist/Omahedron/releases/tag/omahedron-4.0.3) is that port, at Omarchy v4.0.3. Root CI checks the theme pack.
 
 ## Contributing
 
-Issues and pull requests are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md), which covers the validation workflow, then [AGENTS.md](AGENTS.md), [docs/COMPETE.md](docs/COMPETE.md), and [DECISIONS.md](DECISIONS.md). Two rules matter most: desktop pixels come from Omarchy, and any new upstream command gets classified in the ledger in the same change. Do not change module defaults, pins, or README claims without COMPETE.
-
-When something we fix turns out to be an Omarchy bug rather than a NixOS-ism, it goes upstream.
+Issues and pull requests are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md), then [AGENTS.md](AGENTS.md) and [DECISIONS.md](DECISIONS.md). Theme files live in `themes/`. The archived port is not the place to add desktop features.
 
 ## Credits and license
 
-Omahedron is built and maintained by [Hedronite](https://hedronite.com). The desktop is [Omarchy](https://omarchy.org) by DHH, Basecamp and Omacom. The vendor-into-store architecture and the first module design derive from [zicochaos/omarchy-nix](https://github.com/zicochaos/omarchy-nix), forked with license and credit intact; Omahedron owns that glue now (ADR-0026). Full attribution is in [docs/CREDITS.md](docs/CREDITS.md).
+Omahedron is maintained by [Hedronite](https://hedronite.com). Omarchy is by DHH and Basecamp. The archived Nix glue started from [zicochaos/omarchy-nix](https://github.com/zicochaos/omarchy-nix); that credit stays in [docs/CREDITS.md](docs/CREDITS.md).
 
-MIT. See [LICENSE](LICENSE). The Omahedron mark is Hedronite's; usage notes are in [docs/brand/](docs/brand/).
+MIT. See [LICENSE](LICENSE). The mark is Hedronite's; notes are in [docs/brand/](docs/brand/).
