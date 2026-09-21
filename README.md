@@ -6,8 +6,14 @@
 
 <h1 align="center">Omahedron</h1>
 
+> **Status:** Theme + plugin pack for **stock Omarchy** (and Omarchy-Nix), not a long-term OS fork.
+> Pack targets: [Facet](https://github.com/Hedronite/facet) · [Geode](https://github.com/Hedronite/geode) · [Lapis](https://github.com/Hedronite/lapis-lattice) · [Hedronos](https://github.com/Hedronite/hedronos) / [fullstack-lab](https://github.com/Hedronite/fullstack-lab).
+> Canonical platform SoT: [github.com/Hedronite](https://github.com/Hedronite).
+
+
+
 <p align="center">
-  <strong>Trailing-stable Omarchy vendor port for NixOS.</strong><br>
+  <strong>Omarchy theme + plugin pack</strong> (Facet · Geode · Lapis · Hedronos/fullstack-lab).<br>
 </p>
 
 <p align="center">
@@ -41,8 +47,6 @@
 </p>
 
 ---
-
-> **Status:** In production use as a daily-driver / dogfood NixOS desktop (Omarchy trailing-stable port). Hardening: release scorecard, install docs, and CI continue to track pinned Omarchy/Hyprland. Not a toy reference.
 
 
 Omahedron is the [Omarchy](https://omarchy.org) desktop running on NixOS: Hyprland session, Quickshell bar, launcher, menus, lock screen, twenty-two stock themes with live swap, keybindings, and `omarchy-*` commands — vendored from the pinned upstream tag into the Nix store.
