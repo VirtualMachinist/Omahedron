@@ -7,8 +7,7 @@
 <h1 align="center">Omahedron</h1>
 
 <p align="center">
-  <strong>Hedron themes for stock Omarchy.</strong><br>
-  Theme pack first. Plugins when they are real.
+  <strong>Hedron themes for Omarchy.</strong><br>
 </p>
 
 <p align="center">
@@ -30,8 +29,6 @@
 ---
 
 Omahedron is a theme pack for [Omarchy](https://omarchy.org). It ships **Hedron** and **Hedron Light**: lapis fields, copper and bronze edges, wallpapers included. It runs on stock Arch Omarchy and on Omarchy-Nix. You install the theme directories, then set them with `omarchy theme`.
-
-Unofficial. The desktop is Omarchy's. Omahedron is maintained by [Hedronite](https://hedronite.com). It is not affiliated with Omarchy, Basecamp, 37signals, or Omacom.
 
 ## Install
 
@@ -141,17 +138,5 @@ nix build github:VirtualMachinist/Omahedron
 # result/share/omarchy/themes/hedron
 # result/share/omarchy/themes/hedron-light
 ```
-
-## Legacy desktop port
-
-Earlier revisions of this repository were a NixOS port of the Omarchy desktop (modules, a vendored Omarchy pin, `omarchy.enable`). That port is archived under [`legacy/os-port/`](legacy/os-port/). The tagged release [`omahedron-4.0.3`](https://github.com/VirtualMachinist/Omahedron/releases/tag/omahedron-4.0.3) is that port, at Omarchy v4.0.3. Root CI checks the theme pack.
-
-## Contributing
-
-Issues and pull requests are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md), then [AGENTS.md](AGENTS.md) and [DECISIONS.md](DECISIONS.md). Theme files live in `themes/`. The archived port is not the place to add desktop features.
-
-## Credits and license
-
-Omahedron is maintained by [Hedronite](https://hedronite.com). Omarchy is by DHH and Basecamp. The archived Nix glue started from [zicochaos/omarchy-nix](https://github.com/zicochaos/omarchy-nix); that credit stays in [docs/CREDITS.md](docs/CREDITS.md).
 
 MIT. See [LICENSE](LICENSE). The mark is Hedronite's; notes are in [docs/brand/](docs/brand/).
