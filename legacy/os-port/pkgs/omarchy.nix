@@ -68,6 +68,7 @@ let
   # the manifest against the packaged tree (fail-closed on new upstream
   # mutators at bump time).
   runtimeManifest = import ./omarchy-runtime-manifest.nix;
+  hiddenMenuIdArgs = lib.escapeShellArgs runtimeManifest.hiddenMenuIds;
 
   skillPack = builtins.fromJSON (builtins.readFile ../skills/pack.json);
   extraRuntimeSkills = builtins.filter (n: n != "omarchy") skillPack.runtime;
@@ -886,16 +887,24 @@ stdenv.mkDerivation (finalAttrs: {
             $'install_php() {\n  omarchy-pkg-add' \
             $'install_php() {\n  echo "NixOS: PHP extensions and php.ini are declarative (php.buildEnv / devshell); nothing is written under /etc."\n  omarchy-pkg-add'
 
+        # Direct `omarchy-install-dev-env deno` bypasses the hidden menu rows
+        # and would still run unpinned `mise use -g deno@latest`. Bun is the
+        # JavaScript runtime, so the case refuses and installs nothing.
+        # --replace-fail: an upstream rewrite of this case fails the build.
+        substituteInPlace bin/omarchy-install-dev-env \
+          --replace-fail \
+            $'deno)\n  echo -e "Installing Deno...\\n"\n  mise use -g deno@latest\n  ;;' \
+            $'deno)\n  echo "Deno isn\'t supported (Bun is the JS runtime)." >&2\n  exit 1\n  ;;'
+
         # Menu: delete entries whose only implementation is an Arch
         # system mutation (the scripts behind them are stubbed above; ids are
-        # manifest-driven). sed-line deletion is glyph-safe (upstream icons are
-        # multibyte); the grep guard fails the build when upstream renames an
-        # entry, i.e. this patch is stale.
-        for id in ${lib.concatStringsSep " " runtimeManifest.hiddenMenuIds}; do
-          grep -q "^  \"$id\":" default/omarchy/omarchy-menu.jsonc ||
-            { echo "omarchy-menu.jsonc: expected entry missing (stale patch): $id"; exit 1; }
-          sed -i "/^  \"$id\":/d" default/omarchy/omarchy-menu.jsonc
-        done
+        # manifest-driven). Matching is on the id key and consumes the whole
+        # JSON value, so a multi-line entry cannot leave its action behind.
+        # A renamed id fails the build (stale patch). The installed copy is
+        # checked again at the end of installPhase.
+        ${python3}/bin/python3 ${./hide-menu-entries.py} hide \
+          default/omarchy/omarchy-menu.jsonc \
+          ${hiddenMenuIdArgs}
 
         # Xbox controllers get a real NixOS implementation instead: the
         # hardware.xpadneo catalog feature (B19 rewire machinery).
@@ -2290,6 +2299,11 @@ stdenv.mkDerivation (finalAttrs: {
       if [[ $name == omarchy-nix-configlib ]]; then chmod 644 "$dest/bin/$name"; else chmod 755 "$dest/bin/$name"; fi
     done
     ! grep -rl '@@CONFIG_' "$dest/bin" || { echo "omarchy-nix: unreplaced @@CONFIG_ token in a G3 verb" >&2; exit 1; }
+
+    # Output guard: a hidden id that survived packaging fails the build.
+    ${python3}/bin/python3 ${./hide-menu-entries.py} check \
+      "$dest/default/omarchy/omarchy-menu.jsonc" \
+      ${hiddenMenuIdArgs}
 
     runHook postInstall
   '';

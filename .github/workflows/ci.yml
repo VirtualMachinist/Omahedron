@@ -38,3 +38,10 @@ jobs:
 
       - name: package themes
         run: nix build -L .#omahedron-themes
+
+      # Linux-only. Builds the archived os-port package (not the desktop
+      # test suite) and checks the installed menu plus packaged scripts.
+      - name: os-port deno hardening
+        run: |
+          nix build -L ./legacy/os-port#omarchy -o "$RUNNER_TEMP/omarchy-pkg"
+          bash checks/os-port-deno-menu.sh "$RUNNER_TEMP/omarchy-pkg"
