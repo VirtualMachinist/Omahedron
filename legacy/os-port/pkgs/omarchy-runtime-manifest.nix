@@ -328,7 +328,10 @@
 
   # Menu entries deleted from default/omarchy/omarchy-menu.jsonc at package
   # time (their scripts are declarative-note stubs; no NixOS runtime
-  # implementation exists).
+  # implementation exists). Deletion matches the id key and removes the
+  # whole JSON value, so a multi-line entry cannot leave its body behind.
+  # The installed menu is checked again; a hidden id still present fails
+  # the package build.
   hiddenMenuIds = [
     "setup.direct-boot"
     "setup.security.fido2"
