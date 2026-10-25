@@ -675,7 +675,6 @@
                     "install.development.scala",
                     "install.development.javascript.node",
                     "install.development.javascript.bun",
-                    "install.development.javascript.deno",
                     "install.development.php.php",
                     "install.development.elixir.elixir",
                 }

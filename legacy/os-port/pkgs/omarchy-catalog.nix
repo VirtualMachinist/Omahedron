@@ -335,11 +335,6 @@
       pkgs = [ "bun" ];
       binaries = [ "bun" ];
     };
-    "install.development.javascript.deno" = {
-      arch = "deno";
-      pkgs = [ "deno" ];
-      binaries = [ "deno" ];
-    };
     "install.development.php.php" = {
       arch = "php";
       pkgs = [ "php" ];

@@ -1476,7 +1476,6 @@ stdenv.mkDerivation (finalAttrs: {
           --replace-fail "'omarchy-install-dev-env scala'" "'omarchy-nix-add install.development.scala'" \
           --replace-fail "'omarchy-install-dev-env node'" "'omarchy-nix-add install.development.javascript.node'" \
           --replace-fail "'omarchy-install-dev-env bun'" "'omarchy-nix-add install.development.javascript.bun'" \
-          --replace-fail "'omarchy-install-dev-env deno'" "'omarchy-nix-add install.development.javascript.deno'" \
           --replace-fail "'omarchy-install-dev-env php'" "'omarchy-nix-add install.development.php.php'" \
           --replace-fail "'omarchy-install-dev-env elixir'" "'omarchy-nix-add install.development.elixir.elixir'" \
           --replace-fail "'omarchy-install-dev-env laravel'" "omarchy-nix-declarative-note" \
@@ -1505,7 +1504,6 @@ stdenv.mkDerivation (finalAttrs: {
           --replace-fail "'omarchy-remove-dev-env scala'" "'omarchy-nix-remove install.development.scala'" \
           --replace-fail "'omarchy-remove-dev-env node'" "'omarchy-nix-remove install.development.javascript.node'" \
           --replace-fail "'omarchy-remove-dev-env bun'" "'omarchy-nix-remove install.development.javascript.bun'" \
-          --replace-fail "'omarchy-remove-dev-env deno'" "'omarchy-nix-remove install.development.javascript.deno'" \
           --replace-fail "'omarchy-remove-dev-env php'" "'omarchy-nix-remove install.development.php.php'" \
           --replace-fail "'omarchy-remove-dev-env elixir'" "'omarchy-nix-remove install.development.elixir.elixir'" \
           --replace-fail "'omarchy-remove-dev-env laravel'" "omarchy-nix-declarative-note" \
@@ -1530,7 +1528,6 @@ stdenv.mkDerivation (finalAttrs: {
           --replace-fail '[[ ! -d $HOME/.local/share/mise/installs/scala ]]' '! omarchy-pkg-present scala' \
           --replace-fail '[[ ! -d $HOME/.local/share/mise/installs/node ]]' '! omarchy-pkg-present node' \
           --replace-fail '[[ ! -d $HOME/.local/share/mise/installs/bun ]]' '! omarchy-pkg-present bun' \
-          --replace-fail '[[ ! -d $HOME/.local/share/mise/installs/deno ]]' '! omarchy-pkg-present deno' \
           --replace-fail '[[ ! -d $HOME/.local/share/mise/installs/elixir ]]' '! omarchy-pkg-present elixir' \
           --replace-fail '[[ -d $HOME/.local/share/mise/installs/ruby ]]' 'omarchy-pkg-present ruby' \
           --replace-fail '[[ -d $HOME/.local/share/mise/installs/go ]]' 'omarchy-pkg-present go' \
@@ -1544,7 +1541,6 @@ stdenv.mkDerivation (finalAttrs: {
           --replace-fail '[[ -d $HOME/.local/share/mise/installs/scala ]]' 'omarchy-pkg-present scala' \
           --replace-fail '[[ -d $HOME/.local/share/mise/installs/node ]]' 'omarchy-pkg-present node' \
           --replace-fail '[[ -d $HOME/.local/share/mise/installs/bun ]]' 'omarchy-pkg-present bun' \
-          --replace-fail '[[ -d $HOME/.local/share/mise/installs/deno ]]' 'omarchy-pkg-present deno' \
           --replace-fail '[[ -d $HOME/.local/share/mise/installs/elixir ]]' 'omarchy-pkg-present elixir'
 
         # Agents/apps with no nixpkgs package on the pin — drop their menu
