@@ -358,5 +358,10 @@
     "setup.network.dns.cloudflare"
     "setup.network.dns.google"
     "setup.network.dns.custom"
+    # Upstream Deno rows still call unpinned `mise install` /
+    # `mise/installs/deno`. Bun is the catalog JavaScript runtime, so these
+    # entries are deleted rather than rewired.
+    "install.development.javascript.deno"
+    "remove.development.javascript.deno"
   ];
 }
